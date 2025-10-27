@@ -15,7 +15,8 @@ public class ButtonAttribute : PropertyAttribute
     public Color Color { get; }
     public ButtonDisplay DisplayMode { get; }
 
-    public ButtonAttribute(string methodName, string label = null, ButtonDisplay displayMode = ButtonDisplay.DrawOnTop, float r = 0.9f, float g = 0.9f, float b = 0.9f)
+    public ButtonAttribute(string methodName, string label = null, ButtonDisplay displayMode = ButtonDisplay.DrawOnTop, 
+        float r = 0.9f, float g = 0.9f, float b = 0.9f)
     {
         MethodName = methodName;
         Label = label ?? methodName;
