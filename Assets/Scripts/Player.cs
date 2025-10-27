@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [Header("Movement")]
-    private float moveSpeed => stats.MoveSpeed;
+    private float moveSpeed => stats.moveSpeed;
     [SerializeField] float jumpForce = 5f;
 
     [Header("Look")]
@@ -64,7 +64,7 @@ public class Player : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.F)) {
-            stats.MoveSpeed.AddModifier(new Modifier(0.5f - 1, ModifierType.PercentAdd, this, 4));
+            stats.moveSpeed.AddModifier(new Modifier(0.5f - 1, ModifierType.PercentAdd, this, 4));
         }
     }
 

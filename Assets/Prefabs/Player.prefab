@@ -183,6 +183,9 @@ GameObject:
   - component: {fileID: 1704738121731195016}
   - component: {fileID: 4832517537298139783}
   - component: {fileID: 4706875532758921836}
+  - component: {fileID: 1759559139725362135}
+  - component: {fileID: 5610967228089939522}
+  - component: {fileID: 9020704476798422884}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -343,67 +346,113 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7a5c3b14b3c89f49b1dfbdfd12faf77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHealth:
+  statusEffectManager: {fileID: 9020704476798422884}
+  eventManager: {fileID: 5610967228089939522}
+  health: {fileID: 1759559139725362135}
+  rigidbody: {fileID: 1704738121731195016}
+  maxHealth:
     BaseValue: 100
-  DamageResistance:
+  damageResistance:
     BaseValue: 0
-  Defense:
+  defense:
     BaseValue: 0
-  HealingEffectiveness:
+  healingEffectiveness:
     BaseValue: 1
-  PassiveRegenRate:
+  passiveRegenRate:
     BaseValue: 0
-  MoveSpeed:
+  moveSpeed:
     BaseValue: 8
-  AttackSpeedMultiplier:
+  attackSpeedMultiplier:
     BaseValue: 1
-  ActiveAbilityCooldownRate:
+  activeAbilityCooldownRate:
     BaseValue: 1
-  CriticalChanceMultiplier:
+  criticalChanceMultiplier:
     BaseValue: 1
-  CriticalDamageMultiplier:
+  criticalDamageMultiplier:
     BaseValue: 1
-  Luck:
+  luck:
     BaseValue: 1
-  StatusChanceMultiplier:
+  statusChanceMultiplier:
     BaseValue: 1
-  FlaskCooldown:
+  flaskCooldown:
     BaseValue: 30
-  BuffDurationMultiplier:
+  buffDurationMultiplier:
     BaseValue: 1
-  BuffPotencyMultiplier:
+  buffPotencyMultiplier:
     BaseValue: 1
-  DamageMultiplier:
+  damageMultiplier:
     BaseValue: 1
-  MeleeDamageMultiplier:
+  meleeDamageMultiplier:
     BaseValue: 1
-  ActiveAbilityDamageMultiplier:
+  activeAbilityDamageMultiplier:
     BaseValue: 1
-  ElementalDamageMultiplier:
+  elementalDamageMultiplier:
     BaseValue: 1
-  ProjectileSpeedMultiplier:
+  projectileSpeedMultiplier:
     BaseValue: 1
-  FireDamageMultiplier:
+  damageMultipliers:
+    physical:
+      BaseValue: 1
+    fire:
+      BaseValue: 1
+    ice:
+      BaseValue: 1
+    electric:
+      BaseValue: 1
+    poison:
+      BaseValue: 1
+    light:
+      BaseValue: 1
+  damageResistances:
+    physical:
+      BaseValue: 0
+    fire:
+      BaseValue: 0
+    ice:
+      BaseValue: 0
+    electric:
+      BaseValue: 0
+    poison:
+      BaseValue: 0
+    light:
+      BaseValue: 0
+  jumpCount:
     BaseValue: 1
-  IceDamageMultiplier:
+  currencyMultiplier:
     BaseValue: 1
-  ElectricDamageMultiplier:
-    BaseValue: 1
-  PoisonDamageMultiplier:
-    BaseValue: 1
-  LightDamageMultiplier:
-    BaseValue: 1
-  FireResistance:
-    BaseValue: 1
-  IceResistance:
-    BaseValue: 1
-  ElectricResistance:
-    BaseValue: 1
-  PoisonResistance:
-    BaseValue: 1
-  LightResistance:
-    BaseValue: 1
-  JumpCount:
-    BaseValue: 1
-  CurrencyMultiplier:
-    BaseValue: 1
+--- !u!114 &1759559139725362135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8542186682067204331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3f5bb860d78aa64085fa7e17d3e41eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5610967228089939522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8542186682067204331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b14e3a5fe5dbb0e4cbbcd11d71c4a5ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &9020704476798422884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8542186682067204331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58141d53289bf7c4182874b0af6fb47b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

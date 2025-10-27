@@ -1,70 +1,65 @@
-using System;
 using Stats;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class Statboard : MonoBehaviour
-{
-    //[Section("References")]
-    //public EntityStatusEffectManager statusEffectManager;
-    //public EntityEventManager eventManager;
+[DisallowMultipleComponent]
+public class Statboard : MonoBehaviour {
+    [Section("References")]
+    [Button(nameof(TryGetReferences), "Retrieve References")]
+    public EntityStatusEffectManager statusEffectManager;
+    public EntityEventManager eventManager;
+    public Health health;
+    public new Rigidbody rigidbody;
 
     [Section("Heart")]
-    public Stat MaxHealth = 100;
-    public Stat DamageResistance = 0;
-    public Stat Defense = 0;
-    public Stat HealingEffectiveness = 1;
-    public Stat PassiveRegenRate = 0;
+    public Stat maxHealth = 100;
+    public Stat damageResistance = 0;
+    public Stat defense = 0;
+    public Stat healingEffectiveness = 1;
+    public Stat passiveRegenRate = 0;
 
     [Section("Lungs")] 
-    public Stat MoveSpeed = 8;
-    public Stat AttackSpeedMultiplier = 1;
-    public Stat ActiveAbilityCooldownRate = 1;
+    public Stat moveSpeed = 8;
+    public Stat attackSpeedMultiplier = 1;
+    public Stat activeAbilityCooldownRate = 1;
     
     [Section("Brain")]
-    public Stat CriticalChanceMultiplier = 1;
-    public Stat CriticalDamageMultiplier = 1;
-    public Stat Luck = 1;
+    public Stat criticalChanceMultiplier = 1;
+    public Stat criticalDamageMultiplier = 1;
+    public Stat luck = 1;
 
     [Section("Liver")] 
-    public Stat StatusChanceMultiplier = 1;
-    public Stat FlaskCooldown = 30;
-    public Stat BuffDurationMultiplier = 1;
-    public Stat BuffPotencyMultiplier = 1;
+    public Stat statusChanceMultiplier = 1;
+    public Stat flaskCooldown = 30;
+    public Stat buffDurationMultiplier = 1;
+    public Stat buffPotencyMultiplier = 1;
     
     [Section("Combat")]
-    public Stat DamageMultiplier = 1;
-    public Stat MeleeDamageMultiplier = 1;
-    public Stat ActiveAbilityDamageMultiplier = 1;
-    public Stat ElementalDamageMultiplier = 1;
-    public Stat ProjectileSpeedMultiplier = 1;
+    public Stat damageMultiplier = 1;
+    public Stat meleeDamageMultiplier = 1;
+    public Stat activeAbilityDamageMultiplier = 1;
+    public Stat elementalDamageMultiplier = 1;
+    public Stat projectileSpeedMultiplier = 1;
     
     [Section("Elemental")]
-    [Header("Damage Multipliers")]
-    public Stat FireDamageMultiplier = 1;
-    public Stat IceDamageMultiplier = 1;
-    public Stat ElectricDamageMultiplier = 1;
-    public Stat PoisonDamageMultiplier = 1;
-    public Stat LightDamageMultiplier = 1;
-    [Header("Resistances")]
-    public Stat FireResistance = 1;
-    public Stat IceResistance = 1;
-    public Stat ElectricResistance = 1;
-    public Stat PoisonResistance = 1;
-    public Stat LightResistance = 1;
+    public DamageTypeStats damageMultipliers = new(1);
+    public DamageTypeStats damageResistances = new(0);
 
     [Section("Misc")] 
-    public Stat JumpCount = 1;
-    public Stat CurrencyMultiplier = 1;
+    public Stat jumpCount = 1;
+    public Stat currencyMultiplier = 1;
 
     private void Update() {
         foreach (var field in typeof(Statboard).GetFields()) {
             if (field.FieldType == typeof(Stat)) {
                 Stat stat = (Stat)field.GetValue(this);
                 stat.UpdateTimers();
+            }else if (field.FieldType == typeof(DamageTypeStats)) {
+                DamageTypeStats stats = (DamageTypeStats)field.GetValue(this);
+                stats.TickStats();
             }
         }
     }
-
 
     public Stat GetStatByName(string statName)
     {
@@ -77,16 +72,130 @@ public class Statboard : MonoBehaviour
         return null;
     }
 
+    public enum VariableType {
+        //Heart
+        MaxHealth,
+        DamageResistance,
+        Defense,
+        HealingEffectiveness,
+        PassiveRegenRate,
+        
+        //Lungs
+        MoveSpeed,
+        AttackSpeedMultiplier,
+        ActiveAbilityCooldownRate,
+        
+        //Brain
+        CriticalChanceMultiplier,
+        CriticalDamageMultiplier,
+        Luck,
+        
+        //Liver
+        StatusChanceMultiplier,
+        FlaskCooldown,
+        BuffDurationMultiplier,
+        BuffPotencyMultiplier,
+        
+        //Combat
+        DamageMultiplier,
+        MeleeDamageMultiplier,
+        ActiveAbilityDamageMultiplier,
+        ElementalDamageMultiplier,
+        ProjectileSpeedMultiplier,
+        
+        //Elemental
+            //Damage Multipliers
+        PhysicalDamageMultiplier,
+        FireDamageMultiplier,
+        IceDamageMultiplier,
+        ElectricDamageMultiplier,
+        PoisonDamageMultiplier,
+        LightDamageMultiplier,
+            //Resistances
+        PhysicalDamageResistance,
+        FireResistance,
+        IceResistance,
+        ElectricResistance,
+        PoisonResistance,
+        LightResistance,
+        
+        //Misc
+        JumpCount,
+        CurrencyMultiplier
+    }
+    
     public Stat GetStatByEnum(VariableType variableType) => variableType switch {
-        VariableType.Health => MaxHealth,
-        VariableType.MoveSpeed => MoveSpeed,
-        VariableType.FlaskCooldown => FlaskCooldown,
+        //Heart
+        VariableType.MaxHealth => maxHealth,
+        VariableType.DamageResistance => damageResistance,
+        VariableType.Defense => defense,
+        VariableType.HealingEffectiveness => healingEffectiveness,
+        VariableType.PassiveRegenRate => passiveRegenRate,
+        
+        //Lungs
+        VariableType.MoveSpeed => moveSpeed,
+        VariableType.AttackSpeedMultiplier => attackSpeedMultiplier,
+        VariableType.ActiveAbilityCooldownRate => activeAbilityCooldownRate,
+        
+        //Brain
+        VariableType.CriticalChanceMultiplier => criticalChanceMultiplier,
+        VariableType.CriticalDamageMultiplier => criticalDamageMultiplier,
+        VariableType.Luck => luck,
+        
+        //Liver
+        VariableType.StatusChanceMultiplier => statusChanceMultiplier,
+        VariableType.FlaskCooldown => flaskCooldown,
+        VariableType.BuffDurationMultiplier => buffDurationMultiplier,
+        VariableType.BuffPotencyMultiplier => buffPotencyMultiplier,
+        
+        //Combat
+        VariableType.DamageMultiplier => damageMultiplier,
+        VariableType.MeleeDamageMultiplier => meleeDamageMultiplier,
+        VariableType.ActiveAbilityDamageMultiplier => activeAbilityDamageMultiplier,
+        VariableType.ElementalDamageMultiplier => elementalDamageMultiplier,
+        VariableType.ProjectileSpeedMultiplier => projectileSpeedMultiplier,
+        
+        //Elemental
+            //Damage Multipliers
+        VariableType.FireDamageMultiplier => damageMultipliers.fire,
+        VariableType.IceDamageMultiplier => damageMultipliers.ice,
+        VariableType.ElectricDamageMultiplier => damageMultipliers.electric,
+        VariableType.PoisonDamageMultiplier => damageMultipliers.poison,
+        VariableType.LightDamageMultiplier => damageMultipliers.light,
+        VariableType.PhysicalDamageMultiplier => damageMultipliers.physical,
+            //Resistances
+        VariableType.PhysicalDamageResistance => damageResistances.physical,
+        VariableType.FireResistance => damageResistances.fire,
+        VariableType.IceResistance => damageResistances.ice,
+        VariableType.ElectricResistance => damageResistances.electric,
+        VariableType.PoisonResistance => damageResistances.poison,
+        VariableType.LightResistance => damageResistances.light,
+        
+        //Misc
+        VariableType.JumpCount => jumpCount,
+        VariableType.CurrencyMultiplier => currencyMultiplier,
+        
+        //default
         _ => null
     };
+
+    private void Awake() {
+        TryGetReferences();
+        TryAssignReferences();
+    }
     
-    public enum VariableType {
-        Health,
-        MoveSpeed,
-        FlaskCooldown
+    private void TryGetReferences() {
+        statusEffectManager ??= GetComponent<EntityStatusEffectManager>();
+        eventManager ??= GetComponent<EntityEventManager>();
+        health ??= GetComponent<Health>();
+        if (rigidbody == null) {
+            rigidbody = GetComponent<Rigidbody>();
+        }
+    }
+    
+    private void TryAssignReferences() {
+        statusEffectManager?.SetStatboard(this);
+        eventManager?.SetStatboard(this);
+        health?.SetStatboard(this);
     }
 }
