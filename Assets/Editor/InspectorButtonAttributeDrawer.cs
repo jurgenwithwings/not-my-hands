@@ -141,7 +141,6 @@ public class ButtonAttributeDrawer : PropertyDrawer
     
     private static Color GetReadableTextColor(Color background)
     {
-        // Calculate relative luminance using the standard sRGB formula
         float luminance = 0.2126f * background.r + 0.7152f * background.g + 0.0722f * background.b;
         return luminance < 0.4f ? Color.white : Color.black;
     }

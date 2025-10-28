@@ -185,7 +185,7 @@ GameObject:
   - component: {fileID: 4706875532758921836}
   - component: {fileID: 1759559139725362135}
   - component: {fileID: 5610967228089939522}
-  - component: {fileID: 9020704476798422884}
+  - component: {fileID: 215593239173104613}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -346,7 +346,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7a5c3b14b3c89f49b1dfbdfd12faf77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statusEffectManager: {fileID: 9020704476798422884}
+  statusEffectManager: {fileID: 215593239173104613}
   eventManager: {fileID: 5610967228089939522}
   health: {fileID: 1759559139725362135}
   rigidbody: {fileID: 1704738121731195016}
@@ -444,7 +444,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b14e3a5fe5dbb0e4cbbcd11d71c4a5ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &9020704476798422884
+--- !u!114 &215593239173104613
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -453,6 +453,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 8542186682067204331}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58141d53289bf7c4182874b0af6fb47b, type: 3}
+  m_Script: {fileID: 11500000, guid: 7aa5c26e40a34bd89ee7704953f4cf42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

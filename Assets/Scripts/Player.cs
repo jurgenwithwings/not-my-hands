@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Stats;
 using UnityEngine;
 
@@ -17,6 +18,11 @@ public class Player : MonoBehaviour
     [SerializeField] Transform groundCheck;
     [SerializeField] float groundDistance = 0.2f;
     [SerializeField] LayerMask groundMask;
+
+    [Header("Testing")] 
+    [SerializeField] private DamageInstance[] damage;
+    [SerializeField] private ClassReference<StatusEffect> effect;
+    [SerializeField] private LayerMask enemyMask;
 
     Rigidbody rb;
     Statboard stats;
@@ -63,8 +69,18 @@ public class Player : MonoBehaviour
             rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
         }
 
-        if (Input.GetKeyDown(KeyCode.F)) {
-            stats.moveSpeed.AddModifier(new Modifier(0.5f - 1, ModifierType.PercentAdd, this, 4));
+        if (Input.GetMouseButtonDown(0)) {
+            Physics.Raycast(playerCamera.position, playerCamera.forward * 1000f, out RaycastHit hitInfo, 1000, enemyMask);
+
+            if (hitInfo.collider.TryGetComponent(out Statboard stats)) {
+                Debug.LogWarning("Hit: " + hitInfo.collider.gameObject.name);
+                DamageInfo damageInfo = new DamageInfo(damage, this.stats);
+                damageInfo.hitPoint = hitInfo.point;
+                damageInfo.direction = (hitInfo.point - playerCamera.position).normalized;
+                damageInfo.statusEffects.Add(effect, 3);
+                
+                stats.health.TakeDamage(damageInfo);
+            }
         }
     }
 

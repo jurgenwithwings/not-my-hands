@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 [DisallowMultipleComponent]
 public class Statboard : MonoBehaviour {
     [Section("References")]
-    [Button(nameof(TryGetReferences), "Retrieve References", r:0.1f, g:0.1f, b:1f)]
+    [Button(nameof(TryGetReferences), "Retrieve References", r:0.2f, g:0.2f, b:0.2f)]
     public EntityStatusEffectManager statusEffectManager;
     public EntityEventManager eventManager;
     public Health health;
