@@ -12,7 +12,7 @@ public class Health : MonoBehaviour
     
     private void Start() {
         currentHealth = statboard.maxHealth;
-        ObjectPool.InitialisePool<DamageNumber>();
+        ObjectPool.InitialisePool<DamageNumber>(100);
     }
     
     public float TakeDamage(DamageInfo damageInfo) {

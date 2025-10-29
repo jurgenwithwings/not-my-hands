@@ -8,12 +8,12 @@ public class DamageNumber : MonoBehaviour, IPoolable<DamageNumber> {
     
     public Action<DamageNumber> ReturnToPoolAction { get; set; }
 
-    public string SetKey() => "DamageNumber";
+    public string ObjectPoolKey() => "DamageNumber";
     
-    public void OnPoolSpawn() {
+    public void OnPoolPull() {
         //noop
     }
-    public void OnPoolDespawn() {
+    public void OnPoolPush() {
         //noop
     }
 }

@@ -9,9 +9,8 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 namespace ObjectPooling {
     public static class ObjectPool<T> where T : MonoBehaviour, IPoolable<T>
     {
-        private static string errorString = $"{typeof(T).Name} Pool Prefab is null. 'IPoolable<T>.SetPoolPrefab(PoolPrefab);' must be called in OnValidate!";
-
         private static string Key;
+        public static bool isInitialised { get; private set; }= false;
         public static AsyncOperationHandle<GameObject> loadHandle { get; private set; }
         
         private static readonly Stack<T> pool = new();
@@ -25,7 +24,7 @@ namespace ObjectPooling {
             //Get the IPoolable to set the key - Holy ass code
             parent = new GameObject($"{typeof(T).Name} Pool").transform;
             T t = parent.gameObject.AddComponent<T>();
-            Key = t.SetKey();
+            Key = t.ObjectPoolKey();
             Object.Destroy(t);
             
             InitialisePool();
@@ -39,20 +38,18 @@ namespace ObjectPooling {
             } else {
                 Debug.LogError($"Failed to load pool prefab for {typeof(T).Name} with key {Key}.");
             }
+
+            isInitialised = true;
         }
 
-        public static T Pull(Vector3? position = null, Quaternion? rotation = null)
-        {
+        public static T Pull(Vector3? position = null, Quaternion? rotation = null) {
             T instance;
-            if (pool.Count > 0) //Get an item from the pool if one exists
-            {
+            if (pool.Count > 0) { //Get an item from the pool if one exists
                 instance = pool.Pop();
             }
-            else
-            {
-                if (prefab == null)
-                {
-                    Debug.LogError(errorString);
+            else {
+                if (prefab == null) {
+                    Debug.LogError($"prefab is null for {typeof(T).Name}");
                     return null;
                 }
                 instance = Object.Instantiate(prefab, parent).GetComponent<T>();
@@ -63,35 +60,36 @@ namespace ObjectPooling {
             if (rotation.HasValue) instance.transform.rotation = rotation.Value;
 
             instance.gameObject.SetActive(true);
-            instance.OnPoolSpawn();
+            instance.OnPoolPull();
 
             return instance;
         }
 
-        public static void Push(T instance)
-        {
-            instance.OnPoolDespawn();
+        public static void Push(T instance) {
+            instance.OnPoolPush();
             instance.gameObject.SetActive(false);
             instance.transform.SetParent(parent, false);
             pool.Push(instance);
         }
     }
     
-    public static class ObjectPool
-    {
+    public static class ObjectPool {
         private static List<Type> runningTasks = new();
         
+        /// <summary>
+        /// Initialises the pool for type T by preloading from Addressables. Optionally pre-instantiates a number of objects.
+        /// </summary>
+        /// <param name="numberToInitialise">How many objects to initialise.</param>
+        /// <typeparam name="T">Type of ObjectPool to preload</typeparam>
         public static async Task InitialisePool<T>(int numberToInitialise = 0) where T : MonoBehaviour, IPoolable<T> {
-            if (!ObjectPool<T>.loadHandle.IsDone && !runningTasks.Contains(typeof(T))) {
+            if (!ObjectPool<T>.isInitialised && !runningTasks.Contains(typeof(T))) {
                 runningTasks.Add(typeof(T));
-                Debug.Log("Starting pool initialisation for " + typeof(T).Name);
             }
             else {
-                Debug.Log("Initialisation is already running for " + typeof(T).Name);
                 return;
             }
             
-            while (!ObjectPool<T>.loadHandle.IsDone) {
+            while (!ObjectPool<T>.isInitialised) {
                 await Task.Yield();
             }
 
@@ -105,35 +103,48 @@ namespace ObjectPooling {
             
         }
         
-        public static bool TryPull<T>(Vector3 pos, Quaternion rot, out T t) where T : MonoBehaviour, IPoolable<T> {
-            if (ObjectPool<T>.loadHandle.IsDone) {
-                t = ObjectPool<T>.Pull(pos, rot);
+        /// <summary>
+        /// Safe way to pull an Object from a ObjectPool. Returns false if the pool is not initialised.
+        /// </summary>
+        /// <param name="pos">Position to place the object.</param>
+        /// <param name="rot">Rotation to orient the object.</param>
+        /// <param name="result">The object that was pulled from the pool.</param>
+        /// <returns></returns>
+        public static bool TryPull<T>(Vector3 pos, Quaternion rot, out T result) where T : MonoBehaviour, IPoolable<T> {
+            if (ObjectPool<T>.isInitialised) {
+                result = ObjectPool<T>.Pull(pos, rot);
                 return true;
             }
-            t = null;
+            result = null;
             return false;
         }
         
-        public static void Push<T>(T t) where T : MonoBehaviour, IPoolable<T> {
-            ObjectPool<T>.Push(t);
+        /// <summary>
+        /// Pushes an object back into its pool. Nothing fancy, just here for consistent syntax.
+        /// </summary>
+        /// <param name="obj">The object to push back into the pool.</param>
+        public static void Push<T>(T obj) where T : MonoBehaviour, IPoolable<T> {
+            ObjectPool<T>.Push(obj);
         }
     }
     
     public interface IPoolable<T> where T : MonoBehaviour, IPoolable<T> {
         public Action<T> ReturnToPoolAction { get; set; }
 
-        public static string Key = string.Empty;
-
-        string SetKey();
+        string ObjectPoolKey();
         
         void Initialise(Action<T> returnToPoolAction) {
             ReturnToPoolAction = returnToPoolAction;
         }
         
-        /// Unity calls this when the object is spawned from the pool.
-        void OnPoolSpawn();
+        /// <summary>
+        /// Called when the object is spawned from the pool.
+        /// </summary>
+        void OnPoolPull();
 
-        /// Unity calls this before the object is returned to the pool.
-        void OnPoolDespawn();
+        /// <summary>
+        /// Called when the object is pushed back into the pool.
+        /// </summary>
+        void OnPoolPush();
     }
 }
