@@ -12,6 +12,7 @@ public class Health : MonoBehaviour
     
     private void Start() {
         currentHealth = statboard.maxHealth;
+        ObjectPool.InitialisePool<DamageNumber>();
     }
     
     public float TakeDamage(DamageInfo damageInfo) {
@@ -29,8 +30,10 @@ public class Health : MonoBehaviour
         float totalDamageTaken = damageInfo.totalDamage;
         currentHealth -= totalDamageTaken;
 
-        DamageNumber db = ObjectPool<DamageNumber>.Pull(transform.position, transform.rotation);
-        db.gameObject.name = damageInfo.totalDamage.ToString("F1");
+        if (ObjectPool.TryPull(transform.position, transform.rotation, out DamageNumber damageNumber))
+        {
+            damageNumber.gameObject.name = damageInfo.totalDamage.ToString("F1");
+        }
         
         if (currentHealth < 0) {
             Die();
