@@ -100,6 +100,7 @@ public abstract class StatusEffect {
             lastTick = Time.time;
 
             DamageInfo damage = new DamageInfo(finalDamage.ToArray(), highestDamageReceived.source);
+            damage.ignoreResistances = true;
 
             stats.health.TakeDamage(damage);
         }
@@ -133,7 +134,7 @@ public class Burn : StatusEffect {
         tickInterval = 1.0f;
         
         baseDamage = new List<DamageInstance>();
-        baseDamage.Add(new DamageInstance(DamageInstance.Type.Fire, 0.25f));
+        baseDamage.Add(new DamageInstance(DamageInstance.Type.Fire, 0.15f));
         damagePerStack = new List<DamageInstance>();
         damagePerStack.Add(new DamageInstance(DamageInstance.Type.Fire, 0.1f));
 
@@ -198,7 +199,7 @@ public class Judged : StatusEffect {
         base.Initialize(manager, damageInfo);
 
         baseDamage = new List<DamageInstance>();
-        baseDamage.Add(new DamageInstance(DamageInstance.Type.Light, 0.35f));
+        baseDamage.Add(new DamageInstance(DamageInstance.Type.Light, 0.15f));
         damagePerStack = new List<DamageInstance>();
         damagePerStack.Add(new DamageInstance(DamageInstance.Type.Light, 0.1f));
 
@@ -227,6 +228,7 @@ public class Judged : StatusEffect {
             float damage = damageAbsorbed * (baseDamage[0].amount + (damagePerStack[0].amount * currentStacks));
             DamageInstance[] damageInstance = { new(DamageInstance.Type.Light, damage) };
             DamageInfo damageInfo = new DamageInfo(damageInstance, highestDamageReceived.source);
+            damageInfo.ignoreResistances = true;
             stats.health.TakeDamage(damageInfo);
         }
     }

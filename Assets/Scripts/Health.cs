@@ -1,3 +1,4 @@
+using ObjectPooling;
 using UnityEngine;
 
 public class Health : MonoBehaviour
@@ -18,7 +19,9 @@ public class Health : MonoBehaviour
             return 0;
         }
 
-        damageInfo /= statboard.damageResistances;
+        if (!damageInfo.ignoreResistances) {
+            damageInfo /= statboard.damageResistances;
+        }
         Debug.LogWarning(damageInfo.totalDamage);
         
         statboard.eventManager.TakeDamage(damageInfo);
@@ -26,6 +29,9 @@ public class Health : MonoBehaviour
         float totalDamageTaken = damageInfo.totalDamage;
         currentHealth -= totalDamageTaken;
 
+        DamageNumber db = ObjectPool<DamageNumber>.Pull(transform.position, transform.rotation);
+        db.gameObject.name = damageInfo.totalDamage.ToString("F1");
+        
         if (currentHealth < 0) {
             Die();
         }

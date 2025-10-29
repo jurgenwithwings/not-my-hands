@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Stats;
 using UnityEngine;
@@ -46,17 +47,6 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        // Mouse look
-        float mouseX = Input.GetAxisRaw("Mouse X") * lookSensitivity;
-        float mouseY = Input.GetAxisRaw("Mouse Y") * lookSensitivity;
-
-        transform.Rotate(Vector3.up * mouseX);
-
-        pitch -= mouseY;
-        pitch = Mathf.Clamp(pitch, -maxLookAngle, maxLookAngle);
-        if (playerCamera != null)
-            playerCamera.localEulerAngles = new Vector3(pitch, 0f, 0f);
-
         // Ground check
         if (groundCheck != null)
             grounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
@@ -95,6 +85,19 @@ public class Player : MonoBehaviour
         // Preserve vertical velocity (gravity/jumps)
         Vector3 newVel = new Vector3(targetVel.x, rb.linearVelocity.y, targetVel.z);
         rb.linearVelocity = newVel;
+    }
+
+    private void LateUpdate() {
+        // Mouse look
+        float mouseX = Input.GetAxisRaw("Mouse X") * lookSensitivity;
+        float mouseY = Input.GetAxisRaw("Mouse Y") * lookSensitivity;
+
+        transform.Rotate(Vector3.up * mouseX);
+
+        pitch -= mouseY;
+        pitch = Mathf.Clamp(pitch, -maxLookAngle, maxLookAngle);
+        if (playerCamera != null)
+            playerCamera.localEulerAngles = new Vector3(pitch, 0f, 0f);
     }
 
     void OnDrawGizmosSelected()
