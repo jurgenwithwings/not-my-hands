@@ -129,12 +129,12 @@ namespace ObjectPooling {
     }
     
     public interface IPoolable<T> where T : MonoBehaviour, IPoolable<T> {
-        public Action<T> ReturnToPoolAction { get; set; }
+        public Action<T> ReturnToPool { get; set; }
 
         string ObjectPoolKey();
         
         void Initialise(Action<T> returnToPoolAction) {
-            ReturnToPoolAction = returnToPoolAction;
+            ReturnToPool = returnToPoolAction;
         }
         
         /// <summary>

@@ -12,7 +12,7 @@ public class Health : MonoBehaviour
     
     private void Start() {
         currentHealth = statboard.maxHealth;
-        ObjectPool.InitialisePool<DamageNumber>(100);
+        ObjectPool.InitialisePool<DamageNumber>(10);
     }
     
     public float TakeDamage(DamageInfo damageInfo) {
@@ -30,9 +30,9 @@ public class Health : MonoBehaviour
         float totalDamageTaken = damageInfo.totalDamage;
         currentHealth -= totalDamageTaken;
 
-        if (ObjectPool.TryPull(transform.position, transform.rotation, out DamageNumber damageNumber))
+        if (ObjectPool.TryPull(damageInfo.hitPoint, transform.rotation, out DamageNumber damageNumber))
         {
-            damageNumber.gameObject.name = damageInfo.totalDamage.ToString("F1");
+            damageNumber.SetDamage(totalDamageTaken);
         }
         
         if (currentHealth < 0) {

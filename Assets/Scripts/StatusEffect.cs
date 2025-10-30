@@ -12,6 +12,7 @@ public class StatusEffectData : ScriptableObject {
     public List<object> AdditionalResources;
 }
 
+[Serializable]
 public abstract class StatusEffect {
     public string key { get; private set; } = "";
     protected EntityStatusEffectManager attachedManager;
@@ -81,6 +82,7 @@ public abstract class StatusEffect {
         attachedManager = manager;
         highestDamageReceived = damageInfo;
         currentDuration = maxDuration;
+        lastTick = Time.time;
     }
     
     public virtual void AddStack(DamageInfo damageInfo, int stacks) {
@@ -96,14 +98,6 @@ public abstract class StatusEffect {
     }
     
     public virtual void Tick() {
-        if (Time.time - lastTick >= tickInterval) {
-            lastTick = Time.time;
-
-            DamageInfo damage = new DamageInfo(finalDamage.ToArray(), highestDamageReceived.source);
-            damage.ignoreResistances = true;
-
-            stats.health.TakeDamage(damage);
-        }
         if (currentDuration <= 0) {
             RemoveStacks(StacksLostOnDurationEnd);
             currentDuration = maxDuration;
@@ -132,6 +126,7 @@ public class Burn : StatusEffect {
         base.Initialize(manager, damageInfo);
         
         tickInterval = 1.0f;
+        lastTick = Time.time;
         
         baseDamage = new List<DamageInstance>();
         baseDamage.Add(new DamageInstance(DamageInstance.Type.Fire, 0.15f));
@@ -150,37 +145,73 @@ public class Burn : StatusEffect {
 
     public override void Tick() {
         if (Time.time - lastTick > tickInterval) {
+            lastTick = Time.time;
+            
             DamageInstance damageIncrease = baseDamage[0];
             damageIncrease.amount += 0.02f * (totalDuration * 0.15f);
             baseDamage[0] = damageIncrease;
+
+            DamageInfo damage = new DamageInfo(finalDamage.ToArray(), highestDamageReceived.source);
+            damage.hitPoint = stats.transform.position;
+            damage.ignoreResistances = true;
+
+            stats.health.TakeDamage(damage);
             
             totalDuration += tickInterval;
 
             isDirty = true;
         }
+        
         base.Tick();
     }
 }
 
 public class Freeze : StatusEffect {
+    string source = "Freeze";
+    private Modifier mod;
+    
+    protected override List<DamageInstance> CalculateFinalDamage() {
+        return null;
+    }
+
     public override void Initialize(EntityStatusEffectManager manager, DamageInfo damageInfo) {
         base.Initialize(manager, damageInfo);
 
         maxStacks = 10;
         maxDuration = 6;
         currentDuration = maxDuration;
+        
+        mod = new Modifier(-0.1f, ModifierType.PercentAdd, source);
+        
+        stats.moveSpeed.AddModifier(mod);
+    }
 
-        stats.moveSpeed.AddModifier(new Modifier(-0.5f, ModifierType.PercentAdd, "Freeze"));
+    public override void Tick() {
+        base.Tick();
+        Debug.Log(stats.moveSpeed.Value);
     }
 
     public override void AddStack(DamageInfo damageInfo, int stacks) {
         base.AddStack(damageInfo, stacks);
-
+        
+        ReplaceModifier();
+        
         currentDuration = maxDuration;
     }
 
+    private void ReplaceModifier() {
+        mod = new Modifier(-0.05f + (-0.05f * currentStacks), ModifierType.PercentAdd, source);
+        stats.moveSpeed.RemoveAllModifiersFromSource(source);
+        stats.moveSpeed.AddModifier(mod);
+    }
+
+    public override void RemoveStacks(int stacks) {
+        ReplaceModifier();
+        base.RemoveStacks(stacks);
+    }
+
     public override void RemoveEffect() {
-        stats.moveSpeed.RemoveAllModifiersFromSource("Freeze");
+        stats.moveSpeed.RemoveAllModifiersFromSource(source);
     }
 }
 
@@ -222,18 +253,15 @@ public class Judged : StatusEffect {
             currentStacks = maxStacks;
         }
     }
-
-    public override void Tick() {
-        if (currentDuration <= 0) {
-            float damage = damageAbsorbed * (baseDamage[0].amount + (damagePerStack[0].amount * currentStacks));
-            DamageInstance[] damageInstance = { new(DamageInstance.Type.Light, damage) };
-            DamageInfo damageInfo = new DamageInfo(damageInstance, highestDamageReceived.source);
-            damageInfo.ignoreResistances = true;
-            stats.health.TakeDamage(damageInfo);
-        }
-    }
     
     public override void RemoveEffect() {
         stats.eventManager.OnTakeDamage -= OnTakeDamage;
+        
+        float damage = damageAbsorbed * (baseDamage[0].amount + (damagePerStack[0].amount * currentStacks));
+        DamageInstance[] damageInstance = { new(DamageInstance.Type.Light, damage) };
+        DamageInfo damageInfo = new DamageInfo(damageInstance, highestDamageReceived.source);
+        damageInfo.ignoreResistances = true;
+        damageInfo.hitPoint = stats.transform.position;
+        stats.health.TakeDamage(damageInfo);
     }
 }
