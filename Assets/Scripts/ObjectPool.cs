@@ -28,15 +28,12 @@ namespace ObjectPooling {
             Key = t.ObjectPoolKey();
             Object.Destroy(t);
 
-            Debug.LogWarning(Thread.CurrentThread.ManagedThreadId);
-            Thread thread = new Thread(InitialisePool);
-            thread.Start();
+            loadHandle = Addressables.LoadAssetAsync<GameObject>(Key);
+            loadHandle.Completed += InitialisePool;
         }
 
-        private static async void InitialisePool() {
-            loadHandle = Addressables.LoadAssetAsync<GameObject>(Key);
-            Debug.LogWarning(loadHandle.Task.Id);
-            await loadHandle.Task;
+        private static void InitialisePool(AsyncOperationHandle<GameObject> handle) {
+            loadHandle.Completed -= InitialisePool;
             if (loadHandle.Status == AsyncOperationStatus.Succeeded) {
                 prefab = loadHandle.Result;
                 isInitialised = true;
@@ -78,20 +75,20 @@ namespace ObjectPooling {
     
     public static class ObjectPool {
         private static List<Type> runningTasks = new();
-        
+
         /// <summary>
         /// Initialises the pool for type T by preloading from Addressables. Optionally pre-instantiates a number of objects.
         /// </summary>
         /// <param name="numberToInitialise">How many objects to initialise.</param>
         /// <typeparam name="T">Type of ObjectPool to preload</typeparam>
-        public static async Task InitialisePool<T>(int numberToInitialise = 0) where T : MonoBehaviour, IPoolable<T> {
+        public static void InitialisePool<T>(int numberToInitialise = 0) where T : MonoBehaviour, IPoolable<T> {
             if (!ObjectPool<T>.isInitialised && !runningTasks.Contains(typeof(T))) {
+                Task.Run(() => Initialise<T>(numberToInitialise));
                 runningTasks.Add(typeof(T));
             }
-            else {
-                return;
-            }
-            
+        }
+        
+        private static async Task Initialise<T>(int numberToInitialise) where T : MonoBehaviour, IPoolable<T> {
             while (!ObjectPool<T>.isInitialised) {
                 await Task.Yield();
             }

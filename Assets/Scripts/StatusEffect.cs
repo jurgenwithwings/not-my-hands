@@ -240,6 +240,7 @@ public class Judged : StatusEffect {
         OnTakeDamage(damageInfo);
         
         stats.eventManager.OnDamageTaken += OnTakeDamage;
+        
     }
     
     private void OnTakeDamage(DamageInfo damageInfo) {
