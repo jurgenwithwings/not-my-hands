@@ -7,7 +7,7 @@ public class EntityStatusEffectManager : MonoBehaviour
     public Statboard statboard { get; private set; }
     public void SetStatboard(Statboard board) {
         statboard ??= board;
-        statboard.eventManager.OnTakeDamage += HandleStatusEffects;
+        statboard.eventManager.OnDamageTaken += HandleStatusEffects;
     }
     
     public List<StatusEffect> activeEffects { get; private set; } = new();
@@ -19,7 +19,7 @@ public class EntityStatusEffectManager : MonoBehaviour
     }
 
     private void OnDestroy() {
-        statboard.eventManager.OnTakeDamage -= HandleStatusEffects;
+        statboard.eventManager.OnDamageTaken -= HandleStatusEffects;
     }
 
     public void AddStacks(DamageInfo damageInfo, int stacks = 1) {

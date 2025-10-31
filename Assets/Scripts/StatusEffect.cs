@@ -239,7 +239,7 @@ public class Judged : StatusEffect {
         
         OnTakeDamage(damageInfo);
         
-        stats.eventManager.OnTakeDamage += OnTakeDamage;
+        stats.eventManager.OnDamageTaken += OnTakeDamage;
     }
     
     private void OnTakeDamage(DamageInfo damageInfo) {
@@ -255,7 +255,7 @@ public class Judged : StatusEffect {
     }
     
     public override void RemoveEffect() {
-        stats.eventManager.OnTakeDamage -= OnTakeDamage;
+        stats.eventManager.OnDamageTaken -= OnTakeDamage;
         
         float damage = damageAbsorbed * (baseDamage[0].amount + (damagePerStack[0].amount * currentStacks));
         DamageInstance[] damageInstance = { new(DamageInstance.Type.Light, damage) };

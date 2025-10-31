@@ -491,7 +491,7 @@ MonoBehaviour:
   lockCursor: 1
   damage:
   - type: 0
-    amount: 4532
+    amount: 20
   effect:
     className: Judged, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   enemyMask:

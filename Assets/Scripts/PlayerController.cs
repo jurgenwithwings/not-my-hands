@@ -1,4 +1,7 @@
+using System;
+using ObjectPooling;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
@@ -43,6 +46,24 @@ public class PlayerController : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
+
+        stats.eventManager.OnReceivedYourDamage += SpawnDamageNumber;
+        stats.eventManager.OnDamageTaken += LogIt;
+    }
+
+    private void LogIt(DamageInfo obj) {
+        Debug.LogWarning(obj.source.gameObject.name);
+    }
+
+    private void OnDestroy() {
+        stats.eventManager.OnReceivedYourDamage -= SpawnDamageNumber;
+    }
+
+    public void SpawnDamageNumber(DamageInfo damageInfo, Statboard victim) {
+        if (victim == stats) return;
+        if (ObjectPool.TryPull(damageInfo.hitPoint, transform.rotation, out DamageNumber damageNumber)) {
+            damageNumber.SetDamage(damageInfo.totalDamage);
+        }
     }
 
     void Update()
@@ -57,14 +78,30 @@ public class PlayerController : MonoBehaviour
             Physics.Raycast(cameraHolder.position, cameraHolder.forward * 1000f, out RaycastHit hitInfo, 1000, enemyMask);
 
             if (hitInfo.collider && hitInfo.collider.TryGetComponent(out Statboard stats)) {
-                Debug.LogWarning("Hit: " + hitInfo.collider.gameObject.name);
+                //Skewed random distribution to favor lower numbers
+                float t = Mathf.Pow(Random.value, 1.25f);
+                damage[0].amount = Mathf.Lerp(1, 1500000, t);
+                    
                 DamageInfo damageInfo = new DamageInfo(damage, this.stats);
                 damageInfo.hitPoint = hitInfo.point;
                 damageInfo.direction = (hitInfo.point - cameraHolder.position).normalized;
                 damageInfo.statusEffects.Add(effect, 3);
                 
-                stats.health.TakeDamage(damageInfo);
+                stats.health.TakeDamage(damageInfo.Copy());
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.E)) {
+            DamageInfo damageInfo = new DamageInfo(damage, this.stats);
+            damageInfo.hitPoint = transform.position;
+            damageInfo.direction = (transform.position - cameraHolder.position).normalized;
+            damageInfo.statusEffects.Add(effect, 3);
+            damageInfo.selfDamage = true;
+            stats.health.TakeDamage(damageInfo.Copy());
+        }
+
+        if (Input.GetKeyDown(KeyCode.R)) {
+            ObjectPool.InitialisePool<DamageNumber>(1);
         }
     }
 

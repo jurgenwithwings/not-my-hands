@@ -52,19 +52,6 @@ public struct DamageInstance {
 }
 
 [Serializable]
-public struct StatusEffectInstance {
-    public string key;
-    public float duration;
-    public int stacks;
-
-    public StatusEffectInstance(string key, float duration, int stacks) {
-        this.key = key;
-        this.duration = duration;
-        this.stacks = stacks;
-    }
-}
-
-[Serializable]
 public struct DamageInfo {
     public DamageInstance[] damageInstances;
     public Statboard source;
@@ -98,16 +85,18 @@ public struct DamageInfo {
         this.damageInstances = damageInstances;
     }
 
-    public DamageInfo(DamageInfo damageInfo)
-    {
-        damageInstances = (DamageInstance[])damageInfo.damageInstances.Clone();
-        source = damageInfo.source;
-        statusEffects = new(damageInfo.statusEffects);
-        knockback = damageInfo.knockback;
-        direction = damageInfo.direction;
-        hitPoint = damageInfo.hitPoint;
-        selfDamage = damageInfo.selfDamage;
-        ignoreResistances = damageInfo.ignoreResistances;
+    public DamageInfo Copy() {
+        DamageInfo copy = new DamageInfo();
+        copy.damageInstances = (DamageInstance[])damageInstances.Clone();
+        copy.source = source;
+        copy.statusEffects = statusEffects;
+        copy.knockback = knockback;
+        copy.direction = direction;
+        copy.hitPoint = hitPoint;
+        copy.selfDamage = selfDamage;
+        copy.ignoreResistances = ignoreResistances;
+
+        return copy;
     }
 
     public DamageInstance[] GetDamagePercentages()
@@ -121,27 +110,13 @@ public struct DamageInfo {
         return damagePercentages;
     }
 
-    // --- PURE OPERATORS ---
-
-    public static DamageInfo operator *(DamageInfo a, DamageTypeStats b)
-    {
-        return a.GetMultiplied(b);
-    }
-
-    public static DamageInfo operator /(DamageInfo a, DamageTypeStats b)
-    {
-        return a.GetResisted(b);
-    }
-
     // --- PURE METHODS ---
 
-    public DamageInfo GetMultiplied(DamageTypeStats stats)
+    public void SetDamageMultipliers(DamageTypeStats stats)
     {
-        DamageInfo result = new DamageInfo(this);
-
-        for (int i = 0; i < result.damageInstances.Length; i++)
+        for (int i = 0; i < damageInstances.Length; i++)
         {
-            var damage = result.damageInstances[i];
+            var damage = damageInstances[i];
             switch (damage.type)
             {
                 case DamageInstance.Type.Physical:
@@ -163,19 +138,15 @@ public struct DamageInfo {
                     damage.amount *= stats.light.Value;
                     break;
             }
-            result.damageInstances[i] = damage;
+            damageInstances[i] = damage;
         }
-
-        return result;
     }
 
-    public DamageInfo GetResisted(DamageTypeStats stats)
+    public void SetResistanceMultipliers(DamageTypeStats stats)
     {
-        DamageInfo result = new DamageInfo(this);
-
-        for (int i = 0; i < result.damageInstances.Length; i++)
+        for (int i = 0; i < damageInstances.Length; i++)
         {
-            var damage = result.damageInstances[i];
+            var damage = damageInstances[i];
             switch (damage.type)
             {
                 case DamageInstance.Type.Physical:
@@ -197,9 +168,45 @@ public struct DamageInfo {
                     damage.amount *= 1 - stats.light.Value;
                     break;
             }
-            result.damageInstances[i] = damage;
+            damageInstances[i] = damage;
+        }
+    }
+}
+
+public static class Damage {
+    public static string AbbreviateNumber(float number)
+    {
+        return AbbreviateNumber(number, out _);
+    }
+    
+    public static string AbbreviateNumber(float number, out float resultingNumber)
+    {
+        if (number < 1000) {
+            resultingNumber = number;
+            return number.ToString();
         }
 
-        return result;
+        // Limited to Qi due to 64-bit constraints
+        string[] suffixes = { "", "k", "M", "B", "T", "Qa", "Qi" };
+        int suffixIndex = 0;
+        float abbreviatedNumber = number;
+
+        while (abbreviatedNumber >= 1000 && suffixIndex < suffixes.Length - 1)
+        {
+            abbreviatedNumber /= 1000;
+            suffixIndex++;
+        }
+
+        // Format string depends on the value
+        string format;
+        if (suffixIndex == 0) {
+            format = "0";
+        }
+        else {
+            format = /*abbreviatedNumber >= 100 ? "0.##" : */"0.#";
+        }
+        
+        resultingNumber = abbreviatedNumber;
+        return $"{abbreviatedNumber.ToString(format)}{suffixes[suffixIndex]}";
     }
 }

@@ -12,7 +12,7 @@ public class Health : MonoBehaviour
     
     private void Start() {
         currentHealth = statboard.maxHealth;
-        ObjectPool.InitialisePool<DamageNumber>(10);
+        //ObjectPool.InitialisePool<DamageNumber>(10);
     }
     
     public float TakeDamage(DamageInfo damageInfo) {
@@ -21,20 +21,18 @@ public class Health : MonoBehaviour
         }
 
         if (!damageInfo.ignoreResistances) {
-            damageInfo /= statboard.damageResistances;
+            damageInfo.SetResistanceMultipliers(statboard.damageResistances);
         }
-        Debug.LogWarning(damageInfo.totalDamage);
-        
-        statboard.eventManager.TakeDamage(damageInfo);
         
         float totalDamageTaken = damageInfo.totalDamage;
         currentHealth -= totalDamageTaken;
-
-        if (ObjectPool.TryPull(damageInfo.hitPoint, transform.rotation, out DamageNumber damageNumber))
-        {
-            damageNumber.SetDamage(totalDamageTaken);
-        }
         
+        //Publish that we have takenDamage
+        statboard.eventManager.OnDamageTaken.Invoke(damageInfo.Copy());
+        
+        //Tell the source we received their damage
+        damageInfo.source.eventManager.OnReceivedYourDamage?.Invoke(damageInfo.Copy(), statboard);
+
         if (currentHealth < 0) {
             Die();
         }

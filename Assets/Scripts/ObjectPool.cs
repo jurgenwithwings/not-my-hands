@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -26,20 +27,22 @@ namespace ObjectPooling {
             T t = parent.gameObject.AddComponent<T>();
             Key = t.ObjectPoolKey();
             Object.Destroy(t);
-            
-            InitialisePool();
+
+            Debug.LogWarning(Thread.CurrentThread.ManagedThreadId);
+            Thread thread = new Thread(InitialisePool);
+            thread.Start();
         }
 
         private static async void InitialisePool() {
             loadHandle = Addressables.LoadAssetAsync<GameObject>(Key);
+            Debug.LogWarning(loadHandle.Task.Id);
             await loadHandle.Task;
             if (loadHandle.Status == AsyncOperationStatus.Succeeded) {
                 prefab = loadHandle.Result;
+                isInitialised = true;
             } else {
                 Debug.LogError($"Failed to load pool prefab for {typeof(T).Name} with key {Key}.");
             }
-
-            isInitialised = true;
         }
 
         public static T Pull(Vector3? position = null, Quaternion? rotation = null) {
