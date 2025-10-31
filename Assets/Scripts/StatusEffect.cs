@@ -3,7 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using Stats;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.VFX;
+using Object = UnityEngine.Object;
 
 [CreateAssetMenu(fileName = "StatusEffectData", menuName = "ScriptableObjects/StatusEffectData", order = 1)]
 public class StatusEffectData : ScriptableObject {
@@ -225,6 +228,9 @@ public class Charged : StatusEffect {
 
 public class Judged : StatusEffect {
     private float damageAbsorbed;
+    private AsyncOperationHandle handle;
+    private SpriteRenderer spriteRenderer;
+    private float offset = 0.35f;
     
     public override void Initialize(EntityStatusEffectManager manager, DamageInfo damageInfo) {
         base.Initialize(manager, damageInfo);
@@ -240,9 +246,27 @@ public class Judged : StatusEffect {
         OnTakeDamage(damageInfo);
         
         stats.eventManager.OnDamageTaken += OnTakeDamage;
-        
+        handle = Addressables.LoadAssetAsync<Texture2D>("JudgedEye");
+        handle.Completed += SpriteLoaded;
+    }
+
+    private void SpriteLoaded(AsyncOperationHandle handle) {
+        if (handle.Status == AsyncOperationStatus.Succeeded) {
+            spriteRenderer = new GameObject().AddComponent<SpriteRenderer>();
+            Texture2D tex = (Texture2D)handle.Result;
+            spriteRenderer.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.one * 0.5f, 1000);
+            spriteRenderer.color = new Color(0.96f, 0.67f, 0.04f, 0.5f);
+            spriteRenderer.transform.position = stats.healthBar.transform.position + (Vector3.up * offset);
+        }
     }
     
+    public override void Tick() {
+        base.Tick();
+        if (spriteRenderer == null) return;
+        spriteRenderer.transform.position = stats.healthBar.transform.position + (Vector3.up * offset);
+        spriteRenderer.transform.LookAt(highestDamageReceived.source.transform.position + Vector3.up * 0.7f);
+    }
+
     private void OnTakeDamage(DamageInfo damageInfo) {
         damageAbsorbed += damageInfo.totalDamage;
     }
@@ -257,6 +281,8 @@ public class Judged : StatusEffect {
     
     public override void RemoveEffect() {
         stats.eventManager.OnDamageTaken -= OnTakeDamage;
+        handle.Completed -= SpriteLoaded;
+        Object.Destroy(spriteRenderer.gameObject);
         
         float damage = damageAbsorbed * (baseDamage[0].amount + (damagePerStack[0].amount * currentStacks));
         DamageInstance[] damageInstance = { new(DamageInstance.Type.Light, damage) };

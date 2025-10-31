@@ -20,6 +20,10 @@ public class EntityStatusEffectManager : MonoBehaviour
 
     private void OnDestroy() {
         statboard.eventManager.OnDamageTaken -= HandleStatusEffects;
+        
+        foreach (var effect in activeEffects) {
+            effect.RemoveEffect();
+        }
     }
 
     public void AddStacks(DamageInfo damageInfo, int stacks = 1) {

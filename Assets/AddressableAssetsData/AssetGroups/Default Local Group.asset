@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: 88ac653739626a94b9af843868c85ab8
   m_SerializeEntries:
+  - m_GUID: 335a89464a44d354e98e30ff10c4d556
+    m_Address: JudgedEye
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bd8a0dc98059e324cbd16c961200c927
     m_Address: DamageNumber
     m_ReadOnly: 0

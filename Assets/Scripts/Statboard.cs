@@ -9,6 +9,7 @@ public class Statboard : MonoBehaviour {
     public EntityStatusEffectManager statusEffectManager;
     public EntityEventManager eventManager;
     public Health health;
+    public HealthBar healthBar;
     public new Rigidbody rigidbody;
 
     [Section("Heart")]
@@ -188,6 +189,7 @@ public class Statboard : MonoBehaviour {
         statusEffectManager ??= GetComponent<EntityStatusEffectManager>();
         eventManager ??= GetComponent<EntityEventManager>();
         health ??= GetComponent<Health>();
+        healthBar ??= GetComponentInChildren<HealthBar>();
         if (rigidbody == null) {
             rigidbody = GetComponent<Rigidbody>();
         }
@@ -197,5 +199,6 @@ public class Statboard : MonoBehaviour {
         statusEffectManager?.SetStatboard(this);
         eventManager?.SetStatboard(this);
         health?.SetStatboard(this);
+        healthBar?.SetStatboard(this);
     }
 }
