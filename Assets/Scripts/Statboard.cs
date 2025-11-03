@@ -1,11 +1,15 @@
 using Stats;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 [DisallowMultipleComponent]
+[RequireComponent(typeof(RelicManager))] 
+[RequireComponent(typeof(EntityStatusEffectManager))]
+[RequireComponent(typeof(EntityEventManager))]
+[RequireComponent(typeof(Health))]
 public class Statboard : MonoBehaviour {
     [Section("References")]
     [Button(nameof(TryGetReferences), "Retrieve References", r:0.2f, g:0.2f, b:0.2f)]
+    public RelicManager relicManager;
     public EntityStatusEffectManager statusEffectManager;
     public EntityEventManager eventManager;
     public Health health;
@@ -186,6 +190,7 @@ public class Statboard : MonoBehaviour {
     }
     
     private void TryGetReferences() {
+        relicManager ??= GetComponent<RelicManager>();
         statusEffectManager ??= GetComponent<EntityStatusEffectManager>();
         eventManager ??= GetComponent<EntityEventManager>();
         health ??= GetComponent<Health>();
@@ -196,6 +201,7 @@ public class Statboard : MonoBehaviour {
     }
     
     private void TryAssignReferences() {
+        relicManager?.SetStatboard(this);
         statusEffectManager?.SetStatboard(this);
         eventManager?.SetStatboard(this);
         health?.SetStatboard(this);

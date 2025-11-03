@@ -212,12 +212,13 @@ GameObject:
   - component: {fileID: 6635764614032651467}
   - component: {fileID: 9104147635053623449}
   - component: {fileID: 8962318774347086821}
+  - component: {fileID: 5577419250258262336}
+  - component: {fileID: 4519961156615372154}
   - component: {fileID: 4706875532758921836}
   - component: {fileID: 1759559139725362135}
   - component: {fileID: 5610967228089939522}
   - component: {fileID: 215593239173104613}
-  - component: {fileID: 5577419250258262336}
-  - component: {fileID: 4519961156615372154}
+  - component: {fileID: 6932905983754787899}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -318,6 +319,62 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!143 &5577419250258262336
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8542186682067204331}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4519961156615372154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8542186682067204331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5e35b78e284a7e41bf483f7cc4a2953, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 7
+  acceleration: 100
+  deceleration: 60
+  jumpHeight: 1.6
+  gravity: -18
+  terminalVelocity: -60
+  coyoteTime: 0.1
+  cameraHolder: {fileID: 111867425716270794}
+  mouseSensitivity: 100
+  verticalClamp: 85
+  lockCursor: 1
+  damage:
+  - type: 0
+    amount: 20
+  effect:
+    className: Judged, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!114 &4706875532758921836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -330,9 +387,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7a5c3b14b3c89f49b1dfbdfd12faf77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  relicManager: {fileID: 0}
   statusEffectManager: {fileID: 215593239173104613}
   eventManager: {fileID: 5610967228089939522}
   health: {fileID: 1759559139725362135}
+  healthBar: {fileID: 0}
   rigidbody: {fileID: 0}
   maxHealth:
     BaseValue: 100
@@ -441,32 +500,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7aa5c26e40a34bd89ee7704953f4cf42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!143 &5577419250258262336
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8542186682067204331}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4519961156615372154
+--- !u!114 &6932905983754787899
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -475,25 +509,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 8542186682067204331}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5e35b78e284a7e41bf483f7cc4a2953, type: 3}
+  m_Script: {fileID: 11500000, guid: dfb7a419582444f48bfc1caf18ea0561, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 7
-  acceleration: 100
-  deceleration: 60
-  jumpHeight: 1.6
-  gravity: -18
-  terminalVelocity: -60
-  coyoteTime: 0.1
-  cameraHolder: {fileID: 111867425716270794}
-  mouseSensitivity: 100
-  verticalClamp: 85
-  lockCursor: 1
-  damage:
-  - type: 0
-    amount: 20
-  effect:
-    className: Judged, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-  enemyMask:
-    serializedVersion: 2
-    m_Bits: 1024

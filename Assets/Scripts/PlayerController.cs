@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     Statboard stats;
     
     [Header("Movement")]
-    public float moveSpeed = 7f;
+    public float moveSpeed => stats.moveSpeed;
     public float acceleration = 25f;
     public float deceleration = 20f;
 
@@ -52,11 +52,12 @@ public class PlayerController : MonoBehaviour
     }
 
     private void LogIt(DamageInfo obj) {
-        Debug.LogWarning(obj.source.gameObject.name);
+        PlayerHUDEvents.OnSetHealth?.Invoke(stats.health.currentHealth / stats.maxHealth);
     }
 
     private void OnDestroy() {
         stats.eventManager.OnReceivedYourDamage -= SpawnDamageNumber;
+        stats.eventManager.OnDamageTaken -= LogIt;
     }
 
     public void SpawnDamageNumber(DamageInfo damageInfo, Statboard victim) {
@@ -91,8 +92,11 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.E)) {
-            DamageInfo damageInfo = new DamageInfo(damage, this.stats);
+        if (Input.GetKeyDown(KeyCode.Q)) {
+            float t = Mathf.Pow(Random.value, 3f);
+            damage[0].amount = Mathf.Lerp(0, 20, t);
+            
+            DamageInfo damageInfo = new DamageInfo(damage, stats);
             damageInfo.hitPoint = transform.position;
             damageInfo.direction = (transform.position - cameraHolder.position).normalized;
             damageInfo.statusEffects.Add(effect, 3);
@@ -102,6 +106,20 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R)) {
             ObjectPool.InitialisePool<DamageNumber>(1);
+        }
+    }
+
+    public void LateUpdate() {
+        Physics.Raycast(cameraHolder.position, cameraHolder.forward * 5f, out RaycastHit hit, 5f);
+
+        if (hit.collider && hit.collider.TryGetComponent(out IInteractable interactable)) {
+            if (interactable != null) {
+                PlayerHUDEvents.OnSetInteractionText.Invoke($"to Pick Up {interactable.InteractionName()}");
+
+                if (Input.GetKeyDown(KeyCode.E)) {
+                    interactable.PickUp(stats);
+                }
+            }
         }
     }
 

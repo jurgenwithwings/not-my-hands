@@ -81,7 +81,7 @@ public abstract class StatusEffect {
         return result;
     }
     
-    public virtual void Initialize(EntityStatusEffectManager manager, DamageInfo damageInfo) {
+    public virtual void Initialise(EntityStatusEffectManager manager, DamageInfo damageInfo) {
         attachedManager = manager;
         highestDamageReceived = damageInfo;
         currentDuration = maxDuration;
@@ -125,8 +125,8 @@ public abstract class StatusEffect {
 public class Burn : StatusEffect {
     private float totalDuration;
     
-    public override void Initialize(EntityStatusEffectManager manager, DamageInfo damageInfo) {
-        base.Initialize(manager, damageInfo);
+    public override void Initialise(EntityStatusEffectManager manager, DamageInfo damageInfo) {
+        base.Initialise(manager, damageInfo);
         
         tickInterval = 1.0f;
         lastTick = Time.time;
@@ -177,8 +177,8 @@ public class Freeze : StatusEffect {
         return null;
     }
 
-    public override void Initialize(EntityStatusEffectManager manager, DamageInfo damageInfo) {
-        base.Initialize(manager, damageInfo);
+    public override void Initialise(EntityStatusEffectManager manager, DamageInfo damageInfo) {
+        base.Initialise(manager, damageInfo);
 
         maxStacks = 10;
         maxDuration = 6;
@@ -226,14 +226,15 @@ public class Charged : StatusEffect {
     
 }
 
+[Serializable]
 public class Judged : StatusEffect {
     private float damageAbsorbed;
     private AsyncOperationHandle handle;
     private SpriteRenderer spriteRenderer;
     private float offset = 0.35f;
     
-    public override void Initialize(EntityStatusEffectManager manager, DamageInfo damageInfo) {
-        base.Initialize(manager, damageInfo);
+    public override void Initialise(EntityStatusEffectManager manager, DamageInfo damageInfo) {
+        base.Initialise(manager, damageInfo);
 
         baseDamage = new List<DamageInstance>();
         baseDamage.Add(new DamageInstance(DamageInstance.Type.Light, 0.15f));
@@ -244,10 +245,12 @@ public class Judged : StatusEffect {
         currentDuration = maxDuration;
         
         OnTakeDamage(damageInfo);
-        
         stats.eventManager.OnDamageTaken += OnTakeDamage;
-        handle = Addressables.LoadAssetAsync<Texture2D>("JudgedEye");
-        handle.Completed += SpriteLoaded;
+
+        if (stats.healthBar != null) {
+            handle = Addressables.LoadAssetAsync<Texture2D>("JudgedEye");
+            handle.Completed += SpriteLoaded;
+        }
     }
 
     private void SpriteLoaded(AsyncOperationHandle handle) {
@@ -255,14 +258,17 @@ public class Judged : StatusEffect {
             spriteRenderer = new GameObject().AddComponent<SpriteRenderer>();
             Texture2D tex = (Texture2D)handle.Result;
             spriteRenderer.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.one * 0.5f, 1000);
-            spriteRenderer.color = new Color(0.96f, 0.67f, 0.04f, 0.5f);
+            spriteRenderer.color = new Color(0.96f, 0.67f, 0.04f, 0.5f) * 4f;
             spriteRenderer.transform.position = stats.healthBar.transform.position + (Vector3.up * offset);
         }
     }
     
     public override void Tick() {
-        base.Tick();
-        if (spriteRenderer == null) return;
+        if (currentDuration <= 0) {
+            attachedManager.RemoveEffect(GetType());
+        }
+        currentDuration -= Time.deltaTime;
+        if (spriteRenderer == null || stats.healthBar == null) return;
         spriteRenderer.transform.position = stats.healthBar.transform.position + (Vector3.up * offset);
         spriteRenderer.transform.LookAt(highestDamageReceived.source.transform.position + Vector3.up * 0.7f);
     }
@@ -281,13 +287,16 @@ public class Judged : StatusEffect {
     
     public override void RemoveEffect() {
         stats.eventManager.OnDamageTaken -= OnTakeDamage;
-        handle.Completed -= SpriteLoaded;
-        Object.Destroy(spriteRenderer.gameObject);
-        
+        if (stats.healthBar != null || spriteRenderer != null) {
+            handle.Completed -= SpriteLoaded;
+            Object.Destroy(spriteRenderer.gameObject);
+        }
+
         float damage = damageAbsorbed * (baseDamage[0].amount + (damagePerStack[0].amount * currentStacks));
         DamageInstance[] damageInstance = { new(DamageInstance.Type.Light, damage) };
         DamageInfo damageInfo = new DamageInfo(damageInstance, highestDamageReceived.source);
         damageInfo.ignoreResistances = true;
+        damageInfo.selfDamage = true;
         damageInfo.hitPoint = stats.transform.position;
         stats.health.TakeDamage(damageInfo);
     }

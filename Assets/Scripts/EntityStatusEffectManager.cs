@@ -34,7 +34,8 @@ public class EntityStatusEffectManager : MonoBehaviour
             else {
                 StatusEffect newEffect = effectType.CreateInstance();
                 if (newEffect != null) {
-                    newEffect.Initialize(this, damageInfo);
+                    newEffect.Initialise(this, damageInfo);
+                    newEffect.AddStack(damageInfo, stacks - 1);
                     activeEffects.Add(newEffect);
                 }
             }
