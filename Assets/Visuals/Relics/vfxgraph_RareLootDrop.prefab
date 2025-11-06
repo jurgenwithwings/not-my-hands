@@ -44,7 +44,7 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 0.2784314, g: 0.4, b: 1, a: 1}
-  m_Intensity: 5
+  m_Intensity: 3
   m_Range: 2
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -242,37 +242,37 @@ VisualEffect:
       - m_Value: {x: 0.85962003, y: 1.0592737, z: 0.171924, w: 1}
         m_Name: Color02
         m_Overridden: 1
-      - m_Value: {x: 0.08627452, y: 0.16013066, z: 0.5294118, w: 1}
+      - m_Value: {x: 0.08627452, y: 0.08627452, z: 0.5294118, w: 1}
         m_Name: FlashColor
         m_Overridden: 1
-      - m_Value: {x: 0.17192395, y: 0.31981546, z: 1.0592737, w: 1}
+      - m_Value: {x: 0.17192395, y: 0.17192395, z: 1.0592737, w: 1}
         m_Name: ParticlesFloatingColor
         m_Overridden: 1
-      - m_Value: {x: 0.08627452, y: 0.16013066, z: 0.5294118, w: 1}
+      - m_Value: {x: 0.08627452, y: 0.08627452, z: 0.5294118, w: 1}
         m_Name: SphereColor
         m_Overridden: 1
-      - m_Value: {x: 0.08627452, y: 0.16013066, z: 0.5294118, w: 1}
+      - m_Value: {x: 0.08627452, y: 0.08627452, z: 0.5294118, w: 1}
         m_Name: CircleMeshColor
         m_Overridden: 1
-      - m_Value: {x: 0.08627452, y: 0.16013066, z: 0.5294118, w: 1}
+      - m_Value: {x: 0.08627452, y: 0.08627452, z: 0.5294118, w: 1}
         m_Name: VerticalMeshColor
         m_Overridden: 1
-      - m_Value: {x: 0.08627452, y: 0.16013066, z: 0.5294118, w: 1}
+      - m_Value: {x: 0.08627452, y: 0.08627452, z: 0.5294118, w: 1}
         m_Name: ConeMeshColor
         m_Overridden: 1
-      - m_Value: {x: 0.08627452, y: 0.16013066, z: 0.5294118, w: 1}
+      - m_Value: {x: 0.08627452, y: 0.08627452, z: 0.5294118, w: 1}
         m_Name: SphereMeshColor
         m_Overridden: 1
-      - m_Value: {x: 0.17192395, y: 0.31981546, z: 1.0592737, w: 1}
+      - m_Value: {x: 0.17192395, y: 0.17192395, z: 1.0592737, w: 1}
         m_Name: ParticlesColor
         m_Overridden: 1
-      - m_Value: {x: 0.08627452, y: 0.16013066, z: 0.5294118, w: 1}
+      - m_Value: {x: 0.08627452, y: 0.08627452, z: 0.5294118, w: 1}
         m_Name: GroundMarkColor
         m_Overridden: 1
-      - m_Value: {x: 0.08627452, y: 0.16013066, z: 0.5294118, w: 1}
+      - m_Value: {x: 0.08627452, y: 0.08627452, z: 0.5294118, w: 1}
         m_Name: GlowColor
         m_Overridden: 1
-      - m_Value: {x: 0.08627452, y: 0.16013066, z: 0.5294118, w: 1}
+      - m_Value: {x: 0.08627452, y: 0.08627452, z: 0.5294118, w: 1}
         m_Name: FlareColor
         m_Overridden: 1
     m_Uint:

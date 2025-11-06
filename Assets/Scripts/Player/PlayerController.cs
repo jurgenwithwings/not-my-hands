@@ -116,8 +116,16 @@ public class PlayerController : MonoBehaviour
             if (interactable != null) {
                 PlayerHUDEvents.OnSetInteractionText.Invoke($"to Pick Up {interactable.InteractionName()}");
 
+                if (interactable.HasAltInteraction) {
+                    PlayerHUDEvents.OnSetInteractionText.Invoke($"to Pick Up {interactable.InteractionName()}\n" +
+                                                                $"Press 'Q' to getout idk");
+                    if (Input.GetKeyDown(KeyCode.Alpha4))
+                    {
+                        interactable.AltInteract(stats);
+                    }
+                }
                 if (Input.GetKeyDown(KeyCode.E)) {
-                    interactable.PickUp(stats);
+                    interactable.Interact(stats);
                 }
             }
         }

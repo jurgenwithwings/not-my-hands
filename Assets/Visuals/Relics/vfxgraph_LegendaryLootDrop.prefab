@@ -1,0 +1,376 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4457717979313199726
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8033370186608150099}
+  - component: {fileID: 1986029577838683349}
+  - component: {fileID: 7031142108810378369}
+  m_Layer: 16
+  m_Name: Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8033370186608150099
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4457717979313199726}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7254561423331369701}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!108 &1986029577838683349
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4457717979313199726}
+  m_Enabled: 1
+  serializedVersion: 11
+  m_Type: 2
+  m_Color: {r: 1, g: 0.49490198, b: 0.27843142, a: 1}
+  m_Intensity: 5
+  m_Range: 2
+  m_SpotAngle: 30
+  m_InnerSpotAngle: 21.80208
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingLayerMask: 1
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
+  m_ForceVisible: 0
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+  m_LightUnit: 1
+  m_LuxAtDistance: 1
+  m_EnableSpotReflector: 1
+--- !u!114 &7031142108810378369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4457717979313199726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
+--- !u!1 &7806736155608684575
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7254561423331369701}
+  - component: {fileID: 5341812669804091113}
+  - component: {fileID: 4571503019388755143}
+  m_Layer: 0
+  m_Name: vfxgraph_LegendaryLootDrop
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7254561423331369701
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7806736155608684575}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 8033370186608150099}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!2083052967 &5341812669804091113
+VisualEffect:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7806736155608684575}
+  m_Enabled: 1
+  m_Asset: {fileID: 8926484042661614526, guid: 80ab8c5d354f8c447a293304022d501d, type: 3}
+  m_InitialEventName: 
+  m_InitialEventNameOverriden: 0
+  m_StartSeed: 0
+  m_ResetSeedOnPlay: 1
+  m_AllowInstancing: 1
+  m_ResourceVersion: 1
+  m_PropertySheet:
+    m_Float:
+      m_Array:
+      - m_Value: 0.5
+        m_Name: InitialDelay
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Height
+        m_Overridden: 1
+      - m_Value: 1.5
+        m_Name: Scale
+        m_Overridden: 0
+      - m_Value: 0.5
+        m_Name: Delay
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: VerticalMeshRate
+        m_Overridden: 1
+      - m_Value: 1.7
+        m_Name: SphereRate
+        m_Overridden: 1
+      - m_Value: 0.8
+        m_Name: SphereRotationSpeed
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: ConeMeshRate
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: CircleMeshRate
+        m_Overridden: 1
+      - m_Value: 125
+        m_Name: ParticlesFloatingRate
+        m_Overridden: 1
+      - m_Value: 7
+        m_Name: GlowSize
+        m_Overridden: 1
+      - m_Value: 5
+        m_Name: FlareSize
+        m_Overridden: 1
+      - m_Value: 1.6
+        m_Name: SphereSize
+        m_Overridden: 1
+      - m_Value: 7
+        m_Name: GroundMarkSize
+        m_Overridden: 1
+      - m_Value: 1.6
+        m_Name: SphereLifetime
+        m_Overridden: 1
+      - m_Value: 0.8
+        m_Name: VerticalMeshSize
+        m_Overridden: 1
+      - m_Value: 0.95
+        m_Name: ParticlesFloatingSize
+        m_Overridden: 1
+      - m_Value: 0.7
+        m_Name: ParticlesSize_
+        m_Overridden: 1
+      - m_Value: 35
+        m_Name: ParticlesRate_
+        m_Overridden: 1
+      - m_Value: 1.7
+        m_Name: ParticlesLifetime
+        m_Overridden: 1
+      - m_Value: 11
+        m_Name: FlashSize
+        m_Overridden: 1
+      - m_Value: 13
+        m_Name: FlashGlowSize
+        m_Overridden: 1
+      - m_Value: 2
+        m_Name: SphereMeshSize
+        m_Overridden: 1
+      - m_Value: 5
+        m_Name: SphereMeshRate
+        m_Overridden: 1
+    m_Vector2f:
+      m_Array: []
+    m_Vector3f:
+      m_Array:
+      - m_Value: {x: 0, y: 0.0035, z: 0}
+        m_Name: CirlceVelocity
+        m_Overridden: 1
+    m_Vector4f:
+      m_Array:
+      - m_Value: {x: 2.1185474, y: 0.3438479, z: 1.530495, w: 1}
+        m_Name: Color02
+        m_Overridden: 1
+      - m_Value: {x: 0.5647059, y: 0.11764706, z: 0.7490196, w: 1}
+        m_Name: Color01
+        m_Overridden: 1
+      - m_Value: {x: 0.28235295, y: 0.10980392, z: 0.047058813, w: 1}
+        m_Name: SphereMeshColor
+        m_Overridden: 1
+      - m_Value: {x: 2.1185474, y: 0.8171011, z: 0.3438479, w: 1}
+        m_Name: ParticlesColor
+        m_Overridden: 1
+      - m_Value: {x: 2.1185474, y: 0.8171011, z: 0.3438479, w: 1}
+        m_Name: ParticlesFloatingColor
+        m_Overridden: 1
+      - m_Value: {x: 0.7490196, y: 0.28888887, z: 0.1215686, w: 1}
+        m_Name: FlashColor
+        m_Overridden: 1
+      - m_Value: {x: 0.28235295, y: 0.10980392, z: 0.047058813, w: 1}
+        m_Name: SphereColor
+        m_Overridden: 1
+      - m_Value: {x: 0.7490196, y: 0.28888887, z: 0.1215686, w: 1}
+        m_Name: CircleMeshColor
+        m_Overridden: 1
+      - m_Value: {x: 0.7490196, y: 0.28888887, z: 0.1215686, w: 1}
+        m_Name: VerticalMeshColor
+        m_Overridden: 1
+      - m_Value: {x: 0.7490196, y: 0.28888887, z: 0.1215686, w: 1}
+        m_Name: ConeMeshColor
+        m_Overridden: 1
+      - m_Value: {x: 0.7490196, y: 0.28888887, z: 0.1215686, w: 1}
+        m_Name: GroundMarkColor
+        m_Overridden: 1
+      - m_Value: {x: 0.7490196, y: 0.28888887, z: 0.1215686, w: 1}
+        m_Name: GlowColor
+        m_Overridden: 1
+      - m_Value: {x: 0.7490196, y: 0.28888887, z: 0.1215686, w: 1}
+        m_Name: FlareColor
+        m_Overridden: 1
+    m_Uint:
+      m_Array: []
+    m_Int:
+      m_Array: []
+    m_Matrix4x4f:
+      m_Array: []
+    m_AnimationCurve:
+      m_Array: []
+    m_Gradient:
+      m_Array: []
+    m_NamedObject:
+      m_Array:
+      - m_Value: {fileID: 2800000, guid: 366909ad2d32d1f43b3fef73e7ed759b, type: 3}
+        m_Name: Tex03_BaseMesh
+        m_Overridden: 1
+      - m_Value: {fileID: 2800000, guid: 2775e7c30c4489f4db2641f66f190dc2, type: 3}
+        m_Name: Tex01_Flash
+        m_Overridden: 0
+      - m_Value: {fileID: 2800000, guid: d1308ab089a6a0544b048fcb970177bc, type: 3}
+        m_Name: Tex04_CentralMesh
+        m_Overridden: 0
+      - m_Value: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
+        m_Name: Tex02_Glow
+        m_Overridden: 0
+      - m_Value: {fileID: 2800000, guid: 2775e7c30c4489f4db2641f66f190dc2, type: 3}
+        m_Name: VerticalMeshTexture
+        m_Overridden: 0
+      - m_Value: {fileID: 2800000, guid: e2cbfd30d4b935244830c12e414cd7c3, type: 3}
+        m_Name: FlashTexture
+        m_Overridden: 1
+      - m_Value: {fileID: -7064632375872843651, guid: 00d56e3c42a08ca4cb907d3808b816e9, type: 3}
+        m_Name: VerticalMesh
+        m_Overridden: 1
+      - m_Value: {fileID: -7064632375872843651, guid: 00d56e3c42a08ca4cb907d3808b816e9, type: 3}
+        m_Name: ConeMesh
+        m_Overridden: 1
+    m_Bool:
+      m_Array: []
+--- !u!73398921 &4571503019388755143
+VFXRenderer:
+  serializedVersion: 1
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7806736155608684575}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0

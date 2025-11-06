@@ -1,6 +1,7 @@
 using UnityEngine;
 
 public enum Rarity {
+    None,
     Rare,
     Epic,
     Legendary,
