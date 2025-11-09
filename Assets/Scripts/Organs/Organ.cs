@@ -70,3 +70,21 @@ public class Heart : Organ { }
 public class Lungs : Organ { }
 public class Brain : Organ { }
 public class Liver : Organ { }
+
+public class StatusEffectHeart : Organ {
+    public float multiplier = 0.5f;
+    
+    public override void Initialise(Statboard statboard, OrganData organData) {
+        base.Initialise(statboard, organData);
+
+        stats.eventManager.OnDealingDamage += ModifyDamage;
+    }
+
+
+    private void ModifyDamage(DamageInfo damageInfo, Statboard victim, Statboard self) {
+        for (int i = 0; i < damageInfo.damageInstances.Length; i++) {
+            damageInfo.damageInstances[i].amount *=
+                1 + (multiplier * victim.statusEffectManager.BuffEffects.Count);
+        }
+    }
+}

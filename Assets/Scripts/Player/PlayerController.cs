@@ -80,13 +80,17 @@ public class PlayerController : MonoBehaviour
 
             if (hitInfo.collider && hitInfo.collider.TryGetComponent(out Statboard stats)) {
                 //Skewed random distribution to favor lower numbers
-                float t = Mathf.Pow(Random.value, 1.25f);
-                damage[0].amount = Mathf.Lerp(1, 1500000, t);
-                    
-                DamageInfo damageInfo = new DamageInfo(damage, this.stats);
-                damageInfo.hitPoint = hitInfo.point;
-                damageInfo.direction = (hitInfo.point - cameraHolder.position).normalized;
+                /*float t = Mathf.Pow(Random.value, 1.25f);
+                damage[0].amount = Mathf.Lerp(1, 1500000, t);*/
+
+                damage[0].amount = 100;
+                DamageInfo damageInfo = new(damage, this.stats) {
+                    hitPoint = hitInfo.point,
+                    direction = (hitInfo.point - cameraHolder.position).normalized
+                };
                 damageInfo.statusEffects.Add(effect, 3);
+                
+                this.stats.eventManager.OnDealingDamage?.Invoke(damageInfo, stats, this.stats);
                 
                 stats.health.TakeDamage(damageInfo.Copy());
             }
@@ -96,16 +100,38 @@ public class PlayerController : MonoBehaviour
             float t = Mathf.Pow(Random.value, 3f);
             damage[0].amount = Mathf.Lerp(0, 20, t);
             
-            DamageInfo damageInfo = new DamageInfo(damage, stats);
-            damageInfo.hitPoint = transform.position;
-            damageInfo.direction = (transform.position - cameraHolder.position).normalized;
+            DamageInfo damageInfo = new(damage, stats) {
+                hitPoint = transform.position,
+                direction = (transform.position - cameraHolder.position).normalized,
+                selfDamage = true
+            };
             damageInfo.statusEffects.Add(effect, 3);
-            damageInfo.selfDamage = true;
             stats.health.TakeDamage(damageInfo.Copy());
         }
 
         if (Input.GetKeyDown(KeyCode.R)) {
             ObjectPool.InitialisePool<DamageNumber>(1);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Z)) {
+            int index = Random.Range(1, 6);
+            switch (index) {
+                case 1:
+                    effect = typeof(Burn);
+                    break;
+                case 2:
+                    effect = typeof(Freeze);
+                    break;
+                case 3:
+                    effect = typeof(Poison);
+                    break;
+                case 4:
+                    effect = typeof(Charged);
+                    break;
+                case 5:
+                    effect = typeof(Judged);
+                    break;
+            }
         }
     }
 
@@ -114,10 +140,10 @@ public class PlayerController : MonoBehaviour
 
         if (hit.collider && hit.collider.TryGetComponent(out IInteractable interactable)) {
             if (interactable != null) {
-                PlayerHUDEvents.OnSetInteractionText.Invoke($"to Pick Up {interactable.InteractionName()}");
+                PlayerHUDEvents.OnSetInteractionText?.Invoke($"to Pick Up {interactable.InteractionName()}");
 
                 if (interactable.HasAltInteraction) {
-                    PlayerHUDEvents.OnSetInteractionText.Invoke($"to Pick Up {interactable.InteractionName()}\n" +
+                    PlayerHUDEvents.OnSetInteractionText?.Invoke($"to Pick Up {interactable.InteractionName()}\n" +
                                                                 $"Press 'Q' to getout idk");
                     if (Input.GetKeyDown(KeyCode.Alpha4))
                     {

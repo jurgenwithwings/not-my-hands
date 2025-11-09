@@ -111,7 +111,7 @@ public abstract class StatusEffect {
     public virtual void RemoveStacks(int stacks) {
         currentStacks -= stacks;
         isDirty = true;
-        if (currentStacks < 0) {
+        if (currentStacks <= 0) {
             currentStacks = 0;
             attachedManager.RemoveEffect(GetType());
         }
@@ -189,11 +189,6 @@ public class Freeze : StatusEffect {
         stats.moveSpeed.AddModifier(mod);
     }
 
-    public override void Tick() {
-        base.Tick();
-        Debug.Log(stats.moveSpeed.Value);
-    }
-
     public override void AddStack(DamageInfo damageInfo, int stacks) {
         base.AddStack(damageInfo, stacks);
         
@@ -209,8 +204,8 @@ public class Freeze : StatusEffect {
     }
 
     public override void RemoveStacks(int stacks) {
-        ReplaceModifier();
         base.RemoveStacks(stacks);
+        ReplaceModifier();
     }
 
     public override void RemoveEffect() {
@@ -299,5 +294,63 @@ public class Judged : StatusEffect {
         damageInfo.selfDamage = true;
         damageInfo.hitPoint = stats.transform.position;
         stats.health.TakeDamage(damageInfo);
+    }
+}
+
+public abstract class BuffEffect : StatusEffect {
+    protected float durationMult => highestDamageReceived.source.buffDurationMultiplier;
+    protected float potencyMult => highestDamageReceived.source.buffPotencyMultiplier;
+
+    public override void Tick() {
+        if (currentDuration <= 0) {
+            RemoveStacks(StacksLostOnDurationEnd);
+            currentDuration = maxDuration;
+        }
+        currentDuration -= Time.deltaTime / durationMult;
+        Debug.Log(currentDuration * durationMult + "/" + maxDuration * durationMult);
+    }
+}
+
+public class SpeedBoost : BuffEffect {
+    string source = "SpeedBoost";
+    private Modifier mod;
+    
+    protected override List<DamageInstance> CalculateFinalDamage() {
+        return null;
+    }
+
+    public override void Initialise(EntityStatusEffectManager manager, DamageInfo damageInfo) {
+        base.Initialise(manager, damageInfo);
+
+        maxStacks = 10;
+        maxDuration = 8;
+        currentDuration = maxDuration;
+        
+        mod = new Modifier(0.1f, ModifierType.PercentMultiply, source);
+        
+        stats.moveSpeed.AddModifier(mod);
+    }
+
+    public override void AddStack(DamageInfo damageInfo, int stacks) {
+        base.AddStack(damageInfo, stacks);
+        
+        ReplaceModifier();
+        
+        currentDuration = maxDuration;
+    }
+
+    private void ReplaceModifier() {
+        mod = new Modifier(0.05f + (0.05f * currentStacks), ModifierType.PercentMultiply, source);
+        stats.moveSpeed.RemoveAllModifiersFromSource(source);
+        stats.moveSpeed.AddModifier(mod);
+    }
+
+    public override void RemoveStacks(int stacks) {
+        base.RemoveStacks(stacks);
+        ReplaceModifier();
+    }
+
+    public override void RemoveEffect() {
+        stats.moveSpeed.RemoveAllModifiersFromSource(source);
     }
 }

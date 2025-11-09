@@ -1,4 +1,5 @@
 using System;
+using NUnit.Framework.Internal;
 using UnityEngine;
 
 public class POrgan : PhysicalLoot, IInteractable {
@@ -9,6 +10,7 @@ public class POrgan : PhysicalLoot, IInteractable {
         OrganManager organManager = interactor.GetComponent<OrganManager>();
         if (organManager != null) {
             organManager.AddOrgan(data.organClass, data);
+            Destroy(gameObject);
         }
     }
 }

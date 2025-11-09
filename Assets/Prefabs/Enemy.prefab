@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 9047510863568201356}
   - component: {fileID: 6195785506168083407}
   - component: {fileID: 5988398498091909213}
+  - component: {fileID: 6052328491181967940}
   m_Layer: 10
   m_Name: Enemy
   m_TagString: Untagged
@@ -155,10 +156,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7a5c3b14b3c89f49b1dfbdfd12faf77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  relicManager: {fileID: 6052328491181967940}
   statusEffectManager: {fileID: 6195785506168083407}
   eventManager: {fileID: 5988398498091909213}
   health: {fileID: 9047510863568201356}
-  healthBar: {fileID: 0}
+  healthBar: {fileID: 7929674769736282749}
   rigidbody: {fileID: 7271274723162091676}
   maxHealth:
     BaseValue: 100000000
@@ -265,6 +267,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b14e3a5fe5dbb0e4cbbcd11d71c4a5ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6052328491181967940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2872158059377986449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfb7a419582444f48bfc1caf18ea0561, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &5755619704094639224
@@ -385,3 +399,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8278456987857694511, guid: 156fbfae76ca49343bbff2a0101db5a4, type: 3}
   m_PrefabInstance: {fileID: 5755619704094639224}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7929674769736282749 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2444272145087264261, guid: 156fbfae76ca49343bbff2a0101db5a4, type: 3}
+  m_PrefabInstance: {fileID: 5755619704094639224}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0aefff07da064a4e8a16c3be99e60f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -8,13 +8,21 @@ public class EntityEventManager : MonoBehaviour
         statboard ??= board;
     }
     
+    /// <summary>
+    /// <para><c>DamageInfo</c> - The damage that was taken</para>
+    /// </summary>
     public Action<DamageInfo> OnDamageTaken;
-    public void DamageTaken(DamageInfo damageInfo) {
-        OnDamageTaken?.Invoke(damageInfo);
-    }
 
+    /// <summary>
+    /// <para><c>DamageInfo</c> - The Damage that was received</para>
+    /// <para><c>Statboard</c> - Victim's statboard</para>
+    /// </summary>
     public Action<DamageInfo, Statboard> OnReceivedYourDamage;
-    public void ReceivedYourDamage(DamageInfo damageInfo, Statboard victim) {
-        OnReceivedYourDamage?.Invoke(damageInfo, victim);
-    }
+    
+    /// <summary>
+    /// <para><c>DamageInfo</c> - DamageInfo to be modified,</para>
+    /// <para><c>Statboard</c> - Victim's statboard</para>
+    /// <para><c>Statboard</c> - Attacker's statboard</para>
+    /// </summary>
+    public Action<DamageInfo, Statboard, Statboard> OnDealingDamage;
 }
