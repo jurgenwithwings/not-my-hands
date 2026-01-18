@@ -2,15 +2,10 @@ using System;
 using UnityEngine;
 
 [Serializable]
-[CreateAssetMenu(fileName = "New Organ", menuName = "ScriptableObjects/Organ")]
-public class OrganData : ScriptableObject {
-    public string displayName;
-    public Sprite icon;
+[CreateAssetMenu(fileName = "Organ", menuName = "ScriptableObjects/Organ")]
+public class OrganData : ItemData {
     public OrganType type;
     public ClassReference<Organ> organClass;
-    public Rarity rarity;
-    [TextArea] public string description;
-    [Space] 
     public OrganStat[] stats;
 
     //Set defaults for type

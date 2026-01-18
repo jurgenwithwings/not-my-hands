@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3ac37012d41647d480c62cf24bc9c6f8, type: 3}
-  m_Name: WovenEye
+  m_Name: TestRelic Epic
   m_EditorClassIdentifier: 
-  itemName: WovenEye
+  itemName: Test2
   itemDescription: New Description
-  rarity: 1
+  rarity: 2
   icon: {fileID: 0}
-  prefab: {fileID: 3387581230344646663, guid: 31be3142fdb4a4d45864f7cd3ece0d67, type: 3}
+  prefab: {fileID: 6225308302197737555, guid: d9ba53cc062fd9f4eb49d08c309b3f05, type: 3}
   relicType:
-    className: WovenEye, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    className: 

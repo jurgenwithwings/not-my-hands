@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64fa47f9c5ff4a2d98f461c58cf651df, type: 3}
   m_Name: Lungs
   m_EditorClassIdentifier: 
-  displayName: Lungs
+  itemName: Lungs
+  itemDescription: New Description
+  rarity: 0
   icon: {fileID: 0}
+  prefab: {fileID: 8480930156855611742, guid: a33eab6886154cb45b2465d5b205cb2c, type: 3}
   type: 1
   organClass:
     className: Lungs, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-  rarity: 0
-  description: 
   stats:
   - statType: 5
     value: 6

@@ -8,21 +8,20 @@ namespace Stats {
         /// <summary>
         /// This is a flat amount that is added to the base value. This is very powerful.
         /// </summary>
-        [Tooltip("This is a flat amount that is added to the base value. This is very powerful.")]
-        Flat = 100,
+        [Tooltip("Flat amount added to the base.")]
+        BaseAdd = 100,
 
         /// <summary>
         /// This is the most common type of modifier. It takes the base value and multiplies it by the modifier value.
         /// </summary>
-        [Tooltip(
-            "This is the most common type of modifier. It takes the base value and multiplies it by the modifier value.")]
-        PercentMultiply = 200,
+        [Tooltip("Most common modifier. Multiplies the base value after all the modifier have been summed.")]
+        TotalMultiply = 200,
 
         /// <summary>
         /// This is a percentage added after everything else. It is exponential so use carefully.
         /// </summary>
-        [Tooltip("This is a percentage added after everything else. It is exponential so use carefully.")]
-        PercentAdd = 300,
+        [Tooltip("Calculates and applies each modifier one after another, based on the new value.")]
+        SequentialMultiply = 300,
     }
 
     public class Modifier {
@@ -224,22 +223,22 @@ namespace Stats {
                 Modifier mod = modifiers[i];
 
                 switch (mod.Type) {
-                    case ModifierType.Flat:
+                    case ModifierType.BaseAdd:
 
                         finalValue += mod.Value;
                         break;
-                    case ModifierType.PercentAdd:
+                    case ModifierType.SequentialMultiply:
 
                         sumPercentAdd += mod.Value;
 
-                        // If we're at the end of the list OR the next modifer is a not a PercentAdd, then apply the final value
-                        if (i + 1 >= modifiers.Count || modifiers[i + 1].Type != ModifierType.PercentAdd) {
+                        // If we're at the end of the list OR the next modifer is a not a SequentialMultiply, then apply the final value
+                        if (i + 1 >= modifiers.Count || modifiers[i + 1].Type != ModifierType.SequentialMultiply) {
                             finalValue *= 1 + sumPercentAdd;
                             sumPercentAdd = 0;
                         }
 
                         break;
-                    case ModifierType.PercentMultiply:
+                    case ModifierType.TotalMultiply:
 
                         finalValue *= 1 + mod.Value;
                         break;

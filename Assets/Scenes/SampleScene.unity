@@ -119,6 +119,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &90595873 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6932905983754787899, guid: d9987197563e0444bb958194017c1eab, type: 3}
+  m_PrefabInstance: {fileID: 3132290271837684974}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfb7a419582444f48bfc1caf18ea0561, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -1320,6 +1331,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3121389424051611969, guid: fbcbf0dd30499a447973a756b0ef07e3, type: 3}
+      propertyPath: guaranteedLoot
+      value: 
+      objectReference: {fileID: 11400000, guid: 3a41230910b2e504b9900b4bec9fb567, type: 2}
+    - target: {fileID: 3121389424051611969, guid: fbcbf0dd30499a447973a756b0ef07e3, type: 3}
+      propertyPath: uniqueLoot.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3121389424051611969, guid: fbcbf0dd30499a447973a756b0ef07e3, type: 3}
+      propertyPath: uniqueLoot.Array.data[0].data
+      value: 
+      objectReference: {fileID: 11400000, guid: 7461959b4bbc0304699da405319d0e2c, type: 2}
+    - target: {fileID: 3121389424051611969, guid: fbcbf0dd30499a447973a756b0ef07e3, type: 3}
+      propertyPath: uniqueLoot.Array.data[0].dropWeight
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4414275663427085397, guid: fbcbf0dd30499a447973a756b0ef07e3, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -1527,10 +1554,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 215593239173104613, guid: d9987197563e0444bb958194017c1eab, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1092446530947262507, guid: d9987197563e0444bb958194017c1eab, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1573,7 +1596,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4519961156615372154, guid: d9987197563e0444bb958194017c1eab, type: 3}
       propertyPath: effect.className
-      value: SpeedBoost, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4519961156615372154, guid: d9987197563e0444bb958194017c1eab, type: 3}
+      propertyPath: mouseSensitivity
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 4706875532758921836, guid: d9987197563e0444bb958194017c1eab, type: 3}
+      propertyPath: relicManager
+      value: 
+      objectReference: {fileID: 90595873}
+    - target: {fileID: 4706875532758921836, guid: d9987197563e0444bb958194017c1eab, type: 3}
+      propertyPath: luck.BaseValue
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8542186682067204331, guid: d9987197563e0444bb958194017c1eab, type: 3}
       propertyPath: m_Name
@@ -1583,7 +1618,8 @@ PrefabInstance:
       propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1348787492010925958, guid: d9987197563e0444bb958194017c1eab, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

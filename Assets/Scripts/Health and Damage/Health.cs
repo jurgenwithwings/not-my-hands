@@ -1,3 +1,4 @@
+using System;
 using ObjectPooling;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ public class Health : MonoBehaviour
     }
 
     public float currentHealth;
+    
+    public Action<Statboard> onDeath;
     
     private void Start() {
         currentHealth = statboard.maxHealth;
@@ -34,12 +37,17 @@ public class Health : MonoBehaviour
         damageInfo.source.eventManager.OnReceivedYourDamage?.Invoke(damageInfo.Copy(), statboard);
 
         if (currentHealth < 0) {
-            Die();
+            Die(damageInfo.source);
         }
+        
+        //TEMP TEMP TEMP TEMP
+        onDeath?.Invoke(damageInfo.source);
+        
         return totalDamageTaken;
     }
 
-    private void Die() {
+    private void Die(Statboard killer) {
+        onDeath?.Invoke(killer);
         Destroy(gameObject);
     }
 }

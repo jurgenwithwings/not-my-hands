@@ -184,7 +184,7 @@ public class Freeze : StatusEffect {
         maxDuration = 6;
         currentDuration = maxDuration;
         
-        mod = new Modifier(-0.1f, ModifierType.PercentAdd, source);
+        mod = new Modifier(-0.1f, ModifierType.SequentialMultiply, source);
         
         stats.moveSpeed.AddModifier(mod);
     }
@@ -198,7 +198,7 @@ public class Freeze : StatusEffect {
     }
 
     private void ReplaceModifier() {
-        mod = new Modifier(-0.05f + (-0.05f * currentStacks), ModifierType.PercentAdd, source);
+        mod = new Modifier(-0.05f + (-0.05f * currentStacks), ModifierType.SequentialMultiply, source);
         stats.moveSpeed.RemoveAllModifiersFromSource(source);
         stats.moveSpeed.AddModifier(mod);
     }
@@ -326,7 +326,7 @@ public class SpeedBoost : BuffEffect {
         maxDuration = 8;
         currentDuration = maxDuration;
         
-        mod = new Modifier(0.1f, ModifierType.PercentMultiply, source);
+        mod = new Modifier(0.1f, ModifierType.TotalMultiply, source);
         
         stats.moveSpeed.AddModifier(mod);
     }
@@ -340,7 +340,7 @@ public class SpeedBoost : BuffEffect {
     }
 
     private void ReplaceModifier() {
-        mod = new Modifier(0.05f + (0.05f * currentStacks), ModifierType.PercentMultiply, source);
+        mod = new Modifier(0.05f + (0.05f * currentStacks), ModifierType.TotalMultiply, source);
         stats.moveSpeed.RemoveAllModifiersFromSource(source);
         stats.moveSpeed.AddModifier(mod);
     }

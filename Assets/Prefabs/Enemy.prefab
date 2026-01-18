@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 6195785506168083407}
   - component: {fileID: 5988398498091909213}
   - component: {fileID: 6052328491181967940}
+  - component: {fileID: 3121389424051611969}
   m_Layer: 10
   m_Name: Enemy
   m_TagString: Untagged
@@ -163,7 +164,7 @@ MonoBehaviour:
   healthBar: {fileID: 7929674769736282749}
   rigidbody: {fileID: 7271274723162091676}
   maxHealth:
-    BaseValue: 100000000
+    BaseValue: 200000
   damageResistance:
     BaseValue: 0
   defense:
@@ -281,6 +282,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb7a419582444f48bfc1caf18ea0561, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3121389424051611969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2872158059377986449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3dd3f3bf5edd9548843d6b810f67626, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lootTable: {fileID: 11400000, guid: ac67b5592e744ff428d4e2beaf60f8ae, type: 2}
+  uniqueLoot: []
+  enemyInfluence: 1
 --- !u!1001 &5755619704094639224
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -50,7 +50,7 @@ public class WovenEye : Relic {
 
     private void ReplaceModifier() {
         stats.moveSpeed.RemoveAllModifiersFromSource(source);
-        stats.moveSpeed.AddModifier(new Modifier(0.05f * stacks, ModifierType.PercentMultiply, source));
+        stats.moveSpeed.AddModifier(new Modifier(0.05f * stacks, ModifierType.TotalMultiply, source));
     }
 
     public override void Remove() {

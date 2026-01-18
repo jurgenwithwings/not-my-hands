@@ -12,14 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64fa47f9c5ff4a2d98f461c58cf651df, type: 3}
   m_Name: StatusEffectHeart
   m_EditorClassIdentifier: 
-  displayName: StatusEffectHeart
+  itemName: Status Effect Heart
+  itemDescription: New Description
+  rarity: 2
   icon: {fileID: 0}
+  prefab: {fileID: 4615000329499921034, guid: 4457150eb20c6cc4798d45243b206c6d, type: 3}
   type: 0
   organClass:
     className: StatusEffectHeart, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
-  rarity: 2
-  description: 
   stats:
   - statType: 0
     value: 200
