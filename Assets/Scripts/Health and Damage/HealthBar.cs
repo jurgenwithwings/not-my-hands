@@ -25,7 +25,7 @@ public class HealthBar : MonoBehaviour {
     private float secondaryHealthMoveDelay = 1.68f;
 
     private float maxHealth => stats.maxHealth;
-    private float currentHealth => stats.health.currentHealth;
+    private float currentHealth => stats.health.CurrentHealth;
 
     void Awake() {
         canvas = GetComponent<Canvas>();

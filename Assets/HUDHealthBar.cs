@@ -1,9 +1,11 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class HUDHealthBar : MonoBehaviour{
-    [SerializeField] private Slider healthBar;
-    [SerializeField] private Slider secondaryHealthBar;
+    [SerializeField] private Slider redHealthBar;
+    [SerializeField] private Slider yellowHealthBar;
+    [SerializeField] private TMP_Text valueText;
 
     private float targetHealth = 1;
 
@@ -11,31 +13,34 @@ public class HUDHealthBar : MonoBehaviour{
     private float secondaryHealthMoveDelay = 1.68f;
     
     void Start() {
-        PlayerHUDEvents.OnSetHealth += SetTargetHealth;
-        healthBar.value = 1;
-        secondaryHealthBar.value = 1;
+        PlayerHUDEvents.OnHealthChanged += SetTargetHealth;
+        redHealthBar.value = 1;
+        yellowHealthBar.value = 1;
     }
 
     private void OnDestroy() {
-        PlayerHUDEvents.OnSetHealth -= SetTargetHealth;
+        PlayerHUDEvents.OnHealthChanged -= SetTargetHealth;
     }
 
-    private void SetTargetHealth(float percent) {
+    private void SetTargetHealth(float currentHealth, float maxHealth) {
+        float percent = currentHealth / maxHealth;
         if (percent < targetHealth && 
-                 Mathf.Approximately(secondaryHealthBar.value, healthBar.value)) { // If health lost, and anim not in progress. Start Timer.
+                 Mathf.Approximately(yellowHealthBar.value, redHealthBar.value)) { // If health lost, and anim not in progress. Start Timer.
             lastDamageTime = Time.time;
         }
         targetHealth = percent;
-        healthBar.value = percent;
+        redHealthBar.value = percent;
         
-        if (percent > targetHealth || secondaryHealthBar.value - percent <= 0.01f) { //If gaining health or small damage, then skip animation.
-            secondaryHealthBar.value = targetHealth;
+        if (redHealthBar.value > yellowHealthBar.value || (yellowHealthBar.value - percent <= 0.01f && yellowHealthBar.value - redHealthBar.value <= 0.01f)) { //If gaining health or small damage, then skip animation.
+            yellowHealthBar.value = targetHealth;
         }
+        
+        valueText.text = $"{Mathf.CeilToInt(currentHealth)} / {Mathf.CeilToInt(maxHealth)}";
     }
 
     private void Update() {
         if (Time.time - lastDamageTime > secondaryHealthMoveDelay) {
-            secondaryHealthBar.value = Mathf.MoveTowards(secondaryHealthBar.value, targetHealth, Time.deltaTime * 0.5f);
+            yellowHealthBar.value = Mathf.MoveTowards(yellowHealthBar.value, targetHealth, Time.deltaTime * 0.5f);
         }
     }
 }

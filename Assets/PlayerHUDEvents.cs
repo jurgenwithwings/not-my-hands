@@ -6,5 +6,10 @@ public static class PlayerHUDEvents {
     /// </summary>
     public static Action<string> OnSetInteractionText;
     
-    public static Action<float> OnSetHealth;
+    /// <summary>
+    /// Called when the player's health changes.
+    /// <para><c>Current Health</c> - Current health of the player</para>
+    /// <para><c>Maximum Health</c> - Maximum health of the player</para>
+    /// </summary>
+    public static Action<float, float> OnHealthChanged;
 }

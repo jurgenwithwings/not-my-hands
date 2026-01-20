@@ -51,16 +51,16 @@ public class PlayerController : MonoBehaviour
         }
 
         stats.eventManager.OnReceivedYourDamage += SpawnDamageNumber;
-        stats.eventManager.OnDamageTaken += LogIt;
+        stats.eventManager.OnDamageTaken += PlayerTakenDamage;
     }
 
-    private void LogIt(DamageInfo obj) {
-        PlayerHUDEvents.OnSetHealth?.Invoke(stats.health.currentHealth / stats.maxHealth);
+    private void PlayerTakenDamage(DamageInfo obj) {
+        PlayerHUDEvents.OnHealthChanged?.Invoke(stats.health.CurrentHealth, stats.maxHealth);
     }
 
     private void OnDestroy() {
         stats.eventManager.OnReceivedYourDamage -= SpawnDamageNumber;
-        stats.eventManager.OnDamageTaken -= LogIt;
+        stats.eventManager.OnDamageTaken -= PlayerTakenDamage;
     }
 
     public void SpawnDamageNumber(DamageInfo damageInfo, Statboard victim) {

@@ -9,12 +9,21 @@ public class Health : MonoBehaviour
         statboard ??= board;
     }
 
-    public float currentHealth;
+    public float CurrentHealth {get; private set;}
+    
+    [SerializeField] private float healthRegenDelay = 5f;
+    private float lastTimeDamaged;
     
     public Action<Statboard> onDeath;
     
     private void Start() {
-        currentHealth = statboard.maxHealth;
+        CurrentHealth = statboard.maxHealth;
+        statboard.maxHealth.OnValueChanged = (newMax) => {
+            if (CurrentHealth > newMax) {
+                CurrentHealth = newMax;
+            }
+        };
+        
         ObjectPool.InitialisePool<DamageNumber>(10);
     }
     
@@ -28,7 +37,8 @@ public class Health : MonoBehaviour
         }
         
         float totalDamageTaken = damageInfo.totalDamage;
-        currentHealth -= totalDamageTaken;
+        CurrentHealth -= totalDamageTaken;
+        lastTimeDamaged = Time.time;
         
         //Publish that we have takenDamage
         statboard.eventManager.OnDamageTaken?.Invoke(damageInfo.Copy());
@@ -36,7 +46,7 @@ public class Health : MonoBehaviour
         //Tell the source we received their damage
         damageInfo.source.eventManager.OnReceivedYourDamage?.Invoke(damageInfo.Copy(), statboard);
 
-        if (currentHealth < 0) {
+        if (CurrentHealth < 0) {
             Die(damageInfo.source);
         }
         
@@ -44,6 +54,13 @@ public class Health : MonoBehaviour
         onDeath?.Invoke(damageInfo.source);
         
         return totalDamageTaken;
+    }
+
+    private void Update() {
+        if (CurrentHealth < statboard.maxHealth && Time.time - lastTimeDamaged > healthRegenDelay) {
+            CurrentHealth += statboard.passiveRegenRate * Time.deltaTime;
+            CurrentHealth = Mathf.Min(CurrentHealth, statboard.maxHealth);
+        }
     }
 
     private void Die(Statboard killer) {
