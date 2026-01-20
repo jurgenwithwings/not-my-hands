@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Stats;
 using UnityEngine;
 
@@ -21,13 +22,17 @@ public struct DamageTypeStats {
         light = defaultValue;
     }
 
-    public void TickStats() {
-        foreach (var field in typeof(DamageTypeStats).GetFields()) {
+    public List<Stat> GetStats() {
+        List<Stat> stats = new List<Stat>();
+        
+        foreach (FieldInfo field in typeof(DamageTypeStats).GetFields()) {
             if (field.FieldType == typeof(Stat)) {
                 Stat stat = (Stat)field.GetValue(this);
-                stat.UpdateTimers();
+                stats.Add(stat);
             }
         }
+
+        return stats;
     }
 }
 

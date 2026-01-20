@@ -151,7 +151,7 @@ public class LootTable : ScriptableObject {
         return Luck.GetLuckCurve(luck, enemyInfluence, bonus, exp);
     }
     
-#region Validation
+    #region Validation
     private void OnValidate() {
         CollectRarityWeights();
     }
@@ -191,5 +191,5 @@ public class LootTable : ScriptableObject {
             }
         }
     }
-#endregion
+    #endregion
 }

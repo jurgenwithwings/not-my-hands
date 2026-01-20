@@ -4,7 +4,7 @@ using UnityEngine;
 public class OrganManager : MonoBehaviour {
     private Statboard statboard;
 
-    private Organ[] organs = { new Heart(), new Lungs(), new Brain(), new Liver() };
+    private Organ[] organs = { new Heart(), new Brain(), new Liver() };
     
     private void Awake() {
         statboard = GetComponent<Statboard>();

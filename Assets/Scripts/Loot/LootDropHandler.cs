@@ -4,13 +4,24 @@ using UnityEngine;
 
 public class LootDropHandler : MonoBehaviour
 {
+    [Header("Common Drop Table (Required)")]
     [SerializeField] private LootTable lootTable;
     [Space]
+    [Header("Optional Unique Loot (Added to the Common Drop Table)")]
     [SerializeField] private List<LootTable.LootItem> uniqueLoot;
-    [SerializeField] private LootTable guaranteedLoot;
-    [SerializeField] private Vector2Int guaranteedDropRange = Vector2Int.one;
+    [Space]
+    [SerializeField, Range(0, 100)] private float initialDropChance = 100;
+    [SerializeField, Range(0, 100)] private float extraDropChance = 10;
+    [SerializeField] private int maxDrops = 2;
+    [Space]
+    [Header("Optional additional Loot that is rolled separately to the Common Drops")]
+    [SerializeField] private LootTable additionalLoot;
+    [SerializeField, Range(0, 100)] private float additionalInitialDropChance = 100;
+    [SerializeField, Range(0, 100)] private float additionalExtraDropChance = 10;
+    [SerializeField] private int additionalMaxDrops = 1;
+    [Space]
+    [Header("Extra Settings")]
     [SerializeField] private float enemyInfluence = 1.0f;
-    [SerializeField] private Vector2Int dropRange = Vector2Int.one;
 
     private struct DroppedItem {
         public LootTable.LootItem item;
@@ -27,25 +38,27 @@ public class LootDropHandler : MonoBehaviour
     }
 
     private void HandleLootDrop(Statboard killer) {
-        //Check for negative luck values
-        bool negateLuck = killer.luck <= 0;
+        float luckMult = Luck.GetLuckCurve(killer.luck);
         
-        if (guaranteedLoot != null) {
-            List<LootTable.LootItem> guaranteedItemPool = new List<LootTable.LootItem>(guaranteedLoot.items);
-            float guaranteedTotalWeight = guaranteedLoot.GetTotalWeight(killer.luck, enemyInfluence);
+        // Handle additional loot drops
+        if (additionalLoot != null) {
+            List<LootTable.LootItem> additionalItemPool = new List<LootTable.LootItem>(additionalLoot.items);
             
-            int guaranteedDropsToSpawn = UnityEngine.Random.Range(dropRange.x, dropRange.y + 1);
+            float additionalTotalWeight = additionalLoot.GetTotalWeight(killer.luck, enemyInfluence);
+            
+            int additionalDropsToSpawn = GetDropAmount(additionalInitialDropChance, additionalExtraDropChance, additionalMaxDrops, luckMult);
 
-            for (int i = 0; i < guaranteedDropsToSpawn; i++) {
-                DroppedItem droppedItem = SpawnLoot(guaranteedItemPool, guaranteedTotalWeight, killer.luck, enemyInfluence);
-                guaranteedTotalWeight -= droppedItem.adjustedWeight;
-                guaranteedItemPool.Remove(droppedItem.item);
+            for (int i = 0; i < additionalDropsToSpawn; i++) {
+                var droppedItem = SpawnLoot(additionalItemPool, additionalTotalWeight, killer.luck, enemyInfluence);
+                additionalTotalWeight -= droppedItem.adjustedWeight;
+                additionalItemPool.Remove(droppedItem.item);
             }
         }
         
         List<LootTable.LootItem> itemPool = new List<LootTable.LootItem>();
         float totalWeight = 0f;
         
+        // Add unique loot to the pool if available
         if (uniqueLoot != null && uniqueLoot.Count > 0) {
             float uniqueWeight = LootTable.GetTotalWeightFromList(uniqueLoot, killer.luck, enemyInfluence);
             totalWeight += uniqueWeight;
@@ -55,23 +68,22 @@ public class LootDropHandler : MonoBehaviour
         totalWeight += lootTable.GetTotalWeight(killer.luck, enemyInfluence);
         itemPool.AddRange(lootTable.items);
 
-        int dropsToSpawn = UnityEngine.Random.Range(dropRange.x, dropRange.y + 1);
+        int dropsToSpawn = GetDropAmount(initialDropChance, extraDropChance, maxDrops, luckMult);
         
         for (int i = 0; i < dropsToSpawn; i++) {
-            DroppedItem droppedItem = SpawnLoot(itemPool, totalWeight, killer.luck, enemyInfluence);
+            var droppedItem = SpawnLoot(itemPool, totalWeight, killer.luck, enemyInfluence);
             totalWeight -= droppedItem.adjustedWeight;
             itemPool.Remove(droppedItem.item);
         }
     }
     
-    private DroppedItem SpawnLoot(List<LootTable.LootItem> itemPool, float totalWeight, float luck, float enemyInfluence) {
+    private (LootTable.LootItem item, float adjustedWeight) SpawnLoot(List<LootTable.LootItem> itemPool, float totalWeight, float luck, float enemyInfluence) {
         float roll = UnityEngine.Random.Range(0f, totalWeight);
         
         float cumulativeWeight = 0f;
         float adjustedWeight = 0f;
         float multiplier = 0f;
         LootTable.LootItem? droppedItem = null;
-        
         
         foreach (LootTable.LootItem item in itemPool) {
             droppedItem = item;
@@ -89,6 +101,36 @@ public class LootDropHandler : MonoBehaviour
         }
         Debug.Log($"Luck: {luck} | Enemy Influence: {enemyInfluence} | TotalWeight: {totalWeight} | Roll: {roll} | DroppedItem: {droppedItem.Value.data.itemName} | Base Weight: {droppedItem.Value.dropWeight} Multiplier: {multiplier} | Item Weight: {adjustedWeight}");
         
-        return new DroppedItem(droppedItem.Value, adjustedWeight);
+        return (droppedItem.Value, adjustedWeight);
+    }
+
+    private int GetDropAmount(float initial, float extra, int max, float luckMult) {
+        int dropCount = 0;
+        
+        float adjustedInitial = initial * luckMult;
+        float adjustedExtra = extra * luckMult;
+        
+        // Increase max drops if luck significantly increases extra drop chance
+        if (extra < 75 && adjustedExtra > 100) {
+            max *= (int)adjustedExtra / 100;
+        }
+
+        float roll = UnityEngine.Random.Range(0f, 100f);
+        if (roll <= adjustedInitial) {
+            dropCount++;
+            
+            for (int i = dropCount; i < max; i++) {
+                roll = UnityEngine.Random.Range(0f, 100f);
+                
+                if (roll <= adjustedExtra) {
+                    dropCount++;
+                } 
+                else {
+                    break;
+                }
+            }
+        }
+
+        return dropCount;
     }
 }

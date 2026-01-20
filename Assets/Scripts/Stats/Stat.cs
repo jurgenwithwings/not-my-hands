@@ -111,6 +111,8 @@ namespace Stats {
 
         protected readonly List<Modifier> modifiers;
         public readonly ReadOnlyCollection<Modifier> Modifiers;
+        
+        public Action<Stat> OnValueChanged;
 
         //Create a new stat with no base value
         public Stat() {
@@ -151,15 +153,17 @@ namespace Stats {
 
         
         public void AddModifier(Modifier mod) {
-            isDirty = true;
             modifiers.Add(mod);
             modifiers.Sort(CompareModifierOrder);
+            isDirty = true;
+            OnValueChanged?.Invoke(this);
         }
 
         
         public bool RemoveModifier(Modifier mod) {
             if (modifiers.Remove(mod)) {
                 isDirty = true;
+                OnValueChanged?.Invoke(this);
                 return true;
             }
 
@@ -172,15 +176,15 @@ namespace Stats {
             // Loops through the list backwards to avoid index issues once a modifier is removed
             for (int i = modifiers.Count - 1; i >= 0; i--) {
                 if (modifiers[i].Source == source) {
+                    modifiers.RemoveAt(i);
                     didRemove = true;
                     isDirty = true;
-                    modifiers.RemoveAt(i);
+                    OnValueChanged?.Invoke(this);
                 }
             }
 
             return didRemove;
         }
-
         
         public void AddDuration(Modifier mod, float duration) {
             int index = modifiers.IndexOf(mod);

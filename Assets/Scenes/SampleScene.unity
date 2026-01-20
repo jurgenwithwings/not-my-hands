@@ -1608,7 +1608,7 @@ PrefabInstance:
       objectReference: {fileID: 90595873}
     - target: {fileID: 4706875532758921836, guid: d9987197563e0444bb958194017c1eab, type: 3}
       propertyPath: luck.BaseValue
-      value: 0
+      value: 69
       objectReference: {fileID: 0}
     - target: {fileID: 8542186682067204331, guid: d9987197563e0444bb958194017c1eab, type: 3}
       propertyPath: m_Name

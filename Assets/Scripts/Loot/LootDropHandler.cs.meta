@@ -1,2 +1,13 @@
 fileFormatVersion: 2
 guid: e3dd3f3bf5edd9548843d6b810f67626
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - lootTable: {fileID: 11400000, guid: ac67b5592e744ff428d4e2beaf60f8ae, type: 2}
+  - guaranteedLoot: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

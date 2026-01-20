@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Reflection;
 using Stats;
 using UnityEngine;
 
@@ -19,14 +21,8 @@ public class Statboard : MonoBehaviour {
     [Section("Heart")]
     public Stat maxHealth = 100;
     public Stat damageResistance = 0;
-    public Stat defense = 0;
     public Stat healingEffectiveness = 1;
     public Stat passiveRegenRate = 0;
-
-    [Section("Lungs")] 
-    public Stat moveSpeed = 8;
-    public Stat attackSpeedMultiplier = 1;
-    public Stat activeAbilityCooldownRate = 1;
     
     [Section("Brain")]
     public Stat criticalChanceMultiplier = 1;
@@ -35,14 +31,21 @@ public class Statboard : MonoBehaviour {
 
     [Section("Liver")] 
     public Stat statusChanceMultiplier = 1;
-    public Stat flaskCooldown = 30;
     public Stat buffDurationMultiplier = 1;
     public Stat buffPotencyMultiplier = 1;
+    
+    [Section("Movement")]
+    public Stat moveSpeed = 8;
+    public Stat jumpCount = 1;
+    
+    [Section("Mana")]
+    public Stat maxMana = 30;
+    public Stat manaRegenRate = 2;
     
     [Section("Combat")]
     public Stat damageMultiplier = 1;
     public Stat meleeDamageMultiplier = 1;
-    public Stat activeAbilityDamageMultiplier = 1;
+    public Stat rangedDamageMultiplier = 1;
     public Stat elementalDamageMultiplier = 1;
     public Stat projectileSpeedMultiplier = 1;
     
@@ -51,18 +54,33 @@ public class Statboard : MonoBehaviour {
     public DamageTypeStats damageResistances = new(0);
 
     [Section("Misc")] 
-    public Stat jumpCount = 1;
     public Stat currencyMultiplier = 1;
 
-    private void Update() {
-        foreach (var field in typeof(Statboard).GetFields()) {
+    private List<Stat> allStats = new();
+
+    private void Awake() {
+        //TryGetReferences();
+        
+        TryAssignReferences();
+        
+        CollectAllStatsToList();
+    }
+
+    private void CollectAllStatsToList() {
+        foreach (FieldInfo field in typeof(Statboard).GetFields()) {
             if (field.FieldType == typeof(Stat)) {
                 Stat stat = (Stat)field.GetValue(this);
-                stat.UpdateTimers();
+                allStats.Add(stat);
             }else if (field.FieldType == typeof(DamageTypeStats)) {
                 DamageTypeStats stats = (DamageTypeStats)field.GetValue(this);
-                stats.TickStats();
+                allStats.AddRange(stats.GetStats());
             }
+        }
+    }
+
+    private void Update() {
+        foreach (Stat stat in allStats) {
+            stat.UpdateTimers();
         }
     }
 
@@ -81,14 +99,8 @@ public class Statboard : MonoBehaviour {
         //Heart
         MaxHealth,
         DamageResistance,
-        Defense,
         HealingEffectiveness,
         PassiveRegenRate,
-        
-        //Lungs
-        MoveSpeed,
-        AttackSpeedMultiplier,
-        ActiveAbilityCooldownRate,
         
         //Brain
         CriticalChanceMultiplier,
@@ -97,14 +109,21 @@ public class Statboard : MonoBehaviour {
         
         //Liver
         StatusChanceMultiplier,
-        FlaskCooldown,
         BuffDurationMultiplier,
         BuffPotencyMultiplier,
+        
+        //Movement
+        MoveSpeed,
+        JumpCount,
+        
+        //Mana
+        MaxMana,
+        ManaRegenRate,
         
         //Combat
         DamageMultiplier,
         MeleeDamageMultiplier,
-        ActiveAbilityDamageMultiplier,
+        RangedDamageMultiplier,
         ElementalDamageMultiplier,
         ProjectileSpeedMultiplier,
         
@@ -125,7 +144,6 @@ public class Statboard : MonoBehaviour {
         LightResistance,
         
         //Misc
-        JumpCount,
         CurrencyMultiplier
     }
     
@@ -133,14 +151,8 @@ public class Statboard : MonoBehaviour {
         //Heart
         VariableType.MaxHealth => maxHealth,
         VariableType.DamageResistance => damageResistance,
-        VariableType.Defense => defense,
         VariableType.HealingEffectiveness => healingEffectiveness,
         VariableType.PassiveRegenRate => passiveRegenRate,
-        
-        //Lungs
-        VariableType.MoveSpeed => moveSpeed,
-        VariableType.AttackSpeedMultiplier => attackSpeedMultiplier,
-        VariableType.ActiveAbilityCooldownRate => activeAbilityCooldownRate,
         
         //Brain
         VariableType.CriticalChanceMultiplier => criticalChanceMultiplier,
@@ -149,14 +161,21 @@ public class Statboard : MonoBehaviour {
         
         //Liver
         VariableType.StatusChanceMultiplier => statusChanceMultiplier,
-        VariableType.FlaskCooldown => flaskCooldown,
         VariableType.BuffDurationMultiplier => buffDurationMultiplier,
         VariableType.BuffPotencyMultiplier => buffPotencyMultiplier,
+        
+        //Movement
+        VariableType.MoveSpeed => moveSpeed,
+        VariableType.JumpCount => jumpCount,
+        
+        //Mana
+        VariableType.MaxMana => maxMana,
+        VariableType.ManaRegenRate => manaRegenRate,
         
         //Combat
         VariableType.DamageMultiplier => damageMultiplier,
         VariableType.MeleeDamageMultiplier => meleeDamageMultiplier,
-        VariableType.ActiveAbilityDamageMultiplier => activeAbilityDamageMultiplier,
+        VariableType.RangedDamageMultiplier => rangedDamageMultiplier,
         VariableType.ElementalDamageMultiplier => elementalDamageMultiplier,
         VariableType.ProjectileSpeedMultiplier => projectileSpeedMultiplier,
         
@@ -177,17 +196,11 @@ public class Statboard : MonoBehaviour {
         VariableType.LightResistance => damageResistances.light,
         
         //Misc
-        VariableType.JumpCount => jumpCount,
         VariableType.CurrencyMultiplier => currencyMultiplier,
         
         //default
         _ => null
     };
-
-    private void Awake() {
-        TryGetReferences();
-        TryAssignReferences();
-    }
     
     private void TryGetReferences() {
         relicManager ??= GetComponent<RelicManager>();

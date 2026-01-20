@@ -4,8 +4,8 @@ public static class Luck {
 #region Luck Curve
 
     private static float luckoutsideInfluence = 1f;
-    private static float luckCurveBonus = 0.7f;
-    private static float luckCurveExp = 0.8f;
+    private static float luckCurveBonus = 0.3f;
+    private static float luckCurveExp = 0.7f;
 
     public static float GetLuckCurve(float luck, float outsideInfluence, float bonus, float exp) {
         bool isNegativeLuck = false;

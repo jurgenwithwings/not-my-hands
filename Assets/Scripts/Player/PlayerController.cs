@@ -1,12 +1,15 @@
 using System;
 using ObjectPooling;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    Statboard stats;
+    private Statboard stats;
+
+    private InputAction inputs;
     
     [Header("Movement")]
     public float moveSpeed => stats.moveSpeed;
@@ -90,7 +93,7 @@ public class PlayerController : MonoBehaviour
                 };
                 damageInfo.statusEffects.Add(effect, 3);
                 
-                this.stats.eventManager.OnDealingDamage?.Invoke(damageInfo, stats, this.stats);
+                this.stats.eventManager.OnPreSendDamage?.Invoke(damageInfo, stats, this.stats);
                 
                 stats.health.TakeDamage(damageInfo.Copy());
             }
