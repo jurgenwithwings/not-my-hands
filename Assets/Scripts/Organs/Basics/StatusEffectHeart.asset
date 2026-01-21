@@ -22,12 +22,10 @@ MonoBehaviour:
   - statType: 0
     value: 200
   - statType: 1
-    value: 0.2
+    value: 0.05
   - statType: 2
-    value: 0
-  - statType: 3
     value: 1
-  - statType: 4
+  - statType: 3
     value: 0
   organClass:
     className: StatusEffectHeart, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,

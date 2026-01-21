@@ -398,18 +398,10 @@ MonoBehaviour:
     BaseValue: 100
   damageResistance:
     BaseValue: 0
-  defense:
-    BaseValue: 0
   healingEffectiveness:
     BaseValue: 1
   passiveRegenRate:
     BaseValue: 0
-  moveSpeed:
-    BaseValue: 8
-  attackSpeedMultiplier:
-    BaseValue: 1
-  activeAbilityCooldownRate:
-    BaseValue: 1
   criticalChanceMultiplier:
     BaseValue: 1
   criticalDamageMultiplier:
@@ -418,17 +410,23 @@ MonoBehaviour:
     BaseValue: 1
   statusChanceMultiplier:
     BaseValue: 1
-  flaskCooldown:
-    BaseValue: 30
   buffDurationMultiplier:
     BaseValue: 1
   buffPotencyMultiplier:
     BaseValue: 1
+  moveSpeed:
+    BaseValue: 8
+  jumpCount:
+    BaseValue: 1
+  maxMana:
+    BaseValue: 30
+  manaRegenRate:
+    BaseValue: 2
   damageMultiplier:
     BaseValue: 1
   meleeDamageMultiplier:
     BaseValue: 1
-  activeAbilityDamageMultiplier:
+  rangedDamageMultiplier:
     BaseValue: 1
   elementalDamageMultiplier:
     BaseValue: 1
@@ -460,8 +458,6 @@ MonoBehaviour:
       BaseValue: 0
     light:
       BaseValue: 0
-  jumpCount:
-    BaseValue: 1
   currencyMultiplier:
     BaseValue: 1
 --- !u!114 &1759559139725362135
@@ -476,7 +472,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3f5bb860d78aa64085fa7e17d3e41eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentHealth: 0
+  healthRegenDelay: 5
 --- !u!114 &5610967228089939522
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -551,7 +547,7 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: Keyboard
+  m_DefaultControlScheme: 
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}

@@ -1,7 +1,6 @@
 using System;
 using ObjectPooling;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(CharacterController))]
@@ -9,7 +8,7 @@ public class PlayerController : MonoBehaviour
 {
     private Statboard stats;
 
-    private InputAction inputs;
+    private InputManager inputs;
     
     [Header("Movement")]
     public float moveSpeed => stats.moveSpeed;
@@ -39,7 +38,7 @@ public class PlayerController : MonoBehaviour
     private bool jumpQueued;
     private float lastGroundedTime;
     private float xRotation;
-
+    
     void Awake() {
         stats = GetComponent<Statboard>();
         
@@ -52,6 +51,8 @@ public class PlayerController : MonoBehaviour
 
         stats.eventManager.OnReceivedYourDamage += SpawnDamageNumber;
         stats.eventManager.OnDamageTaken += PlayerTakenDamage;
+        
+        inputs = GetComponent<InputManager>();
     }
 
     private void PlayerTakenDamage(DamageInfo obj) {
@@ -61,6 +62,8 @@ public class PlayerController : MonoBehaviour
     private void OnDestroy() {
         stats.eventManager.OnReceivedYourDamage -= SpawnDamageNumber;
         stats.eventManager.OnDamageTaken -= PlayerTakenDamage;
+        
+        //playerControls.Disable();
     }
 
     public void SpawnDamageNumber(DamageInfo damageInfo, Statboard victim) {
@@ -70,15 +73,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        HandleLook();
+    void Update() {
         HandleInput();
         HandleGrounding();
         HandleMovement();
         HandleJump();
         
-        if (Input.GetMouseButtonDown(0)) {
+        if (inputs.PrimaryFire.Triggered) {
             Physics.Raycast(cameraHolder.position, cameraHolder.forward * 1000f, out RaycastHit hitInfo, 1000, enemyMask);
 
             if (hitInfo.collider && hitInfo.collider.TryGetComponent(out Statboard stats)) {
@@ -139,6 +140,8 @@ public class PlayerController : MonoBehaviour
     }
 
     public void LateUpdate() {
+        HandleLook();
+        
         Physics.Raycast(cameraHolder.position, cameraHolder.forward * 5f, out RaycastHit hit, 5f);
 
         if (hit.collider && hit.collider.TryGetComponent(out IInteractable interactable)) {
@@ -153,33 +156,32 @@ public class PlayerController : MonoBehaviour
                         interactable.AltInteract(stats);
                     }
                 }
-                if (Input.GetKeyDown(KeyCode.E)) {
+                if (inputs.Interact.Triggered) {
                     interactable.Interact(stats);
                 }
             }
         }
     }
 
-    void HandleLook()
-    {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+    void HandleLook() {
+        Vector2 inputVector = inputs.Look;
+        inputVector *= Time.deltaTime;
 
-        xRotation -= mouseY;
+        xRotation -= inputVector.y;
         xRotation = Mathf.Clamp(xRotation, -verticalClamp, verticalClamp);
 
         cameraHolder.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        transform.Rotate(Vector3.up * mouseX);
+        transform.Rotate(Vector3.up * inputVector.x);
     }
 
-    void HandleInput()
-    {
-        float x = Input.GetAxisRaw("Horizontal");
-        float z = Input.GetAxisRaw("Vertical");
-        moveInput = (transform.right * x + transform.forward * z).normalized;
+    void HandleInput() {
+        Vector2 inputVector = inputs.Move;
+        moveInput = (transform.right * inputVector.x + transform.forward * inputVector.y).normalized;
 
-        if (Input.GetButtonDown("Jump"))
+        if (inputs.Jump) {
+            //print("Jump Triggered");
             jumpQueued = true;
+        }
     }
 
     void HandleGrounding()
