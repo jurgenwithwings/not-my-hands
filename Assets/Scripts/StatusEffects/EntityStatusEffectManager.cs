@@ -6,10 +6,12 @@ public class EntityStatusEffectManager : MonoBehaviour
 {
     public Statboard statboard { get; private set; }
     public void SetStatboard(Statboard board) {
-        statboard ??= board;
+        if (statboard == null) {
+            statboard = board;
+        }
         statboard.eventManager.OnDamageTaken += HandleStatusEffects;
     }
-    
+
     public List<StatusEffect> PrimaryStatusEffects { get; private set; } = new();
     public List<BuffEffect> BuffEffects { get; private set; } = new();
     

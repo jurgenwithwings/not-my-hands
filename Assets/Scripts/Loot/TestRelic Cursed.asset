@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ac37012d41647d480c62cf24bc9c6f8, type: 3}
   m_Name: TestRelic Cursed
   m_EditorClassIdentifier: 
-  itemName: Test4
+  itemName: Cursed
   itemDescription: New Description
   rarity: 4
   icon: {fileID: 0}

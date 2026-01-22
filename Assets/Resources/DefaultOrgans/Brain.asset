@@ -17,13 +17,13 @@ MonoBehaviour:
   rarity: 0
   icon: {fileID: 0}
   prefab: {fileID: 8480930156855611742, guid: a33eab6886154cb45b2465d5b205cb2c, type: 3}
-  type: 2
+  type: 1
+  stats:
+  - statType: 4
+    value: 1
+  - statType: 5
+    value: 1
+  - statType: 6
+    value: 1
   organClass:
     className: Brain, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-  stats:
-  - statType: 8
-    value: 1
-  - statType: 9
-    value: 1
-  - statType: 10
-    value: 1

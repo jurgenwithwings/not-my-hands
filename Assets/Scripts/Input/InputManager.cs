@@ -13,7 +13,7 @@ public enum InputMap {
 
 public enum ControlType {
     Keyboard,
-    Gamepad
+    Controller
 }
 
 public struct InputEvent<T>{
@@ -53,7 +53,7 @@ public struct InputEvent<T>{
 }
 
 public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
-    private PlayerControls controls;
+    public static PlayerControls controls { get; private set; }
     
     private List<InputEvent<Type>> inputFields;
 
@@ -69,8 +69,8 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
             controls.Player.SetCallbacks(this);
             controls.UI.SetCallbacks(this);
         }
-        
-        controls.Player.Enable();
+
+        EnableActionMap(InputMap.Player);
 
         SetUIModuleAsset();
     }
@@ -110,7 +110,7 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
         ControlType controlType = CurrentControlDevice;
         switch (context.control.device) {
             case Gamepad:
-                CurrentControlDevice = ControlType.Gamepad;
+                CurrentControlDevice = ControlType.Controller;
                 break;
             case Mouse or Keyboard:
                 CurrentControlDevice = ControlType.Keyboard;
@@ -138,12 +138,6 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
         SwapLegs.ResetState();
         Inventory.ResetState();
         Recycle.ResetState();
-    }
-    
-    private void Update() {
-        //PlayerHUDEvents.DebugText(CurrentControlDevice.ToString(), key: "0");
-        //PlayerHUDEvents.DebugText(PrimaryFire.Triggered.ToString(), key: "1");
-        //PlayerHUDEvents.DebugText(PrimaryFire.preformedLastFrame.ToString(), key: "2");
     }
 
     public void DefaultHandle(InputAction.CallbackContext context) {
@@ -206,6 +200,9 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
     public InputEvent<bool> PrimaryFire;
     public void OnPrimaryFire(InputAction.CallbackContext context) {
         DefaultHandle(context);
+        if (Interact.Context.performed) {
+            return;
+        }
         if (context.performed || context.canceled) {
             PrimaryFire.SetAndInvoke(context.performed, context.performed, context);
         }
@@ -214,6 +211,9 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
     public InputEvent<bool> SecondaryFire;
     public void OnSecondaryFire(InputAction.CallbackContext context) {
         DefaultHandle(context);
+        if (Interact.Context.performed) {
+            return;
+        }
         if (context.performed || context.canceled) {
             SecondaryFire.SetAndInvoke(context.performed, context.performed, context);
         }
@@ -222,6 +222,9 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
     public InputEvent<bool> PrimaryKick;
     public void OnPrimaryKick(InputAction.CallbackContext context) {
         DefaultHandle(context);
+        if (Interact.Context.performed) {
+            return;
+        }
         if (context.performed || context.canceled) {
             PrimaryKick.SetAndInvoke(context.performed, context.performed, context);
         }
@@ -230,6 +233,9 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
     public InputEvent<bool> SecondaryKick;
     public void OnSecondaryKick(InputAction.CallbackContext context) {
         DefaultHandle(context);
+        if (Interact.Context.performed) {
+            return;
+        }
         if (context.performed || context.canceled) {
             SecondaryKick.SetAndInvoke(context.performed, context.performed, context);
         }
@@ -267,6 +273,14 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
         }
     }
 
+    public InputEvent<bool> Pause;
+    public void OnPause(InputAction.CallbackContext context) {
+        DefaultHandle(context);
+        if (context.performed || context.canceled) {
+            Pause.SetAndInvoke(context.performed, context.performed, context);
+        }
+    }
+
 
     // UI Actions
     public void OnNavigate(InputAction.CallbackContext context) { }
@@ -282,4 +296,126 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
         }
     }
     public void OnScrollWheel(InputAction.CallbackContext context) { }
+}
+
+public struct CachedGlyph {
+    private readonly string actionName;
+    private ControlType controlType;
+    private OnScreenControllerUI controllerSetting;
+    private string glyph;
+
+    /// <param name="name">Provide this in the format "[ActionMap]/[ActionName]" e.g "Player/Interact"</param>
+    public CachedGlyph(string name) {
+        actionName = name;
+        controlType = InputManager.CurrentControlDevice;
+        controllerSetting = PlayerSettings.controllerUI;
+        glyph = "";
+    }
+    
+    public string Glyph(bool includeModifier = true) {
+        if (string.IsNullOrEmpty(glyph)) {
+            return Get(includeModifier);
+        }
+        if (InputManager.CurrentControlDevice == controlType && PlayerSettings.controllerUI == controllerSetting) {
+            return glyph;
+        }
+        return Get(includeModifier);
+    }
+        
+    private string Get(bool includeModifier) {
+        controlType = InputManager.CurrentControlDevice;
+        controllerSetting = PlayerSettings.controllerUI;
+        glyph = InputManager.controls.FindAction(actionName, true).Glyph(includeModifier);
+        return glyph;
+    }
+
+    public void Refresh() {
+        Get(true);
+    }
+
+    public static implicit operator string(CachedGlyph glyph) {
+        return glyph.glyph;
+    }
+}
+
+public static class InputManagerExtensions {
+    /// <summary>
+    /// Looks up the current Binding for the given action, in glyph form.
+    /// If calling frequently, like on <c>Update</c>, use the <c>CashedGlyph</c> to save on string lookups.
+    /// </summary>
+    /// <param name="action">The action to find the glyph for.</param>
+    /// <param name="includeModifier">If action binding has a modifier, whether to include that in the output.</param>
+    /// <returns>The inline text glyph fot the InputAction</returns>
+    public static string Glyph(this InputAction action, bool includeModifier = true) {
+        if (action.bindings[0].isComposite) {
+            var parts = new List<string>();
+            string modifier = "";
+
+            for (int i = 1; i < action.bindings.Count; i++) {
+                if (string.IsNullOrEmpty(action.bindings[i].groups)) {
+                    continue;
+                }
+                if (!action.bindings[i].groups.Contains(InputManager.CurrentControlDevice.ToString())) {
+                     continue;   
+                }
+                
+                parts.Add(action.BindingToGlyph(i));
+
+                parts[^1] = parts.Count switch {
+                    1 => parts[^1] + " + ",
+                    2 => "(" + parts[^1],
+                    > 2 => " or " + parts[^1],
+                    _ => parts[^1]
+                };
+            }
+
+            if (parts.Count > 0) {
+                parts[^1] = $"{parts[^1]})";
+                
+                if (!includeModifier) {
+                    parts.RemoveAt(0);
+                }
+            }
+            
+            return string.Join("", parts);
+        }
+        else {
+            return action.BindingToGlyph();
+        }
+    }
+
+    private static string BindingToGlyph(this InputAction action, int? index = null) {
+        index ??= action.GetBindingIndex(InputManager.CurrentControlDevice.ToString());
+        
+        action.GetBindingDisplayString(index.Value, out var deviceLayoutName, out var controlPath);
+        
+        string control = "";
+            
+        switch (InputManager.CurrentControlDevice) {
+            case ControlType.Keyboard:
+                control = controlPath; break;
+            case ControlType.Controller:
+                string prefix = "XB";
+                switch (PlayerSettings.controllerUI) {
+                    case OnScreenControllerUI.Xbox:
+                        prefix = "XB";
+                        break;
+                    case OnScreenControllerUI.PlayStation:
+                        prefix = "PS";
+                        break;
+                    case OnScreenControllerUI.Switch:
+                        prefix = "SW";
+                        break;
+                }
+                control = prefix + controlPath; break;
+        }
+
+        //PlayerHUDEvents.DebugText($"Index: {index} | Action: {action} | Layout: {deviceLayoutName} | ControlPath: {controlPath} | Control: {control}", 10, key:$"q{index}");
+        
+        if (!String.IsNullOrEmpty(control)) {
+            return $"<sprite name=\"{control}\">";
+        }
+        
+        return action.GetBindingDisplayString(InputBinding.DisplayStringOptions.DontIncludeInteractions, InputManager.CurrentControlDevice.ToString());
+    }
 }

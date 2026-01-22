@@ -5,11 +5,16 @@ public class PRelic : PhysicalLoot, IInteractable {
 
     //Interactable
     public string InteractionName() => data.itemName;
-    public bool HasAltInteraction { get; }
+    public bool HasAltInteraction { get; } = true;
 
     public void Interact(Statboard interactor) {
         interactor.relicManager.AddRelic(data.relicType, data);
         Destroy(gameObject);
+    }
+
+    public void AltInteract(Statboard interactor) {
+        Interact(interactor);
+        PlayerHUDEvents.DebugText($"Picked Up {data.itemName}");
     }
     //Interactable End
 

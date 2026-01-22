@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DebugText : MonoBehaviour
 {
@@ -29,6 +30,7 @@ public class DebugText : MonoBehaviour
     private void Start() {
         debugText = transform.GetChild(0).GetComponent<TMP_Text>();
         defColor = debugText.color;
+        
         inactiveEntries.Add(new DebugTextEntry("", 0f, null, debugText));
         debugText.gameObject.SetActive(false);
         PlayerHUDEvents.OnDebug += SetDebugText;
@@ -48,6 +50,7 @@ public class DebugText : MonoBehaviour
                     entry.text.color = color ?? defColor;
                     entry.time = time;
                     debugTextEntries[i] = entry;
+                    LayoutRebuilder.ForceRebuildLayoutImmediate(transform as RectTransform);
                     return;
                 }
             }
@@ -63,6 +66,7 @@ public class DebugText : MonoBehaviour
             entry.text.gameObject.SetActive(true);
             entry.text.transform.SetSiblingIndex(transform.childCount - 1);
             debugTextEntries.Add(entry);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(transform as RectTransform);
             return;
         }
         
@@ -70,6 +74,7 @@ public class DebugText : MonoBehaviour
         newEntry.text.color = color ?? defColor;
         newEntry.text.transform.SetSiblingIndex(transform.childCount - 1);
         debugTextEntries.Add(newEntry);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(transform as RectTransform);
     }
     
     private void Update() {

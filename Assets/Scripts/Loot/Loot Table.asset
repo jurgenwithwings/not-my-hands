@@ -15,13 +15,5 @@ MonoBehaviour:
   items:
   - data: {fileID: 11400000, guid: 5592fd48d972a794a9ed68631c7c3da3, type: 2}
     dropWeight: 20
-  - data: {fileID: 11400000, guid: dfa19b45dfd6b0a4da5e085c563a0f59, type: 2}
-    dropWeight: 20
-  - data: {fileID: 11400000, guid: a197fbfdbf45a49458b8c4bf5dd127fe, type: 2}
-    dropWeight: 20
-  - data: {fileID: 11400000, guid: 7837c3f34757b5940b07a48c17947426, type: 2}
-    dropWeight: 20
-  - data: {fileID: 11400000, guid: 52e129641dd0126419868557fcd66201, type: 2}
-    dropWeight: 7
   - data: {fileID: 11400000, guid: 99ceb88fb6540fa40bc06e6fe35742d5, type: 2}
     dropWeight: 100

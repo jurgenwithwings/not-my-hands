@@ -167,18 +167,10 @@ MonoBehaviour:
     BaseValue: 200000
   damageResistance:
     BaseValue: 0
-  defense:
-    BaseValue: 0
   healingEffectiveness:
     BaseValue: 1
   passiveRegenRate:
     BaseValue: 0
-  moveSpeed:
-    BaseValue: 10
-  attackSpeedMultiplier:
-    BaseValue: 1
-  activeAbilityCooldownRate:
-    BaseValue: 1
   criticalChanceMultiplier:
     BaseValue: 1
   criticalDamageMultiplier:
@@ -187,17 +179,23 @@ MonoBehaviour:
     BaseValue: 1
   statusChanceMultiplier:
     BaseValue: 1
-  flaskCooldown:
-    BaseValue: 30
   buffDurationMultiplier:
     BaseValue: 1
   buffPotencyMultiplier:
     BaseValue: 1
+  moveSpeed:
+    BaseValue: 10
+  jumpCount:
+    BaseValue: 1
+  maxMana:
+    BaseValue: 30
+  manaRegenRate:
+    BaseValue: 2
   damageMultiplier:
     BaseValue: 1
   meleeDamageMultiplier:
     BaseValue: 1
-  activeAbilityDamageMultiplier:
+  rangedDamageMultiplier:
     BaseValue: 1
   elementalDamageMultiplier:
     BaseValue: 1
@@ -229,8 +227,6 @@ MonoBehaviour:
       BaseValue: 0
     light:
       BaseValue: 0
-  jumpCount:
-    BaseValue: 1
   currencyMultiplier:
     BaseValue: 1
 --- !u!114 &9047510863568201356
@@ -245,7 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3f5bb860d78aa64085fa7e17d3e41eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentHealth: 0
+  healthRegenDelay: 5
 --- !u!114 &6195785506168083407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -295,7 +291,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lootTable: {fileID: 11400000, guid: ac67b5592e744ff428d4e2beaf60f8ae, type: 2}
-  uniqueLoot: []
+  uniqueLoot:
+  - data: {fileID: 11400000, guid: 7461959b4bbc0304699da405319d0e2c, type: 2}
+    dropWeight: 5
+  initialDropChance: 100
+  extraDropChance: 10
+  maxDrops: 2
+  additionalLoot: {fileID: 11400000, guid: 3a41230910b2e504b9900b4bec9fb567, type: 2}
+  additionalInitialDropChance: 100
+  additionalExtraDropChance: 10
+  additionalMaxDrops: 1
   enemyInfluence: 1
 --- !u!1001 &5755619704094639224
 PrefabInstance:

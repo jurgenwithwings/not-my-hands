@@ -4,8 +4,8 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - lootTable: {fileID: 11400000, guid: ac67b5592e744ff428d4e2beaf60f8ae, type: 2}
-  - guaranteedLoot: {instanceID: 0}
+  - lootTable: {instanceID: 0}
+  - additionalLoot: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ac37012d41647d480c62cf24bc9c6f8, type: 3}
   m_Name: TestRelic Epic 2
   m_EditorClassIdentifier: 
-  itemName: Test3
+  itemName: Epic 2
   itemDescription: New Description
   rarity: 2
   icon: {fileID: 0}

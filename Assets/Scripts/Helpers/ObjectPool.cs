@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -78,6 +77,7 @@ namespace ObjectPooling {
 
         /// <summary>
         /// Initialises the pool for type T by preloading from Addressables. Optionally pre-instantiates a number of objects.
+        /// DO NOT INITIALISE AN ASSET CONTAINING TEXT MESH PRO NEAR A SCENE LOAD WITH ANY PRE-SPAWNED.
         /// </summary>
         /// <param name="numberToInitialise">How many objects to initialise.</param>
         /// <typeparam name="T">Type of ObjectPool to preload</typeparam>
@@ -92,7 +92,7 @@ namespace ObjectPooling {
             while (!ObjectPool<T>.isInitialised) {
                 await Task.Yield();
             }
-
+           
             Stack<T> stack = new Stack<T>();
             for (int i = 0; i < numberToInitialise; i++) {
                 stack.Push(ObjectPool<T>.Pull());
@@ -100,7 +100,6 @@ namespace ObjectPooling {
             while (stack.Count > 0) {
                 ObjectPool<T>.Push(stack.Pop());
             }
-            
         }
         
         /// <summary>

@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public static class PlayerHUDEvents {
+    
     /// <summary>
-    /// Should be called on Late Update.
+    /// Call it update the Interaction Prompt on the UI.
+    /// <para><c>Text</c> - The text to be displayed.</para>
+    /// <para><c>DualInteraction</c> - If there is a secondary Interaction.</para>
     /// </summary>
-    public static Action<string> OnSetInteractionText;
+    public static Action<string, bool> OnSetInteractionText;
     
     /// <summary>
     /// Called when the player's health changes.

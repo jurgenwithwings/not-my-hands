@@ -79,6 +79,32 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
         HandleJump();
         
+        Physics.Raycast(cameraHolder.position, cameraHolder.forward * 5f, out RaycastHit hit, 5f);
+
+        if (hit.collider && hit.collider.TryGetComponent(out IInteractable interactable)) {
+            if (interactable != null) {
+                if (interactable.HasAltInteraction) {
+
+                    if (inputs.Interact.Context.performed && (inputs.PrimaryInteract.Triggered)) {
+                        interactable.Interact(stats);
+                    }
+                    else if (inputs.Interact.Context.performed && (inputs.SecondaryInteract.Triggered))
+                    {
+                        interactable.AltInteract(stats);
+                    }
+                }
+                else {
+                    if (inputs.Interact.Triggered) {
+                        interactable.Interact(stats);
+                    }
+                }
+                PlayerHUDEvents.OnSetInteractionText?.Invoke($"to pick up {interactable.InteractionName()}", interactable.HasAltInteraction);
+            }
+        }
+        else {
+            PlayerHUDEvents.OnSetInteractionText?.Invoke("", false);
+        }
+        
         if (inputs.PrimaryFire.Triggered) {
             Physics.Raycast(cameraHolder.position, cameraHolder.forward * 1000f, out RaycastHit hitInfo, 1000, enemyMask);
 
@@ -101,6 +127,7 @@ public class PlayerController : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Q)) {
+            PlayerHUDEvents.DebugText("Trying to take damage");
             float t = Mathf.Pow(Random.value, 3f);
             damage[0].amount = Mathf.Lerp(0, 20, t);
             
@@ -141,26 +168,6 @@ public class PlayerController : MonoBehaviour
 
     public void LateUpdate() {
         HandleLook();
-        
-        Physics.Raycast(cameraHolder.position, cameraHolder.forward * 5f, out RaycastHit hit, 5f);
-
-        if (hit.collider && hit.collider.TryGetComponent(out IInteractable interactable)) {
-            if (interactable != null) {
-                PlayerHUDEvents.OnSetInteractionText?.Invoke($"to Pick Up {interactable.InteractionName()}");
-
-                if (interactable.HasAltInteraction) {
-                    PlayerHUDEvents.OnSetInteractionText?.Invoke($"to Pick Up {interactable.InteractionName()}\n" +
-                                                                $"Press 'Q' to getout idk");
-                    if (Input.GetKeyDown(KeyCode.Alpha4))
-                    {
-                        interactable.AltInteract(stats);
-                    }
-                }
-                if (inputs.Interact.Triggered) {
-                    interactable.Interact(stats);
-                }
-            }
-        }
     }
 
     void HandleLook() {

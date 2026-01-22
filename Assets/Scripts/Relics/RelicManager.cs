@@ -6,7 +6,9 @@ public class RelicManager : MonoBehaviour
 {
     public Statboard statboard { get; private set; }
     public void SetStatboard(Statboard board) {
-        statboard ??= board;
+        if (statboard == null) {
+            statboard = board;
+        }
     }
 
     public List<Relic> relics { get; private set; } = new();

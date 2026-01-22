@@ -2,19 +2,22 @@ using System;
 using UnityEngine;
 
 public class OrganManager : MonoBehaviour {
-    private Statboard statboard;
+    private Statboard Statboard;
 
     private Organ[] organs = { new Heart(), new Brain(), new Liver() };
-    
-    private void Awake() {
-        statboard = GetComponent<Statboard>();
-        OrganHelper.InitialiseOrganArray(organs, statboard);
+
+    public void SetStatboard(Statboard statboard) {
+        if (Statboard != null) {
+            Statboard = statboard;
+        }
+        Statboard = GetComponent<Statboard>();
+        OrganHelper.InitialiseOrganArray(organs, Statboard);
     }
 
     public void AddOrgan(ClassReference<Organ> organ, OrganData data) {
         int index = (int)data.type;
         organs[index] = organ.CreateInstance();
-        organs[index].Initialise(statboard, data);
+        organs[index].Initialise(Statboard, data);
     }
 
     public void Update() {
@@ -25,6 +28,6 @@ public class OrganManager : MonoBehaviour {
 
     public void RemoveOrgan(OrganType organType) {
         organs[(int)organType].Remove();
-        organs[(int)organType] = OrganHelper.GetDefaultOrgan(organType, statboard);
+        organs[(int)organType] = OrganHelper.GetDefaultOrgan(organType, Statboard);
     }
 }

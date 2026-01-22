@@ -11,10 +11,13 @@ public class HealthBar : MonoBehaviour {
     [SerializeField] private Transform lookTarget;
     [SerializeField] private float screeSize = 0.1f;
 
-    [SerializeField] private Statboard stats;
+    [SerializeField] private Statboard statboard;
 
     public void SetStatboard(Statboard board) {
-        stats = board;
+        if (statboard == null) {
+            statboard = board;
+        }
+        statboard.eventManager.OnDamageTaken += SetSliderValue;
     }
 
     private float defaultScaleFactor = 0.01f;
@@ -24,8 +27,8 @@ public class HealthBar : MonoBehaviour {
     private float targetHealth = 1;
     private float secondaryHealthMoveDelay = 1.68f;
 
-    private float maxHealth => stats.maxHealth;
-    private float currentHealth => stats.health.CurrentHealth;
+    private float maxHealth => statboard.maxHealth;
+    private float currentHealth => statboard.health.CurrentHealth;
 
     void Awake() {
         canvas = GetComponent<Canvas>();
@@ -37,13 +40,12 @@ public class HealthBar : MonoBehaviour {
     }
 
     void Start() {
-        stats.eventManager.OnDamageTaken += SetSliderValue;
         healthSlider.value = 1f;
         secondaryHealthSlider.value = 1f;
     }
 
     private void OnDestroy() {
-        stats.eventManager.OnDamageTaken -= SetSliderValue;
+        statboard.eventManager.OnDamageTaken -= SetSliderValue;
     }
 
     private void SetSliderValue(DamageInfo damageInfo) {

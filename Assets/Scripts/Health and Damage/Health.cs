@@ -6,25 +6,43 @@ public class Health : MonoBehaviour
 {
     private Statboard statboard;
     public void SetStatboard(Statboard board) {
-        statboard ??= board;
+        if (statboard == null) {
+            statboard = board;
+        }
+
+        if (useSB) {
+            CurrentHealth = statboard.maxHealth;
+            statboard.maxHealth.OnValueChanged = (newMax) => {
+                maxHealth = statboard.maxHealth;
+                if (CurrentHealth > newMax) {
+                    CurrentHealth = newMax;
+                }
+            };
+        }
     }
 
     public float CurrentHealth {get; private set;}
     
     [SerializeField] private float healthRegenDelay = 5f;
+    
+    private bool useSB = true;
+    [Header("If set to '0' will use the statboard")]
+    [SerializeField] private float maxHealth;
+    
     private float lastTimeDamaged;
     
-    public Action<Statboard> onDeath;
+    public event Action<Statboard> OnDeath;
     
     private void Start() {
-        CurrentHealth = statboard.maxHealth;
-        statboard.maxHealth.OnValueChanged = (newMax) => {
-            if (CurrentHealth > newMax) {
-                CurrentHealth = newMax;
-            }
-        };
+        if (maxHealth != 0) {
+            useSB = false;
+        }
+
+        if (!useSB) {
+            CurrentHealth = maxHealth;
+        }
         
-        ObjectPool.InitialisePool<DamageNumber>(10);
+        ObjectPool.InitialisePool<DamageNumber>();
     }
     
     public float TakeDamage(DamageInfo damageInfo) {
@@ -51,20 +69,20 @@ public class Health : MonoBehaviour
         }
         
         //TEMP TEMP TEMP TEMP
-        onDeath?.Invoke(damageInfo.source);
+        OnDeath?.Invoke(damageInfo.source);
         
         return totalDamageTaken;
     }
 
     private void Update() {
-        if (CurrentHealth < statboard.maxHealth && Time.time - lastTimeDamaged > healthRegenDelay) {
+        if (CurrentHealth < maxHealth && Time.time - lastTimeDamaged > healthRegenDelay) {
             CurrentHealth += statboard.passiveRegenRate * Time.deltaTime;
-            CurrentHealth = Mathf.Min(CurrentHealth, statboard.maxHealth);
+            CurrentHealth = Mathf.Min(CurrentHealth, maxHealth);
         }
     }
 
     private void Die(Statboard killer) {
-        onDeath?.Invoke(killer);
+        OnDeath?.Invoke(killer);
         Destroy(gameObject);
     }
 }

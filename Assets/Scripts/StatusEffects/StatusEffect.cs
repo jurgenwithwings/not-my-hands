@@ -284,7 +284,11 @@ public class Judged : StatusEffect {
         stats.eventManager.OnDamageTaken -= OnTakeDamage;
         if (stats.healthBar != null || spriteRenderer != null) {
             handle.Completed -= SpriteLoaded;
-            Object.Destroy(spriteRenderer.gameObject);
+            try {
+                Object.Destroy(spriteRenderer.gameObject);
+            }catch { 
+                // ignored
+            }
         }
 
         float damage = damageAbsorbed * (baseDamage[0].amount + (damagePerStack[0].amount * currentStacks));

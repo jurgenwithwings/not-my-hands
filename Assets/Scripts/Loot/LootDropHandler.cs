@@ -34,7 +34,7 @@ public class LootDropHandler : MonoBehaviour
     }
     
     private void Start() {
-        GetComponent<Health>().onDeath += HandleLootDrop;
+        GetComponent<Health>().OnDeath += HandleLootDrop;
     }
 
     private void HandleLootDrop(Statboard killer) {
@@ -99,7 +99,7 @@ public class LootDropHandler : MonoBehaviour
                 break;
             }
         }
-        Debug.Log($"Luck: {luck} | Enemy Influence: {enemyInfluence} | TotalWeight: {totalWeight} | Roll: {roll} | DroppedItem: {droppedItem.Value.data.itemName} | Base Weight: {droppedItem.Value.dropWeight} Multiplier: {multiplier} | Item Weight: {adjustedWeight}");
+        PlayerHUDEvents.DebugText($"Luck: {luck} | Enemy Influence: {enemyInfluence} | TotalWeight: {totalWeight} | Roll: {roll} | DroppedItem: {droppedItem.Value.data.itemName} | Base Weight: {droppedItem.Value.dropWeight} Multiplier: {multiplier} | Item Weight: {adjustedWeight}", 10);
         
         return (droppedItem.Value, adjustedWeight);
     }

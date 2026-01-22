@@ -3,21 +3,24 @@ using System.Reflection;
 using Stats;
 using UnityEngine;
 
-[DisallowMultipleComponent]
-[RequireComponent(typeof(RelicManager))] 
-[RequireComponent(typeof(EntityStatusEffectManager))]
-[RequireComponent(typeof(EntityEventManager))]
-[RequireComponent(typeof(Health))]
+//[DisallowMultipleComponent]
+//[RequireComponent(typeof(RelicManager))] 
+//[RequireComponent(typeof(EntityStatusEffectManager))]
+//[RequireComponent(typeof(EntityEventManager))]
+//[RequireComponent(typeof(Health))]
 public class Statboard : MonoBehaviour {
     [Section("References")]
     [Button(nameof(TryGetReferences), "Retrieve References", r:0.2f, g:0.2f, b:0.2f)]
-    public RelicManager relicManager;
-    public EntityStatusEffectManager statusEffectManager;
     public EntityEventManager eventManager;
+    public EntityStatusEffectManager statusEffectManager;
     public Health health;
+    public RelicManager relicManager;
+    public OrganManager organManager;
     public HealthBar healthBar;
     public new Rigidbody rigidbody;
 
+    private List<Stat> allStats = new();
+    
     [Section("Heart")]
     public Stat maxHealth = 100;
     public Stat damageResistance = 0;
@@ -56,16 +59,12 @@ public class Statboard : MonoBehaviour {
     [Section("Misc")] 
     public Stat currencyMultiplier = 1;
 
-    private List<Stat> allStats = new();
-
     private void Awake() {
-        //TryGetReferences();
-        
         TryAssignReferences();
         
         CollectAllStatsToList();
     }
-
+    
     private void CollectAllStatsToList() {
         foreach (FieldInfo field in typeof(Statboard).GetFields()) {
             if (field.FieldType == typeof(Stat)) {
@@ -203,21 +202,25 @@ public class Statboard : MonoBehaviour {
     };
     
     private void TryGetReferences() {
-        relicManager ??= GetComponent<RelicManager>();
-        statusEffectManager ??= GetComponent<EntityStatusEffectManager>();
-        eventManager ??= GetComponent<EntityEventManager>();
-        health ??= GetComponent<Health>();
-        healthBar ??= GetComponentInChildren<HealthBar>();
-        if (rigidbody == null) {
-            rigidbody = GetComponent<Rigidbody>();
+        if (eventManager == null) { eventManager = GetComponent<EntityEventManager>(); }
+        if (statusEffectManager == null) { statusEffectManager = GetComponent<EntityStatusEffectManager>(); }
+        if (health == null) {
+            print("Trying to get health");
+            health = GetComponent<Health>();
+            print($"health : {health}");
         }
+        if (relicManager == null) { relicManager = GetComponent<RelicManager>(); }
+        if (organManager == null) { organManager = GetComponent<OrganManager>(); }
+        if (healthBar == null) { healthBar = GetComponent<HealthBar>(); }
+        //if (rigidbody == null) { rigidbody = GetComponent<Rigidbody>(); }
     }
     
     private void TryAssignReferences() {
-        relicManager?.SetStatboard(this);
-        statusEffectManager?.SetStatboard(this);
-        eventManager?.SetStatboard(this);
-        health?.SetStatboard(this);
-        healthBar?.SetStatboard(this);
+        if (eventManager != null ) eventManager.SetStatboard(this);
+        if (statusEffectManager != null) statusEffectManager.SetStatboard(this);
+        if (health != null) health.SetStatboard(this);
+        if (organManager != null) organManager.SetStatboard(this);
+        if (relicManager != null) relicManager.SetStatboard(this);
+        if (healthBar != null) healthBar.SetStatboard(this);
     }
 }
