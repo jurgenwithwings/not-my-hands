@@ -397,17 +397,6 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "binding",
-                    "id": "18152852-546b-49eb-9ae2-532d80ac1056",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard",
-                    "action": "PrimaryInteract",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
                     "name": "Gamepad",
                     "id": "d136c0c6-2e4c-437e-803b-05f01fcd0ed2",
                     "path": "OneModifier",
@@ -477,17 +466,6 @@
                     "name": "binding",
                     "id": "84f7ce2f-a1e0-4349-859d-c0790e7012c3",
                     "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard",
-                    "action": "SecondaryInteract",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "binding",
-                    "id": "0f947c58-772a-4eb3-b64f-f4775f30ad35",
-                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard",

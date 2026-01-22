@@ -202,25 +202,39 @@ public class Statboard : MonoBehaviour {
     };
     
     private void TryGetReferences() {
-        if (eventManager == null) { eventManager = GetComponent<EntityEventManager>(); }
-        if (statusEffectManager == null) { statusEffectManager = GetComponent<EntityStatusEffectManager>(); }
-        if (health == null) {
-            print("Trying to get health");
-            health = GetComponent<Health>();
-            print($"health : {health}");
-        }
-        if (relicManager == null) { relicManager = GetComponent<RelicManager>(); }
-        if (organManager == null) { organManager = GetComponent<OrganManager>(); }
-        if (healthBar == null) { healthBar = GetComponent<HealthBar>(); }
+        eventManager ??= GetComponent<EntityEventManager>();
+        statusEffectManager ??= GetComponent<EntityStatusEffectManager>();
+        health ??= GetComponent<Health>();
+        relicManager ??= GetComponent<RelicManager>();
+        organManager ??= GetComponent<OrganManager>();
+        healthBar ??= GetComponent<HealthBar>();
         //if (rigidbody == null) { rigidbody = GetComponent<Rigidbody>(); }
     }
     
     private void TryAssignReferences() {
-        if (eventManager != null ) eventManager.SetStatboard(this);
-        if (statusEffectManager != null) statusEffectManager.SetStatboard(this);
-        if (health != null) health.SetStatboard(this);
-        if (organManager != null) organManager.SetStatboard(this);
-        if (relicManager != null) relicManager.SetStatboard(this);
-        if (healthBar != null) healthBar.SetStatboard(this);
+        IStatboard[] statboardMembers = { eventManager, statusEffectManager, health, relicManager, organManager, healthBar };
+        
+        foreach (IStatboard member in statboardMembers) {
+            member?.SetStatboard(this);
+        }
+        
+        foreach (IStatboard member in statboardMembers) {
+            member?.StatboardFinishedSet();
+        }
+    }
+}
+
+public interface IStatboard {
+    public Statboard statboard { get; set; }
+
+    public void SetStatboard(Statboard board) {
+        statboard ??= board;
+    }
+
+    /// <summary>
+    /// Implement to execute logic once all <c>IStatboards</c> have finished their assignment.
+    /// </summary>
+    public virtual void StatboardFinishedSet() {
+        
     }
 }

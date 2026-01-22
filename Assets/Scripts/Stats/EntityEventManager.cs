@@ -1,14 +1,9 @@
 using System;
 using UnityEngine;
 
-public class EntityEventManager : MonoBehaviour
+public class EntityEventManager : MonoBehaviour, IStatboard
 {
-    public Statboard statboard { get; private set; }
-    public void SetStatboard(Statboard board) {
-        if (statboard == null) {
-            statboard = board;
-        }
-    }
+    public Statboard statboard { get; set; }
     
     /// <summary>
     /// Called when this entity takes damage.
@@ -25,9 +20,15 @@ public class EntityEventManager : MonoBehaviour
     
     /// <summary>
     /// Called before damage is sent from this entity to another.
-    /// <para><c>DamageInfo</c> - DamageInfo to be modified,</para>
+    /// <para><c>DamageInfo</c> - DamageInfo to be modified</para>
     /// <para><c>Statboard</c> - Victim's statboard</para>
     /// <para><c>Statboard</c> - Attacker's statboard</para>
     /// </summary>
     public Action<DamageInfo, Statboard, Statboard> OnPreSendDamage;
+
+    /// <summary>
+    /// Called when mana is successfully changed. Providing the amount the mana was changed by.
+    /// <para><c>ManaSpent</c> - The amount of mana spent or gained. Negative if spent.</para>
+    /// </summary>
+    public Action<float> OnManaChanged;
 }

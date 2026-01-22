@@ -2,14 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RelicManager : MonoBehaviour
+public class RelicManager : MonoBehaviour, IStatboard
 {
-    public Statboard statboard { get; private set; }
-    public void SetStatboard(Statboard board) {
-        if (statboard == null) {
-            statboard = board;
-        }
-    }
+    public Statboard statboard { get; set; }
 
     public List<Relic> relics { get; private set; } = new();
     

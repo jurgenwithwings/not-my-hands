@@ -2,14 +2,10 @@ using System;
 using ObjectPooling;
 using UnityEngine;
 
-public class Health : MonoBehaviour
+public class Health : MonoBehaviour, IStatboard
 {
-    private Statboard statboard;
-    public void SetStatboard(Statboard board) {
-        if (statboard == null) {
-            statboard = board;
-        }
-
+    public Statboard statboard { get; set; }
+    public void StatboardFinishedSet() {
         if (useSB) {
             CurrentHealth = statboard.maxHealth;
             statboard.maxHealth.OnValueChanged = (newMax) => {
@@ -33,7 +29,7 @@ public class Health : MonoBehaviour
     
     public event Action<Statboard> OnDeath;
     
-    private void Start() {
+    private void Awake() {
         if (maxHealth != 0) {
             useSB = false;
         }

@@ -2,13 +2,10 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EntityStatusEffectManager : MonoBehaviour
+public class EntityStatusEffectManager : MonoBehaviour, IStatboard
 {
-    public Statboard statboard { get; private set; }
-    public void SetStatboard(Statboard board) {
-        if (statboard == null) {
-            statboard = board;
-        }
+    public Statboard statboard { get; set; }
+    public void StatboardFinishedSet() {
         statboard.eventManager.OnDamageTaken += HandleStatusEffects;
     }
 

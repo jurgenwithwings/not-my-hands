@@ -2,7 +2,12 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HealthBar : MonoBehaviour {
+public class HealthBar : MonoBehaviour, IStatboard {
+    public Statboard statboard { get; set; }
+    public void StatboardFinishedSet() {
+        statboard.eventManager.OnDamageTaken += SetSliderValue;
+    }
+
     [SerializeField] private Slider healthSlider;
     [SerializeField] private Slider secondaryHealthSlider;
 
@@ -11,14 +16,6 @@ public class HealthBar : MonoBehaviour {
     [SerializeField] private Transform lookTarget;
     [SerializeField] private float screeSize = 0.1f;
 
-    [SerializeField] private Statboard statboard;
-
-    public void SetStatboard(Statboard board) {
-        if (statboard == null) {
-            statboard = board;
-        }
-        statboard.eventManager.OnDamageTaken += SetSliderValue;
-    }
 
     private float defaultScaleFactor = 0.01f;
     private Canvas canvas;

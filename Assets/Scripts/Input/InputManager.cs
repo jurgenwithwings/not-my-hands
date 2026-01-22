@@ -349,7 +349,6 @@ public static class InputManagerExtensions {
     public static string Glyph(this InputAction action, bool includeModifier = true) {
         if (action.bindings[0].isComposite) {
             var parts = new List<string>();
-            string modifier = "";
 
             for (int i = 1; i < action.bindings.Count; i++) {
                 if (string.IsNullOrEmpty(action.bindings[i].groups)) {
@@ -363,18 +362,17 @@ public static class InputManagerExtensions {
 
                 parts[^1] = parts.Count switch {
                     1 => parts[^1] + " + ",
-                    2 => "(" + parts[^1],
                     > 2 => " or " + parts[^1],
                     _ => parts[^1]
                 };
             }
 
-            if (parts.Count > 0) {
+            if (parts.Count > 2) {
+                parts[1] = "(" + parts[1];
                 parts[^1] = $"{parts[^1]})";
-                
-                if (!includeModifier) {
-                    parts.RemoveAt(0);
-                }
+            }
+            if (parts.Count > 0 && !includeModifier) {
+                parts.RemoveAt(0);
             }
             
             return string.Join("", parts);

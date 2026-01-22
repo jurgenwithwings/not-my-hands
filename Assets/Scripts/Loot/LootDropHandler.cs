@@ -95,11 +95,13 @@ public class LootDropHandler : MonoBehaviour
             cumulativeWeight += adjustedWeight;
             
             if (roll <= cumulativeWeight) {
-                Instantiate(item.data.prefab, transform.position, Quaternion.identity).GetComponent<Rigidbody>().AddForce(Vector3.up * 3, ForceMode.Impulse);
+                Vector2 randomDirection = UnityEngine.Random.insideUnitCircle;
+                Vector3 randomDirectionVector = new(randomDirection.x, 0, randomDirection.y);
+                Instantiate(item.data.prefab, transform.position, Quaternion.identity).GetComponent<Rigidbody>().AddForce((Vector3.up + randomDirectionVector) * 5, ForceMode.Impulse);
                 break;
             }
         }
-        PlayerHUDEvents.DebugText($"Luck: {luck} | Enemy Influence: {enemyInfluence} | TotalWeight: {totalWeight} | Roll: {roll} | DroppedItem: {droppedItem.Value.data.itemName} | Base Weight: {droppedItem.Value.dropWeight} Multiplier: {multiplier} | Item Weight: {adjustedWeight}", 10);
+        //PlayerHUDEvents.DebugText($"Luck: {luck} | Enemy Influence: {enemyInfluence} | TotalWeight: {totalWeight} | Roll: {roll} | DroppedItem: {droppedItem.Value.data.itemName} | Base Weight: {droppedItem.Value.dropWeight} Multiplier: {multiplier} | Item Weight: {adjustedWeight}", 10);
         
         return (droppedItem.Value, adjustedWeight);
     }
