@@ -82,6 +82,10 @@ public class LootTable : ScriptableObject {
     public float GetTotalWeight(float luck, float enemyInfluence = 1f) {
         float totalWeight = 0;
 
+        if (BaseTotalWeight == 0) {
+            CollectRarityWeights();
+        }
+
         totalWeight += rareWeight * GetWeightInfluenceMultiplier(Rarity.Rare, luck, enemyInfluence);
         totalWeight += epicWeight * GetWeightInfluenceMultiplier(Rarity.Epic, luck, enemyInfluence);
         totalWeight += legendaryWeight * GetWeightInfluenceMultiplier(Rarity.Legendary, luck, enemyInfluence);
@@ -150,11 +154,6 @@ public class LootTable : ScriptableObject {
         
         return Luck.GetLuckCurve(luck, enemyInfluence, bonus, exp);
     }
-    
-    #region Validation
-    private void OnValidate() {
-        CollectRarityWeights();
-    }
 
     private void CollectRarityWeights() {
         rareWeight = 0f;
@@ -186,10 +185,8 @@ public class LootTable : ScriptableObject {
             }
 
             if (items[i].dropWeight <= 0f) {
-                Debug.LogWarning(
-                    $"Loot Item '{items[i].data.itemName}' in Loot Table '{name}' has a drop weight of 0 or less.");
+                Debug.LogWarning($"Loot Item '{items[i].data.itemName}' in Loot Table '{name}' has a drop weight of 0 or less.");
             }
         }
     }
-    #endregion
 }
