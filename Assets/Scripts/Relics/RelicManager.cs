@@ -14,12 +14,14 @@ public class RelicManager : MonoBehaviour, IStatboard
         }
         else {
             relic = type.CreateInstance();
-            if (relic != null) {
-                relic.Initialise(this, data);
-                relic.AddStack(amount);
-                relics.Add(relic);
+            if (relic == null) {
+                return;
             }
+            relic.Initialise(this, data);
+            relic.AddStack(amount);
+            relics.Add(relic);
         }
+        statboard.eventManager?.OnRelicAdded?.Invoke(relic.data);
     }
 
     public void RemoveRelic(ClassReference<Relic> type, int amountToRemove = 0) {

@@ -13,9 +13,19 @@ MonoBehaviour:
   m_Name: TestRelic Legendary
   m_EditorClassIdentifier: 
   itemName: Legendary
-  itemDescription: New Description
+  itemDescription: 'BOOOOM!
+
+
+    LE
+
+    GEN
+
+    DARY!!
+
+    !!!'
+  itemFlavourText: glod
   rarity: 3
-  icon: {fileID: 0}
+  itemIcon: {fileID: 992975435, guid: 0fc7ca9a14c8abd42819b2057609176b, type: 3}
   prefab: {fileID: 925627058442441481, guid: 11fbac5a6f0bcbc4b9648e22f30e6b79, type: 3}
   relicType:
     className: 

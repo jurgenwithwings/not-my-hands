@@ -5,7 +5,8 @@ using UnityEngine;
 [Serializable]
 [CreateAssetMenu(fileName = "Organ", menuName = "ScriptableObjects/Organ")]
 public class OrganData : ItemData {
-    [Button(nameof(SetDefaultStats), "Set Default Stats", ButtonAttribute.ButtonDisplay.DrawInline)] public OrganType type;
+    [Button(nameof(SetDefaultStats), "Set Default Stats", ButtonAttribute.ButtonDisplay.DrawInline)] 
+    public OrganType type;
     public OrganStat[] stats;
     public ClassReference<Organ> organClass;
 

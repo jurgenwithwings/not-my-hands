@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: TestRelic Epic
   m_EditorClassIdentifier: 
   itemName: Epic 1
-  itemDescription: New Description
+  itemDescription: This is like the first Epic Test Relic
+  itemFlavourText: Num 1 Epic
   rarity: 2
-  icon: {fileID: 0}
+  itemIcon: {fileID: 21300000, guid: 83b8d704c6805f24cafc0f4bef0e718d, type: 3}
   prefab: {fileID: 6225308302197737555, guid: d9ba53cc062fd9f4eb49d08c309b3f05, type: 3}
   relicType:
     className: 

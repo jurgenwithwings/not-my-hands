@@ -13,13 +13,12 @@ MonoBehaviour:
   m_Name: Heart
   m_EditorClassIdentifier: 
   itemName: Heart
-  itemDescription: New Description
+  itemDescription: Your Heart.
+  itemFlavourText: ...
   rarity: 0
-  icon: {fileID: 0}
+  itemIcon: {fileID: 2114017393, guid: 0fc7ca9a14c8abd42819b2057609176b, type: 3}
   prefab: {fileID: 8480930156855611742, guid: a33eab6886154cb45b2465d5b205cb2c, type: 3}
   type: 0
-  organClass:
-    className: Heart, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   stats:
   - statType: 0
     value: 6
@@ -31,3 +30,5 @@ MonoBehaviour:
     value: 1
   - statType: 4
     value: 0
+  organClass:
+    className: Heart, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null

@@ -296,6 +296,19 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
         }
     }
     public void OnScrollWheel(InputAction.CallbackContext context) { }
+
+    public InputEvent<bool> UIExit;
+    public void OnExit(InputAction.CallbackContext context) {
+        DefaultHandle(context);
+        if (context.performed || context.canceled) {
+            UIExit.SetAndInvoke(context.performed, context.performed, context);
+            EnableActionMap(InputMap.Player);
+            //TEMP TEMP TEMP
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            PlayerHUDEvents.OnDoTheInventory.Invoke(false);
+        }
+    }
 }
 
 public struct CachedGlyph {

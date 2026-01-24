@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: TestRelic Cursed
   m_EditorClassIdentifier: 
   itemName: Cursed
-  itemDescription: New Description
+  itemDescription: Its like a place holder but Cursed.
+  itemFlavourText: Cursed Cursed C..
   rarity: 4
-  icon: {fileID: 0}
+  itemIcon: {fileID: 917208548, guid: 0fc7ca9a14c8abd42819b2057609176b, type: 3}
   prefab: {fileID: 3739101996514300296, guid: e7bfe42319da761419fe17a4fbedc128, type: 3}
   relicType:
     className: 

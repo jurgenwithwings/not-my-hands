@@ -31,4 +31,25 @@ public class EntityEventManager : MonoBehaviour, IStatboard
     /// <para><c>ManaSpent</c> - The amount of mana spent or gained. Negative if spent.</para>
     /// </summary>
     public Action<float> OnManaChanged;
+
+    /// <summary>
+    /// Called when a new Organ is picked up by this entity.
+    /// <para><c>New Organ</c> - The Organ that the entity has picked up.</para>
+    /// <para><c>Old Organ</c> - The Organ being dropped for the new one.</para>
+    /// </summary>
+    public Action<OrganData, OrganData> OnOrganChanged;
+    
+    /// <summary>
+    /// Called when a new Relic is picked up by this entity.
+    /// <para><c>New Relic</c> - The Relic that the entity has picked up.</para>
+    /// </summary>
+    public Action<RelicData> OnRelicAdded;
+    
+    /// <summary>
+    /// Called when a new Limb is picked up by this entity.
+    /// <para><c>New Limb</c> - The Limb that the entity has picked up.</para>
+    /// <para><c>LimbSide</c> - The side that the new Limb occupies.</para>
+    /// <para><c>Old Limb</c> - The Limb being dropped for the new one.</para>
+    /// </summary>
+    public Action<LimbData, LimbSide, LimbData> OnLimbChanged;
 }

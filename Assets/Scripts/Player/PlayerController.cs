@@ -23,7 +23,6 @@ public class PlayerController : MonoBehaviour
 
     [Header("Camera")]
     public Transform cameraHolder;
-    public float mouseSensitivity = 120f;
     public float verticalClamp = 85f;
     public bool lockCursor = true;
     
@@ -48,22 +47,56 @@ public class PlayerController : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
-
-        stats.eventManager.OnReceivedYourDamage += SpawnDamageNumber;
-        stats.eventManager.OnDamageTaken += PlayerTakenDamage;
         
         inputs = GetComponent<InputManager>();
+    }
+
+    private void Start() {
+        stats.eventManager.OnReceivedYourDamage += SpawnDamageNumber;
+        stats.eventManager.OnDamageTaken += PlayerTakenDamage;
+        stats.eventManager.OnOrganChanged += PlayerOrganChanged;
+        stats.eventManager.OnRelicAdded += PlayerRelicAdded;
+        stats.eventManager.OnLimbChanged += PlayerLimbChanged;
+
+        foreach (Organ organ in stats.organManager.organs) {
+            PlayerOrganChanged(organ.data, null);
+        }
+        
+        inputs.Inventory.Event += InventoryDebugEvent;
+    }
+
+    private void InventoryDebugEvent(InputEvent<bool> inputEvent) {
+        if (inputEvent.Triggered) {
+            PlayerHUDEvents.OnDoTheInventory.Invoke(true);
+            inputs.EnableActionMap(InputMap.UI);
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+    }
+
+    private void PlayerLimbChanged(LimbData newLimb, LimbSide limbSide, LimbData oldLimb) {
+        PlayerHUDEvents.OnUpdateLimb?.Invoke(newLimb, limbSide);
+    }
+
+    private void PlayerRelicAdded(RelicData relic) {
+        PlayerHUDEvents.OnAddedRelic?.Invoke(relic);
+    }
+
+    private void PlayerOrganChanged(OrganData newOrgan, OrganData oldOrgan) { 
+        PlayerHUDEvents.OnUpdateOrgan?.Invoke(newOrgan);
     }
 
     private void PlayerTakenDamage(DamageInfo obj) {
         PlayerHUDEvents.OnHealthChanged?.Invoke(stats.health.CurrentHealth, stats.maxHealth);
     }
+    
 
     private void OnDestroy() {
         stats.eventManager.OnReceivedYourDamage -= SpawnDamageNumber;
         stats.eventManager.OnDamageTaken -= PlayerTakenDamage;
-        
-        //playerControls.Disable();
+        stats.eventManager.OnOrganChanged += PlayerOrganChanged;
+        stats.eventManager.OnRelicAdded += PlayerRelicAdded;
+        stats.eventManager.OnLimbChanged += PlayerLimbChanged;
     }
 
     public void SpawnDamageNumber(DamageInfo damageInfo, Statboard victim) {
