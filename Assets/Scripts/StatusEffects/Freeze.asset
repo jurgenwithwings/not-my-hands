@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e54d0b4a7bd4a02a51e593580900e45, type: 3}
+  m_Name: Freeze
+  m_EditorClassIdentifier: 
+  displayName: Freeze
+  icon: {fileID: 21300000, guid: eae725e002ad4d342967bbc4c11d4ea4, type: 3}
+  maxDuration: 6
+  StacksLostOnDurationEnd: 999
+  maxStacks: 10
+  tickInterval: 1
+  baseDamage: []
+  damagePerStack: []
+  statusEffectType:
+    rid: 7033823840363610399
+  references:
+    version: 2
+    RefIds:
+    - rid: 7033823840363610399
+      type: {class: Freeze, ns: , asm: Assembly-CSharp}
+      data:
+        baseSpeedMultiplier: 0.1
+        perStackSpeedMultiplier: 0.05

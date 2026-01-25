@@ -18,8 +18,8 @@ public class Statboard : MonoBehaviour {
     public OrganManager organManager;
     public HealthBar healthBar;
     public new Rigidbody rigidbody;
-
-    private List<Stat> allStats = new();
+    
+    public List<Stat> allStats { get; private set; } = new();
     
     [Section("Heart")]
     public Stat maxHealth = 100;

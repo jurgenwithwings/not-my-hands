@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     
     [Header("Testing")] 
     [SerializeField] private DamageInstance[] damage;
-    [SerializeField] private ClassReference<StatusEffect> effect;
+    [SerializeField] private StatusEffectData effect;
     [SerializeField] private LayerMask enemyMask;
 
     private CharacterController controller;
@@ -61,6 +61,8 @@ public class PlayerController : MonoBehaviour
         foreach (Organ organ in stats.organManager.organs) {
             PlayerOrganChanged(organ.data, null);
         }
+        
+        PlayerHUDEvents.OnRegisterStatboard.Invoke(stats);
         
         inputs.Inventory.Event += InventoryDebugEvent;
     }
@@ -178,22 +180,25 @@ public class PlayerController : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Z)) {
-            int index = Random.Range(1, 6);
+            int index = Random.Range(1, 7);
             switch (index) {
                 case 1:
-                    effect = typeof(Burn);
+                    effect = GameConfig.Instance.bleed;
                     break;
                 case 2:
-                    effect = typeof(Freeze);
+                    effect = GameConfig.Instance.burn;
                     break;
                 case 3:
-                    effect = typeof(Poison);
+                    effect = GameConfig.Instance.freeze;
                     break;
                 case 4:
-                    effect = typeof(Charged);
+                    effect = GameConfig.Instance.charged;
                     break;
                 case 5:
-                    effect = typeof(Judged);
+                    effect = GameConfig.Instance.poison;
+                    break;
+                case 6:
+                    effect = GameConfig.Instance.judged;
                     break;
             }
         }

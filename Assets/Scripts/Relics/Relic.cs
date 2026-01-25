@@ -1,10 +1,12 @@
 using System;
 using Stats;
+using UnityEngine;
 
 [Serializable]
 public abstract class Relic {
     protected RelicManager manager;
     public RelicData data { get; private set; }
+    
     protected Statboard stats => manager.statboard;
 
     public int stacks { get; private set; }
@@ -34,8 +36,10 @@ public abstract class Relic {
     }
 }
 
+[Serializable]
 public class WovenEye : Relic {
     private string source;
+
     public override void AddStack(int amount) {
         base.AddStack(amount);
         ReplaceModifier();

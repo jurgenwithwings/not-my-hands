@@ -32,15 +32,15 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard
     }
 
     public void AddStacks(DamageInfo damageInfo, int stacks = 1) {
-        foreach (var effectType in damageInfo.statusEffects.Keys) {
-            if (typeof(BuffEffect).IsAssignableFrom(effectType)) {
-                if (GetBuffFromList(effectType, out BuffEffect effect)) {
+        foreach (var effectData in damageInfo.statusEffects.Keys) {
+            if (typeof(BuffEffect).IsAssignableFrom(effectData.Type())) {
+                if (GetBuffFromList(effectData.Type(), out BuffEffect effect)) {
                     effect.AddStack(damageInfo, stacks);
                 }
                 else {
-                    BuffEffect newEffect = (BuffEffect)effectType.CreateInstance();
+                    BuffEffect newEffect = Activator.CreateInstance(effectData.Type()) as BuffEffect;
                     if (newEffect != null) {
-                        newEffect.Initialise(this, damageInfo);
+                        newEffect.Initialise(effectData, this, damageInfo);
                         if (stacks > 1) {
                             newEffect.AddStack(damageInfo, stacks - 1);
                         }
@@ -49,13 +49,13 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard
                 }
             }
             else {
-                if (GetEffectFromList(effectType, out StatusEffect effect)) {
+                if (GetEffectFromList(effectData.Type(), out StatusEffect effect)) {
                     effect.AddStack(damageInfo, stacks);
                 }
                 else {
-                    StatusEffect newEffect = effectType.CreateInstance();
+                    StatusEffect newEffect = Activator.CreateInstance(effectData.Type()) as StatusEffect;
                     if (newEffect != null) {
-                        newEffect.Initialise(this, damageInfo);
+                        newEffect.Initialise(effectData, this, damageInfo);
                         if (stacks > 1) {
                             newEffect.AddStack(damageInfo, stacks - 1);
                         }
@@ -66,7 +66,7 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard
         }
     }
 
-    public void RemoveStacks(ClassReference<StatusEffect> type, int stacks = 1) {
+    public void RemoveStacks(Type type, int stacks = 1) {
         if (typeof(BuffEffect).IsAssignableFrom(type)) {
             if (GetBuffFromList(type, out BuffEffect effect)) {
                 effect.RemoveStacks(stacks);
@@ -79,7 +79,7 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard
         }
     }
 
-    public void RemoveEffect(ClassReference<StatusEffect> type) {
+    public void RemoveEffect(Type type) {
         if (typeof(BuffEffect).IsAssignableFrom(type)) {
             if (GetBuffFromList(type, out BuffEffect effect)) {
                 effect.RemoveEffect();
@@ -104,12 +104,12 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard
         }
     }
 
-    private bool GetEffectFromList(ClassReference<StatusEffect> type, out StatusEffect effect) {
+    private bool GetEffectFromList(Type type, out StatusEffect effect) {
         effect = PrimaryStatusEffects.Find(e => e.GetType() == type);
         return effect != null;
     }
     
-    private bool GetBuffFromList(ClassReference<StatusEffect> type, out BuffEffect effect) {
+    private bool GetBuffFromList(Type type, out BuffEffect effect) {
         effect = BuffEffects.Find(e => e.GetType() == type);
         return effect != null;
     }

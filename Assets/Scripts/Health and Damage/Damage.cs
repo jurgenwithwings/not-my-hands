@@ -38,7 +38,7 @@ public struct DamageTypeStats {
 
 [Serializable]
 public struct DamageInstance {
-    public enum Type {
+    public enum DamageType {
         Physical,
         Fire,
         Ice,
@@ -47,11 +47,11 @@ public struct DamageInstance {
         Light
     }
 
-    public Type type;
+    public DamageType damageType;
     public float amount;
 
-    public DamageInstance(Type type, float amount) {
-        this.type = type;
+    public DamageInstance(DamageType damageType, float amount) {
+        this.damageType = damageType;
         this.amount = amount;
     }
 }
@@ -60,7 +60,7 @@ public struct DamageInstance {
 public struct DamageInfo {
     public DamageInstance[] damageInstances;
     public Statboard source;
-    public Dictionary<ClassReference<StatusEffect>, int> statusEffects;
+    public Dictionary<StatusEffectData, int> statusEffects;
     public float knockback;
     public Vector3 direction;
     public Vector3 hitPoint;
@@ -122,24 +122,24 @@ public struct DamageInfo {
         for (int i = 0; i < damageInstances.Length; i++)
         {
             var damage = damageInstances[i];
-            switch (damage.type)
+            switch (damage.damageType)
             {
-                case DamageInstance.Type.Physical:
+                case DamageInstance.DamageType.Physical:
                     damage.amount *= stats.physical.Value;
                     break;
-                case DamageInstance.Type.Fire:
+                case DamageInstance.DamageType.Fire:
                     damage.amount *= stats.fire.Value;
                     break;
-                case DamageInstance.Type.Ice:
+                case DamageInstance.DamageType.Ice:
                     damage.amount *= stats.ice.Value;
                     break;
-                case DamageInstance.Type.Electric:
+                case DamageInstance.DamageType.Electric:
                     damage.amount *= stats.electric.Value;
                     break;
-                case DamageInstance.Type.Poison:
+                case DamageInstance.DamageType.Poison:
                     damage.amount *= stats.poison.Value;
                     break;
-                case DamageInstance.Type.Light:
+                case DamageInstance.DamageType.Light:
                     damage.amount *= stats.light.Value;
                     break;
             }
@@ -152,24 +152,24 @@ public struct DamageInfo {
         for (int i = 0; i < damageInstances.Length; i++)
         {
             var damage = damageInstances[i];
-            switch (damage.type)
+            switch (damage.damageType)
             {
-                case DamageInstance.Type.Physical:
+                case DamageInstance.DamageType.Physical:
                     damage.amount *= 1 - stats.physical.Value;
                     break;
-                case DamageInstance.Type.Fire:
+                case DamageInstance.DamageType.Fire:
                     damage.amount *= 1 - stats.fire.Value;
                     break;
-                case DamageInstance.Type.Ice:
+                case DamageInstance.DamageType.Ice:
                     damage.amount *= 1 - stats.ice.Value;
                     break;
-                case DamageInstance.Type.Electric:
+                case DamageInstance.DamageType.Electric:
                     damage.amount *= 1 - stats.electric.Value;
                     break;
-                case DamageInstance.Type.Poison:
+                case DamageInstance.DamageType.Poison:
                     damage.amount *= 1 - stats.poison.Value;
                     break;
-                case DamageInstance.Type.Light:
+                case DamageInstance.DamageType.Light:
                     damage.amount *= 1 - stats.light.Value;
                     break;
             }

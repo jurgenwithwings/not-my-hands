@@ -22,7 +22,7 @@ public class Player : MonoBehaviour
 
     [Header("Testing")] 
     [SerializeField] private DamageInstance[] damage;
-    [SerializeField] private ClassReference<StatusEffect> effect;
+    [SerializeField] private StatusEffectData effect;
     [SerializeField] private LayerMask enemyMask;
 
     Rigidbody rb;
