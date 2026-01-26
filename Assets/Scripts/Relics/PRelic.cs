@@ -8,7 +8,7 @@ public class PRelic : PhysicalLoot, IInteractable {
     public bool HasAltInteraction { get; } = true;
 
     public void Interact(Statboard interactor) {
-        //interactor.relicManager.AddRelic(data.relicType, data);
+        interactor.relicManager.AddRelic(data);
         Destroy(gameObject);
     }
 

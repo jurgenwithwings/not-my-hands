@@ -21,14 +21,19 @@ MonoBehaviour:
   type: 0
   stats:
   - statType: 0
-    value: 6
+    value: 100
   - statType: 1
     value: 0
   - statType: 2
-    value: 0
-  - statType: 3
     value: 1
-  - statType: 4
+  - statType: 3
     value: 0
   organClass:
-    className: Heart, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    rid: 7033823858230296663
+  references:
+    version: 2
+    RefIds:
+    - rid: 7033823858230296663
+      type: {class: Heart, ns: , asm: Assembly-CSharp}
+      data:
+        data: {fileID: 0}

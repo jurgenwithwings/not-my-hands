@@ -29,5 +29,12 @@ MonoBehaviour:
   - statType: 3
     value: 0
   organClass:
-    className: StatusEffectHeart, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
+    rid: 7033823858230296665
+  references:
+    version: 2
+    RefIds:
+    - rid: 7033823858230296665
+      type: {class: StatusEffectHeart, ns: , asm: Assembly-CSharp}
+      data:
+        data: {fileID: 0}
+        perStatusEffectBonus: 0.5

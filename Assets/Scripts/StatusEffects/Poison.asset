@@ -20,15 +20,21 @@ MonoBehaviour:
   tickInterval: 1.5
   baseDamage:
   - damageType: 0
-    amount: 0.3
+    baseAmount: 0
+    additiveMultiplier: 0
+    multiplicativeMultiplier: 0
+    finalMultiplier: 0
   damagePerStack:
   - damageType: 0
-    amount: 0.1
-  statusEffectType:
-    rid: 7033823840363610404
+    baseAmount: 0
+    additiveMultiplier: 0
+    multiplicativeMultiplier: 0
+    finalMultiplier: 0
+  statusEffectClass:
+    rid: 7033823864606163080
   references:
     version: 2
     RefIds:
-    - rid: 7033823840363610404
+    - rid: 7033823864606163080
       type: {class: Poison, ns: , asm: Assembly-CSharp}
       data: 

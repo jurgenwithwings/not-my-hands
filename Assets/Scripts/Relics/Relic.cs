@@ -23,7 +23,7 @@ public abstract class Relic {
     public virtual void RemoveStack() {
         stacks--;
         if (stacks <= 0) {
-            manager.RemoveRelic(GetType());
+            manager.RemoveRelic(data);
         }
     }
 
@@ -36,13 +36,13 @@ public abstract class Relic {
     }
 }
 
-[Serializable]
-public class WovenEye : Relic {
+[Serializable] public class WovenEye : Relic {
     private string source;
 
     public override void AddStack(int amount) {
         base.AddStack(amount);
         ReplaceModifier();
+        //Debug.Log("Added Relic");
     }
 
     public override void RemoveStack() {
@@ -54,7 +54,8 @@ public class WovenEye : Relic {
 
     private void ReplaceModifier() {
         stats.moveSpeed.RemoveAllModifiersFromSource(source);
-        stats.moveSpeed.AddModifier(new Modifier(0.05f * stacks, ModifierType.TotalMultiply, source));
+        PlayerHUDEvents.DebugText($"New Mod Amount: {0.05f * stacks} | Relic Count: {manager.relics.Count}", 3, "Relic");
+        stats.moveSpeed.AddModifier(new Modifier(0.05f * stacks, ModifierType.Multiply, source));
     }
 
     public override void Remove() {

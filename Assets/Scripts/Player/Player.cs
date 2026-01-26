@@ -66,7 +66,6 @@ public class Player : MonoBehaviour
                 Debug.LogWarning("Hit: " + hitInfo.collider.gameObject.name);
                 DamageInfo damageInfo = new DamageInfo(damage, this.stats);
                 damageInfo.hitPoint = hitInfo.point;
-                damageInfo.direction = (hitInfo.point - playerCamera.position).normalized;
                 damageInfo.statusEffects.Add(effect, 3);
                 
                 stats.health.TakeDamage(damageInfo);

@@ -1,13 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Stats;
 using UnityEngine;
 
-//[DisallowMultipleComponent]
-//[RequireComponent(typeof(RelicManager))] 
-//[RequireComponent(typeof(EntityStatusEffectManager))]
-//[RequireComponent(typeof(EntityEventManager))]
-//[RequireComponent(typeof(Health))]
+[DisallowMultipleComponent]
+[RequireComponent(typeof(EntityEventManager))]
+[RequireComponent(typeof(EntityStatusEffectManager))]
+[RequireComponent(typeof(Health))]
+[RequireComponent(typeof(RelicManager))] 
 public class Statboard : MonoBehaviour {
     [Section("References")]
     [Button(nameof(TryGetReferences), "Retrieve References", r:0.2f, g:0.2f, b:0.2f)]
@@ -236,5 +237,36 @@ public interface IStatboard {
     /// </summary>
     public virtual void StatboardFinishedSet() {
         
+    }
+}
+
+[Serializable] public struct DamageTypeStats {
+    public Stat physical;
+    public Stat fire;
+    public Stat ice;
+    public Stat electric;
+    public Stat poison;
+    public Stat light;
+
+    public DamageTypeStats(float defaultValue) {
+        physical = defaultValue;
+        fire = defaultValue;
+        ice = defaultValue;
+        electric = defaultValue;
+        poison = defaultValue;
+        light = defaultValue;
+    }
+
+    public List<Stat> GetStats() {
+        List<Stat> stats = new List<Stat>();
+        
+        foreach (FieldInfo field in typeof(DamageTypeStats).GetFields()) {
+            if (field.FieldType == typeof(Stat)) {
+                Stat stat = (Stat)field.GetValue(this);
+                stats.Add(stat);
+            }
+        }
+
+        return stats;
     }
 }

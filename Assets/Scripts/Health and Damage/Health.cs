@@ -13,6 +13,7 @@ public class Health : MonoBehaviour, IStatboard
                 if (CurrentHealth > newMax) {
                     CurrentHealth = newMax;
                 }
+                statboard.eventManager.OnHealthChanged?.Invoke(CurrentHealth, newMax);
             };
         }
     }
@@ -28,6 +29,8 @@ public class Health : MonoBehaviour, IStatboard
     private float lastTimeDamaged;
     
     public event Action<Statboard> OnDeath;
+    
+    
     
     private void Awake() {
         if (maxHealth != 0) {
@@ -50,7 +53,7 @@ public class Health : MonoBehaviour, IStatboard
             damageInfo.SetResistanceMultipliers(statboard.damageResistances);
         }
         
-        float totalDamageTaken = damageInfo.totalDamage;
+        float totalDamageTaken = damageInfo.finalDamage;
         CurrentHealth -= totalDamageTaken;
         lastTimeDamaged = Time.time;
         
@@ -63,6 +66,8 @@ public class Health : MonoBehaviour, IStatboard
         if (CurrentHealth < 0) {
             Die(damageInfo.source);
         }
+        
+        //Debug.Log(damageInfo.damageInstances[0].additiveMultiplier);
         
         //TEMP TEMP TEMP TEMP
         OnDeath?.Invoke(damageInfo.source);

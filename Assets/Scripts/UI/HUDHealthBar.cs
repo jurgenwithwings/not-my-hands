@@ -11,11 +11,11 @@ public class HUDHealthBar : MonoBehaviour{
 
     private float lastDamageTime;
     private float secondaryHealthMoveDelay = 1.68f;
-    
-    void Start() {
-        PlayerHUDEvents.OnHealthChanged += SetTargetHealth;
+
+    private void Awake() {
         redHealthBar.value = 1;
         yellowHealthBar.value = 1;
+        PlayerHUDEvents.OnHealthChanged += SetTargetHealth;
     }
 
     private void OnDestroy() {

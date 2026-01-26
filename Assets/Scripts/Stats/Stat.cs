@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Stats;
 using UnityEngine;
 
 namespace Stats {
@@ -8,20 +9,26 @@ namespace Stats {
         /// <summary>
         /// This is a flat amount that is added to the base value. This is very powerful.
         /// </summary>
-        [Tooltip("Flat amount added to the base.")]
+        [Tooltip("This is a flat amount that is added to the base value. This is very powerful.")]
         BaseAdd = 100,
 
         /// <summary>
-        /// This is the most common type of modifier. It takes the base value and multiplies it by the modifier value.
+        /// Most common/general modifier. This is Pools up one pig percentage that is multiplied to the base.
         /// </summary>
-        [Tooltip("Most common modifier. Multiplies the base value after all the modifier have been summed.")]
-        TotalMultiply = 200,
-
+        [Tooltip("Most common/general modifier. This is Pools up one pig percentage that is multiplied to the base.")]
+        Additive = 200,
+        
         /// <summary>
-        /// This is a percentage added after everything else. It is exponential so use carefully.
+        /// This is a compounding percentage that exponentially increases the base value. Strong effect usually combined with small numbers.
         /// </summary>
-        [Tooltip("Calculates and applies each modifier one after another, based on the new value.")]
-        SequentialMultiply = 300,
+        [Tooltip("This is a compounding percentage that exponentially increases the base value. Strong effect usually combined with small numbers.")]
+        Multiply = 300,
+        
+        /// <summary>
+        /// This is a compounding multiplier applied to the result of all other modifiers. This is extremely potent and should be used sparingly.
+        /// </summary>
+        [Tooltip("This is a compounding multiplier applied to the result of all other modifiers. This is extremely potent and should be used sparingly.")]
+        Final = 400,
     }
 
     public class Modifier {
@@ -87,8 +94,7 @@ namespace Stats {
         }
     }
 
-    [Serializable]
-    public class Stat {
+    [Serializable] public class Stat {
         public float BaseValue;
 
         public float Value {
@@ -138,6 +144,12 @@ namespace Stats {
         //Get the int value of a stat implicitly
         public static implicit operator int(Stat stat) {
             return stat.IntValue;
+        }
+
+        public void SetBaseValue(float baseValue) {
+            BaseValue = baseValue;
+            isDirty = true;
+            OnValueChanged?.Invoke(this);
         }
         
         /// <summary>
@@ -220,39 +232,38 @@ namespace Stats {
         
         
         protected float CalculateFinalValue() {
-            float finalValue = BaseValue;
-            float sumPercentAdd = 0;
+            float baseAdd = 0;
+            float additiveTotal = 0;
+            float multiplicativeMult = 1;
+            float finalMult = 1;
 
             for (int i = 0; i < modifiers.Count; i++) {
                 Modifier mod = modifiers[i];
 
                 switch (mod.Type) {
                     case ModifierType.BaseAdd:
-
-                        finalValue += mod.Value;
+                        baseAdd += mod.Value;
                         break;
-                    case ModifierType.SequentialMultiply:
-
-                        sumPercentAdd += mod.Value;
-
-                        // If we're at the end of the list OR the next modifer is a not a SequentialMultiply, then apply the final value
-                        if (i + 1 >= modifiers.Count || modifiers[i + 1].Type != ModifierType.SequentialMultiply) {
-                            finalValue *= 1 + sumPercentAdd;
-                            sumPercentAdd = 0;
-                        }
-
+                    
+                    case ModifierType.Additive:
+                        additiveTotal += mod.Value;
                         break;
-                    case ModifierType.TotalMultiply:
-
-                        finalValue *= 1 + mod.Value;
+                    
+                    case ModifierType.Multiply:
+                        multiplicativeMult *= (1 + mod.Value);
                         break;
+                    
+                    case ModifierType.Final:
+                        finalMult *= mod.Value;
+                        break;
+                    
                     default:
                         Debug.LogWarning("Modifier Type Is Not Handled");
                         break;
                 }
             }
 
-            return (float)Math.Round(finalValue, 4);
+            return (float)Math.Round(BaseValue.GetModifiedValue(baseAdd, additiveTotal, multiplicativeMult, finalMult), 4);
         }
         
         protected int CompareModifierOrder(Modifier a, Modifier b) {
@@ -261,6 +272,31 @@ namespace Stats {
             else if (a.Order > b.Order)
                 return 1;
             return 0;
+        }
+    }
+
+    public static class StatExtensions {
+        public static float GetModifiedValue(this float baseValue, float flat, float additive, float multiplicative,
+            float final, bool debug = false) {
+            float newBase = baseValue + flat;
+            if (debug) {
+                PlayerHUDEvents.DebugText($"Base: {baseValue} + Flat: {flat} = {newBase}");
+            }
+
+            float scaled = newBase * (1 + additive);
+            if (debug) {
+                PlayerHUDEvents.DebugText($"NewBase: {newBase} x (1 + Additive: {additive}) = {scaled}");
+            }
+            scaled += ((newBase * multiplicative) - newBase);
+            if (debug) {
+                PlayerHUDEvents.DebugText($"(NewBase: {newBase} x Multiplicative: {multiplicative}) - NewBase: {newBase} = {scaled}");
+            }
+
+            float result = scaled * final;
+            if (debug) {
+                PlayerHUDEvents.DebugText($"Scaled: {scaled} x Final: {final} = {result}");
+            }
+            return result;
         }
     }
 }

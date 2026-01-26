@@ -4,40 +4,7 @@ using System.Reflection;
 using Stats;
 using UnityEngine;
 
-[Serializable]
-public struct DamageTypeStats {
-    public Stat physical;
-    public Stat fire;
-    public Stat ice;
-    public Stat electric;
-    public Stat poison;
-    public Stat light;
-
-    public DamageTypeStats(float defaultValue) {
-        physical = defaultValue;
-        fire = defaultValue;
-        ice = defaultValue;
-        electric = defaultValue;
-        poison = defaultValue;
-        light = defaultValue;
-    }
-
-    public List<Stat> GetStats() {
-        List<Stat> stats = new List<Stat>();
-        
-        foreach (FieldInfo field in typeof(DamageTypeStats).GetFields()) {
-            if (field.FieldType == typeof(Stat)) {
-                Stat stat = (Stat)field.GetValue(this);
-                stats.Add(stat);
-            }
-        }
-
-        return stats;
-    }
-}
-
-[Serializable]
-public struct DamageInstance {
+[Serializable] public struct DamageInstance {
     public enum DamageType {
         Physical,
         Fire,
@@ -48,74 +15,149 @@ public struct DamageInstance {
     }
 
     public DamageType damageType;
-    public float amount;
+    public float baseAmount;
+    // Modifier buckets
+    [HideInInspector] public float flat;            // +X damage
+    [HideInInspector] public float additive;        // +X% damage (as decimal, 0.25 = +25%)
+    [HideInInspector] public float multiplicative;  // x multiplier
+    [HideInInspector] public float final;           // applied at the end
 
-    public DamageInstance(DamageType damageType, float amount) {
+    public DamageInstance(DamageType damageType, float baseAmount) {
         this.damageType = damageType;
-        this.amount = amount;
+        this.baseAmount = baseAmount;
+        this.flat = 0f;
+        this.additive = 0f;
+        this.multiplicative = 1f;
+        this.final = 1f;
+    }
+
+    // Resolve instance damage (no global modifiers applied yet)
+    public float Resolve() {
+        float value = baseAmount + flat;
+        value *= (1f + additive);
+        value *= multiplicative;
+        value *= final;
+        return value;
+    }
+
+    public void SetBaseAmount(float amount) {
+        baseAmount = amount;
+        //isDirty = true;
+    }
+
+    public void AddFlatAmount(float amount) {
+        flat += amount;
+        //isDirty = true;
+    }
+
+    public void AddAdditiveMultiplier(float amount) {
+        additive += amount;
+        //isDirty = true;
+    }
+
+    public void AddMultiplicativeMultiplier(float amount) {
+        multiplicative *= (1 + amount);
+        //isDirty = true;
+    }
+
+    public void AddTotalMultiplier(float amount) {
+        final *= amount;
+        //isDirty = true;
     }
 }
 
-[Serializable]
-public struct DamageInfo {
+[Serializable] public struct DamageInfo {
     public DamageInstance[] damageInstances;
     public Statboard source;
     public Dictionary<StatusEffectData, int> statusEffects;
-    public float knockback;
-    public Vector3 direction;
     public Vector3 hitPoint;
     public bool selfDamage;
     public bool ignoreResistances;
 
-    public float totalDamage
-    {
-        get
-        {
-            float total = 0f;
-            foreach (var instance in damageInstances)
-                total += instance.amount;
-            return total;
-        }
-    }
+    // Hit-level modifier buckets
+    public float flatAll;            // +X to all types
+    public float additiveAll;        // +X% to all types (0.20 = +20%)
+    public float multiplicativeAll;  // x multiplier to all damage
+    public float finalAll;           // final multiplier for whole hit
 
-    public DamageInfo(DamageInstance[] damageInstances, Statboard statboard)
-    {
-        knockback = 0f;
-        direction = Vector3.zero;
+    public bool debug;
+
+    public DamageInfo(DamageInstance[] damageInstances, Statboard statboard) {
         hitPoint = Vector3.zero;
         selfDamage = false;
-        statusEffects = new();
         ignoreResistances = false;
+        statusEffects = new();
+
+        flatAll = 0f;
+        additiveAll = 0f;
+        multiplicativeAll = 1f;
+        finalAll = 1f;
+
+        debug = false;
+        
         source = statboard;
         this.damageInstances = damageInstances;
     }
 
+    // Sum base without modifiers (optional convenience)
+    public float baseDamage {
+        get {
+            float total = 0f;
+            foreach (var instance in damageInstances)
+                total += instance.baseAmount;
+            return total;
+        }
+    }
+
+    public float finalDamage => ResolveFinalDamage();
+    // Fully resolve including instance-level and hit-level buckets
+    public float ResolveFinalDamage() {
+        float total = 0f;
+
+        for (int i = 0; i < damageInstances.Length; i++) {
+            var inst = damageInstances[i];
+
+            if (debug) {
+                PlayerHUDEvents.DebugText($"{inst.baseAmount.GetModifiedValue(inst.flat + flatAll, inst.additive + additiveAll, inst.multiplicative * multiplicativeAll, inst.final * finalAll)}");
+            }
+            total += inst.baseAmount.GetModifiedValue(inst.flat + flatAll, inst.additive + additiveAll, 
+                inst.multiplicative * multiplicativeAll, inst.final * finalAll, debug);
+        }
+
+        return total;
+    }
+
     public DamageInfo Copy() {
-        DamageInfo copy = new DamageInfo();
-        copy.damageInstances = (DamageInstance[])damageInstances.Clone();
-        copy.source = source;
-        copy.statusEffects = statusEffects;
-        copy.knockback = knockback;
-        copy.direction = direction;
-        copy.hitPoint = hitPoint;
-        copy.selfDamage = selfDamage;
-        copy.ignoreResistances = ignoreResistances;
+        DamageInfo copy = this;
+        copy.damageInstances = damageInstances.Clone() as DamageInstance[];
 
         return copy;
     }
 
-    public DamageInstance[] GetDamagePercentages()
+    /*public DamageInstance[] GetDamagePercentages()
     {
         DamageInstance[] damagePercentages = new DamageInstance[damageInstances.Length];
         for (int i = 0; i < damageInstances.Length; i++)
         {
             damagePercentages[i] = damageInstances[i];
-            damagePercentages[i].amount = totalDamage > 0 ? damageInstances[i].amount / totalDamage : 0;
+            damagePercentages[i].baseAmount = finalDamage > 0 ? damageInstances[i].FinalDamage / finalDamage : 0;
         }
         return damagePercentages;
+    }*/
+    
+    public void AddAdditiveMultiplierToAll(float amount) {
+        additiveAll += amount;
     }
 
-    // --- PURE METHODS ---
+    public void AddMultiplicativeMultiplierToAll(float amount) {
+        multiplicativeAll *= (1 +amount);
+    }
+
+    public void AddTotalMultiplierToAll(float amount) {
+        finalAll *= (1 + amount);
+    }
+
+    // --- Helpers ---
 
     public void SetDamageMultipliers(DamageTypeStats stats)
     {
@@ -125,22 +167,22 @@ public struct DamageInfo {
             switch (damage.damageType)
             {
                 case DamageInstance.DamageType.Physical:
-                    damage.amount *= stats.physical.Value;
+                    damage.SetBaseAmount(damage.baseAmount * stats.physical.Value);
                     break;
                 case DamageInstance.DamageType.Fire:
-                    damage.amount *= stats.fire.Value;
+                    damage.SetBaseAmount(damage.baseAmount * stats.fire.Value);
                     break;
                 case DamageInstance.DamageType.Ice:
-                    damage.amount *= stats.ice.Value;
+                    damage.SetBaseAmount(damage.baseAmount * stats.ice.Value);
                     break;
                 case DamageInstance.DamageType.Electric:
-                    damage.amount *= stats.electric.Value;
+                    damage.SetBaseAmount(damage.baseAmount * stats.electric.Value);
                     break;
                 case DamageInstance.DamageType.Poison:
-                    damage.amount *= stats.poison.Value;
+                    damage.SetBaseAmount(damage.baseAmount * stats.poison.Value);
                     break;
                 case DamageInstance.DamageType.Light:
-                    damage.amount *= stats.light.Value;
+                    damage.SetBaseAmount(damage.baseAmount * stats.light.Value);
                     break;
             }
             damageInstances[i] = damage;
@@ -155,22 +197,22 @@ public struct DamageInfo {
             switch (damage.damageType)
             {
                 case DamageInstance.DamageType.Physical:
-                    damage.amount *= 1 - stats.physical.Value;
+                    damage.SetBaseAmount(damage.baseAmount * (1 - stats.physical.Value));
                     break;
                 case DamageInstance.DamageType.Fire:
-                    damage.amount *= 1 - stats.fire.Value;
+                    damage.SetBaseAmount(damage.baseAmount * (1 - stats.fire.Value));
                     break;
                 case DamageInstance.DamageType.Ice:
-                    damage.amount *= 1 - stats.ice.Value;
+                    damage.SetBaseAmount(damage.baseAmount * (1 - stats.ice.Value));
                     break;
                 case DamageInstance.DamageType.Electric:
-                    damage.amount *= 1 - stats.electric.Value;
+                    damage.SetBaseAmount(damage.baseAmount * (1 - stats.electric.Value));
                     break;
                 case DamageInstance.DamageType.Poison:
-                    damage.amount *= 1 - stats.poison.Value;
+                    damage.SetBaseAmount(damage.baseAmount * (1 - stats.poison.Value));
                     break;
                 case DamageInstance.DamageType.Light:
-                    damage.amount *= 1 - stats.light.Value;
+                    damage.SetBaseAmount(damage.baseAmount * (1 - stats.light.Value));
                     break;
             }
             damageInstances[i] = damage;

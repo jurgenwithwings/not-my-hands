@@ -20,12 +20,12 @@ MonoBehaviour:
   tickInterval: 1
   baseDamage: []
   damagePerStack: []
-  statusEffectType:
-    rid: 7033823840363610399
+  statusEffectClass:
+    rid: 7033823864606163078
   references:
     version: 2
     RefIds:
-    - rid: 7033823840363610399
+    - rid: 7033823864606163078
       type: {class: Freeze, ns: , asm: Assembly-CSharp}
       data:
         baseSpeedMultiplier: 0.1

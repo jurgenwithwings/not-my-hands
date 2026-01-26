@@ -18,14 +18,14 @@ public struct OrganStat {
 public abstract class Organ {
     protected Statboard stats;
 
-    public OrganData data;
+    [HideInInspector] public OrganData data;
     
     public virtual void Initialise(Statboard statboard, OrganData organData) {
         stats = statboard;
         data = organData;
 
         foreach (OrganStat stat in data.stats) {
-            stats.GetStatByEnum(stat.statType).BaseValue = stat.value;
+            stats.GetStatByEnum(stat.statType).SetBaseValue(stat.value);
         }
     }
 
@@ -73,26 +73,28 @@ public static class OrganHelper {
 }
 
 //Empty Classes for the default organs
-public class Heart : Organ { }
-public class Brain : Organ { }
-public class Liver : Organ { }
+[Serializable] public class Heart : Organ { }
+[Serializable] public class Brain : Organ { }
+[Serializable] public class Liver : Organ { }
 
 
 // TEMP TEMP TEMP TEMP
-public class StatusEffectHeart : Organ {
-    public float multiplier = 0.5f;
+[Serializable] public class StatusEffectHeart : Organ {
+    public float perStatusEffectBonus = 0.3f;
     
     public override void Initialise(Statboard statboard, OrganData organData) {
         base.Initialise(statboard, organData);
+        
+        StatusEffectHeart variables = organData.organClass as StatusEffectHeart;
+        perStatusEffectBonus = variables.perStatusEffectBonus;
 
         stats.eventManager.OnPreSendDamage += ModifyDamage;
     }
 
-
-    private void ModifyDamage(DamageInfo damageInfo, Statboard victim, Statboard self) {
+    private void ModifyDamage(ref DamageInfo damageInfo, Statboard victim, Statboard self) {
+        Debug.Log("Got Pre Send Damage");
         for (int i = 0; i < damageInfo.damageInstances.Length; i++) {
-            damageInfo.damageInstances[i].amount *=
-                1 + (multiplier * victim.statusEffectManager.BuffEffects.Count);
+            damageInfo.AddAdditiveMultiplierToAll(perStatusEffectBonus * victim.statusEffectManager.StatusEffects.Count);
         }
     }
 }

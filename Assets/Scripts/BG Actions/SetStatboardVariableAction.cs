@@ -17,7 +17,7 @@ public partial class SetStatboardVariableAction : Action
     protected override Status OnStart() {
         Stat stat = Statboard.Value.GetStatByEnum(Stat.Value);
         if (stat != null) {
-            stat.BaseValue = Value.Value;
+            stat.SetBaseValue(Value.Value);
         }
         return Status.Success;
     }

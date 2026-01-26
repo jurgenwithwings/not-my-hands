@@ -19,17 +19,23 @@ MonoBehaviour:
   maxStacks: 999
   tickInterval: 1
   baseDamage:
-  - damageType: 0
-    amount: 0.15
+  - damageType: 1
+    baseAmount: 0.15
+    additiveMultiplier: 0
+    multiplicativeMultiplier: 0
+    finalMultiplier: 0
   damagePerStack:
-  - damageType: 0
-    amount: 0.1
-  statusEffectType:
-    rid: 7033823840363610394
+  - damageType: 1
+    baseAmount: 0.1
+    additiveMultiplier: 0
+    multiplicativeMultiplier: 0
+    finalMultiplier: 0
+  statusEffectClass:
+    rid: 7033823864606163076
   references:
     version: 2
     RefIds:
-    - rid: 7033823840363610394
+    - rid: 7033823864606163076
       type: {class: Burn, ns: , asm: Assembly-CSharp}
       data:
         damageIncreasePerTick: 0.02

@@ -9,7 +9,7 @@ public class POrgan : PhysicalLoot, IInteractable {
     public void Interact(Statboard interactor) {
         OrganManager organManager = interactor.GetComponent<OrganManager>();
         if (organManager != null) {
-            organManager.AddOrgan(data.organClass, data);
+            organManager.AddOrgan(data);
             Destroy(gameObject);
         }
     }

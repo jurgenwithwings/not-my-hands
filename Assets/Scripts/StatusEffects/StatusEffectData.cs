@@ -13,9 +13,9 @@ public class StatusEffectData : ScriptableObject {
     
     public List<DamageInstance> baseDamage;
     public List<DamageInstance> damagePerStack;
-    [SerializeReference, SubclassSelector] public StatusEffect statusEffectType;
+    [SerializeReference, SubclassSelector] public StatusEffect statusEffectClass;
 
     public Type Type() {
-        return statusEffectType.GetType();
+        return statusEffectClass.GetType();
     }
 }

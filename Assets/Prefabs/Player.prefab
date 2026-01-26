@@ -365,14 +365,15 @@ MonoBehaviour:
   terminalVelocity: -60
   coyoteTime: 0.1
   cameraHolder: {fileID: 111867425716270794}
-  mouseSensitivity: 100
   verticalClamp: 85
   lockCursor: 1
   damage:
-  - type: 0
-    amount: 20
-  effect:
-    className: 
+  - damageType: 0
+    baseAmount: 100
+    additiveMultiplier: 0
+    multiplicativeMultiplier: 0
+    finalMultiplier: 0
+  effect: {fileID: 11400000, guid: 9134f1496d127624bbb93ca2d339dde0, type: 2}
   enemyMask:
     serializedVersion: 2
     m_Bits: 1024

@@ -8,24 +8,24 @@ public class RelicManager : MonoBehaviour, IStatboard
 
     public List<Relic> relics { get; private set; } = new();
     
-    public void AddRelic(ClassReference<Relic> type, RelicData data, int amount = 1) {
-        if (GetRelicFromList(type, out Relic relic)) {
+    public void AddRelic(RelicData data, int amount = 1) {
+        if (GetRelicFromList(data.Type(), out Relic relic)) {
             relic.AddStack(amount);
+            statboard.eventManager?.OnRelicAdded?.Invoke(relic.data);
         }
         else {
-            relic = type.CreateInstance();
-            if (relic == null) {
-                return;
+            Relic newRelic = Activator.CreateInstance(data.Type()) as Relic;
+            if (newRelic != null) {
+                newRelic.Initialise(this, data);
+                newRelic.AddStack(amount);
+                relics.Add(newRelic);
+                statboard.eventManager?.OnRelicAdded?.Invoke(newRelic.data);
             }
-            relic.Initialise(this, data);
-            relic.AddStack(amount);
-            relics.Add(relic);
         }
-        statboard.eventManager?.OnRelicAdded?.Invoke(relic.data);
     }
 
-    public void RemoveRelic(ClassReference<Relic> type, int amountToRemove = 0) {
-        if (GetRelicFromList(type, out Relic relic)) {
+    public void RemoveRelic(RelicData data) {
+        if (GetRelicFromList(data.Type(), out Relic relic)) {
             relic.Remove();
             relics.Remove(relic);
         }
@@ -37,8 +37,8 @@ public class RelicManager : MonoBehaviour, IStatboard
         }
     }
 
-    private bool GetRelicFromList(ClassReference<Relic> type, out Relic relic) {
-        relic = relics.Find(e => e.GetType() == type);
+    private bool GetRelicFromList(Type type, out Relic relic) {
+        relic = relics.Find(r => r.GetType() == type);
         return relic != null;
     }
 }

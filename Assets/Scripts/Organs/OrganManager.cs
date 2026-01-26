@@ -9,12 +9,16 @@ public class OrganManager : MonoBehaviour, IStatboard {
 
     public Organ[] organs { get; private set; }= { new Heart(), new Brain(), new Liver() };
 
-    public void AddOrgan(ClassReference<Organ> organ, OrganData data) {
-        int index = (int)data.type;
+    public void AddOrgan(OrganData organ) {
+        int index = (int)organ.type;
+        
         OrganData old = organs[index].data;
-        organs[index] = organ.CreateInstance();
-        organs[index].Initialise(statboard, data);
+        
+        organs[index] = Activator.CreateInstance(organ.Type()) as Organ;
+        organs[index].Initialise(statboard, organ);
+        
         statboard.eventManager?.OnOrganChanged?.Invoke(organs[index].data, old);
+        
         Instantiate(old.prefab, transform.position, Quaternion.identity).GetComponent<Rigidbody>().AddForce(transform.forward + (transform.up * 0.4f) * 2f);
     }
 

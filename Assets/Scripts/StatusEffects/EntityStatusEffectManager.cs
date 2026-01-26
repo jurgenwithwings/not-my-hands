@@ -9,10 +9,10 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard
         statboard.eventManager.OnDamageTaken += HandleStatusEffects;
     }
 
-    public List<StatusEffect> PrimaryStatusEffects { get; private set; } = new();
+    public List<StatusEffect> StatusEffects { get; private set; } = new();
     public List<BuffEffect> BuffEffects { get; private set; } = new();
     
-    public int TotalEffects => BuffEffects.Count + PrimaryStatusEffects.Count;
+    public int TotalEffects => BuffEffects.Count + StatusEffects.Count;
 
     private void HandleStatusEffects(DamageInfo damageInfo) {
         foreach (int effectNum in damageInfo.statusEffects.Values) {
@@ -23,7 +23,7 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard
     private void OnDestroy() {
         statboard.eventManager.OnDamageTaken -= HandleStatusEffects;
         
-        foreach (var effect in PrimaryStatusEffects) {
+        foreach (var effect in StatusEffects) {
             effect.RemoveEffect();
         }
         foreach (var effect in BuffEffects) {
@@ -32,7 +32,7 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard
     }
 
     public void AddStacks(DamageInfo damageInfo, int stacks = 1) {
-        foreach (var effectData in damageInfo.statusEffects.Keys) {
+        foreach (StatusEffectData effectData in damageInfo.statusEffects.Keys) {
             if (typeof(BuffEffect).IsAssignableFrom(effectData.Type())) {
                 if (GetBuffFromList(effectData.Type(), out BuffEffect effect)) {
                     effect.AddStack(damageInfo, stacks);
@@ -51,15 +51,17 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard
             else {
                 if (GetEffectFromList(effectData.Type(), out StatusEffect effect)) {
                     effect.AddStack(damageInfo, stacks);
+                    print("Added Stack to existing Status Effect");
                 }
                 else {
                     StatusEffect newEffect = Activator.CreateInstance(effectData.Type()) as StatusEffect;
                     if (newEffect != null) {
+                        print("Added New Status Effect");
                         newEffect.Initialise(effectData, this, damageInfo);
                         if (stacks > 1) {
                             newEffect.AddStack(damageInfo, stacks - 1);
                         }
-                        PrimaryStatusEffects.Add(newEffect);
+                        StatusEffects.Add(newEffect);
                     }
                 }
             }
@@ -89,14 +91,14 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard
         else {
             if (GetEffectFromList(type, out StatusEffect effect)) {
                 effect.RemoveEffect();
-                PrimaryStatusEffects.Remove(effect);
+                StatusEffects.Remove(effect);
             }
         }
     }
 
     private void Update() {
-        for (int i = PrimaryStatusEffects.Count - 1; i >= 0; i--) {
-            PrimaryStatusEffects[i].Tick();
+        for (int i = StatusEffects.Count - 1; i >= 0; i--) {
+            StatusEffects[i].Tick();
         }
 
         for (int i = BuffEffects.Count - 1; i >= 0; i--) {
@@ -105,7 +107,7 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard
     }
 
     private bool GetEffectFromList(Type type, out StatusEffect effect) {
-        effect = PrimaryStatusEffects.Find(e => e.GetType() == type);
+        effect = StatusEffects.Find(e => e.GetType() == type);
         return effect != null;
     }
     

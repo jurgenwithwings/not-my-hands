@@ -39,17 +39,17 @@ public abstract class StatusEffect {
         
         //Get the base damage
         foreach (var damage in Data.baseDamage) {
-            float damageAmount = damage.amount;
+            float damageAmount = damage.baseAmount;
             totalDamage[damage.damageType] = damageAmount;
         }
         
         //Calculate damage per stack
         foreach (var damage in Data.damagePerStack) {
-            float damageAmount = damage.amount * currentStacks;
+            float damageAmount = damage.baseAmount * currentStacks;
             if (totalDamage[damage.damageType] != null) {
-                totalDamage[damage.damageType] = 0;
+                totalDamage[damage.damageType] = 0f;
             }
-            totalDamage[damage.damageType] = ((float)totalDamage[damage.damageType] + damageAmount) * highestDamageReceived.totalDamage;
+            totalDamage[damage.damageType] = ((float)totalDamage[damage.damageType] + damageAmount) * highestDamageReceived.finalDamage;
         }
         
         //Convert hashtable to list
@@ -65,6 +65,10 @@ public abstract class StatusEffect {
         Data = data;
         attachedManager = manager;
         highestDamageReceived = damageInfo;
+        
+        //TEMP TEMP TEMP
+        highestDamageReceived.debug = false;
+        
         currentDuration = Data.maxDuration;
         lastTick = Time.time;
     }
@@ -76,7 +80,7 @@ public abstract class StatusEffect {
             currentStacks = Data.maxStacks;
         }
         
-        if (damageInfo.totalDamage > highestDamageReceived.totalDamage) {
+        if (damageInfo.finalDamage > highestDamageReceived.finalDamage) {
             highestDamageReceived = damageInfo;
         }
     }
@@ -124,14 +128,14 @@ public class Bleed : StatusEffect {
 [Serializable]
 public class Burn : StatusEffect {
     private float totalDuration;
-    private DamageInstance bonusDamage;
+    private float bonusDamage;
     [SerializeField] private float damageIncreasePerTick = 0.02f;
     [SerializeField] private float totalDurationFactor = 0.15f;
 
     public override void AddStack(DamageInfo damageInfo, int stacks) {
         base.AddStack(damageInfo, stacks);
         
-        bonusDamage = Data.baseDamage[0];
+        bonusDamage = Data.baseDamage[0].baseAmount;
         currentDuration = Data.maxDuration;
     }
 
@@ -139,13 +143,16 @@ public class Burn : StatusEffect {
         if (Time.time - lastTick > Data.tickInterval) {
             lastTick = Time.time;
             
-            bonusDamage.amount += damageIncreasePerTick * (totalDuration * totalDurationFactor);
-
-            DamageInstance[] damageResult = { new(Data.baseDamage[0].damageType, finalDamage[0].amount * bonusDamage.amount)  };
+            bonusDamage = 1 + (damageIncreasePerTick * (totalDuration));
             
-            DamageInfo damage = new(damageResult, highestDamageReceived.source);
-            damage.hitPoint = stats.transform.position;
-            damage.ignoreResistances = true;
+            float damagePercent = Data.baseDamage[0].baseAmount + (Data.damagePerStack[0].baseAmount * currentStacks);
+
+            DamageInstance[] damageResult = { new(Data.baseDamage[0].damageType, (damagePercent * bonusDamage) * highestDamageReceived.finalDamage)  };
+            
+            DamageInfo damage = new(damageResult, highestDamageReceived.source) {
+                hitPoint = stats.transform.position,
+                ignoreResistances = true,
+            };
 
             stats.health.TakeDamage(damage);
             
@@ -171,7 +178,7 @@ public class Freeze : StatusEffect {
     public override void Initialise(StatusEffectData data, EntityStatusEffectManager manager, DamageInfo damageInfo) {
         base.Initialise(data, manager, damageInfo);
         
-        mod = new Modifier(baseSpeedMultiplier, ModifierType.SequentialMultiply, source);
+        mod = new Modifier(baseSpeedMultiplier, ModifierType.Additive, source);
         ReplaceModifier();
         
         stats.moveSpeed.AddModifier(mod);
@@ -222,7 +229,7 @@ public class Judged : StatusEffect {
     public override void Initialise(StatusEffectData data, EntityStatusEffectManager manager, DamageInfo damageInfo) {
         base.Initialise(data, manager, damageInfo);
 
-        Judged judgedData = (Judged)Data.statusEffectType;
+        Judged judgedData = (Judged)Data.statusEffectClass;
         eyeSprite = judgedData.eyeSprite;
         eyeColor = judgedData.eyeColor;
         offset = judgedData.offset;
@@ -238,7 +245,7 @@ public class Judged : StatusEffect {
     }
     
     private void OnTakeDamage(DamageInfo damageInfo) {
-        damageAbsorbed += damageInfo.totalDamage;
+        damageAbsorbed += damageInfo.finalDamage;
     }
     
     public override void Tick() {
@@ -262,7 +269,7 @@ public class Judged : StatusEffect {
     public override void RemoveEffect() {
         stats.eventManager.OnDamageTaken -= OnTakeDamage;
         
-        float damage = damageAbsorbed * (Data.baseDamage[0].amount + (Data.damagePerStack[0].amount * currentStacks));
+        float damage = damageAbsorbed * (Data.baseDamage[0].baseAmount + (Data.damagePerStack[0].baseAmount * currentStacks));
         DamageInstance[] damageInstance = { new(DamageInstance.DamageType.Light, damage) };
         DamageInfo damageInfo = new(damageInstance, highestDamageReceived.source);
         damageInfo.ignoreResistances = true;
@@ -290,7 +297,7 @@ public class SpeedBoost : BuffEffect {
     public override void Initialise(StatusEffectData data, EntityStatusEffectManager manager, DamageInfo damageInfo) {
         base.Initialise(data, manager, damageInfo);
         
-        mod = new Modifier(baseSpeedBoost, ModifierType.TotalMultiply, source);
+        mod = new Modifier(baseSpeedBoost, ModifierType.Multiply, source);
         
         stats.moveSpeed.AddModifier(mod);
     }

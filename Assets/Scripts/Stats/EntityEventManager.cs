@@ -14,17 +14,26 @@ public class EntityEventManager : MonoBehaviour, IStatboard
     /// <summary>
     /// Called when a Health component has received damage from this entity.
     /// <para><c>DamageInfo</c> - The Damage that was received</para>
-    /// <para><c>Statboard</c> - Victim's statboard</para>
+    /// <para><c>Victim</c> - Victim's statboard</para>
     /// </summary>
     public Action<DamageInfo, Statboard> OnReceivedYourDamage;
     
     /// <summary>
     /// Called before damage is sent from this entity to another.
     /// <para><c>DamageInfo</c> - DamageInfo to be modified</para>
-    /// <para><c>Statboard</c> - Victim's statboard</para>
-    /// <para><c>Statboard</c> - Attacker's statboard</para>
+    /// <para><c>Victim</c> - Victim's statboard</para>
+    /// <para><c>Attacker</c> - Attacker's statboard</para>
     /// </summary>
-    public Action<DamageInfo, Statboard, Statboard> OnPreSendDamage;
+    //public Action<DamageInfo, Statboard, Statboard> OnPreSendDamage;
+    public PreSendDamage OnPreSendDamage;
+    public delegate void PreSendDamage(ref DamageInfo damageInfo, Statboard victim, Statboard self);
+    
+    /// <summary>
+    /// Called when health is changes but not through taking damage.
+    /// <para><c>CurrentHealth</c> - The new current amount of health.</para>
+    /// <para><c>MaxHealth</c> - The new maximum health.</para>
+    /// </summary>
+    public Action<float, float> OnHealthChanged;
 
     /// <summary>
     /// Called when mana is successfully changed. Providing the amount the mana was changed by.

@@ -18,5 +18,11 @@ MonoBehaviour:
   rarity: 1
   itemIcon: {fileID: -285354508, guid: 0fc7ca9a14c8abd42819b2057609176b, type: 3}
   prefab: {fileID: 3387581230344646663, guid: 31be3142fdb4a4d45864f7cd3ece0d67, type: 3}
-  relicType:
-    className: WovenEye, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  relicClass:
+    rid: 7033823864606163073
+  references:
+    version: 2
+    RefIds:
+    - rid: 7033823864606163073
+      type: {class: WovenEye, ns: , asm: Assembly-CSharp}
+      data: 

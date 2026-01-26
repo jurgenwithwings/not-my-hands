@@ -27,4 +27,11 @@ MonoBehaviour:
   - statType: 9
     value: 1
   organClass:
-    className: Liver, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    rid: 7033823858230296664
+  references:
+    version: 2
+    RefIds:
+    - rid: 7033823858230296664
+      type: {class: Liver, ns: , asm: Assembly-CSharp}
+      data:
+        data: {fileID: 0}

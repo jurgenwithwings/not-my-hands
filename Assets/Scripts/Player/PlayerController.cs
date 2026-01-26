@@ -54,6 +54,7 @@ public class PlayerController : MonoBehaviour
     private void Start() {
         stats.eventManager.OnReceivedYourDamage += SpawnDamageNumber;
         stats.eventManager.OnDamageTaken += PlayerTakenDamage;
+        stats.eventManager.OnHealthChanged += PlayerHealthChanged;
         stats.eventManager.OnOrganChanged += PlayerOrganChanged;
         stats.eventManager.OnRelicAdded += PlayerRelicAdded;
         stats.eventManager.OnLimbChanged += PlayerLimbChanged;
@@ -62,9 +63,14 @@ public class PlayerController : MonoBehaviour
             PlayerOrganChanged(organ.data, null);
         }
         
-        PlayerHUDEvents.OnRegisterStatboard.Invoke(stats);
+        PlayerHUDEvents.OnRegisterStatboard?.Invoke(stats);
+        PlayerHUDEvents.OnHealthChanged?.Invoke(stats.health.CurrentHealth, stats.maxHealth);
         
         inputs.Inventory.Event += InventoryDebugEvent;
+    }
+
+    private void PlayerHealthChanged(float arg1, float arg2) {
+        PlayerHUDEvents.OnHealthChanged?.Invoke(arg1, arg2);
     }
 
     private void InventoryDebugEvent(InputEvent<bool> inputEvent) {
@@ -96,15 +102,17 @@ public class PlayerController : MonoBehaviour
     private void OnDestroy() {
         stats.eventManager.OnReceivedYourDamage -= SpawnDamageNumber;
         stats.eventManager.OnDamageTaken -= PlayerTakenDamage;
-        stats.eventManager.OnOrganChanged += PlayerOrganChanged;
-        stats.eventManager.OnRelicAdded += PlayerRelicAdded;
-        stats.eventManager.OnLimbChanged += PlayerLimbChanged;
+        stats.eventManager.OnHealthChanged -= PlayerHealthChanged;
+        stats.eventManager.OnOrganChanged -= PlayerOrganChanged;
+        stats.eventManager.OnRelicAdded -= PlayerRelicAdded;
+        stats.eventManager.OnLimbChanged -= PlayerLimbChanged;
     }
 
     public void SpawnDamageNumber(DamageInfo damageInfo, Statboard victim) {
         if (victim == stats) return;
         if (ObjectPool.TryPull(damageInfo.hitPoint, transform.rotation, out DamageNumber damageNumber)) {
-            damageNumber.SetDamage(damageInfo.totalDamage);
+            damageNumber.SetDamage(damageInfo.finalDamage);
+            //PlayerHUDEvents.DebugText($"Damage Dealt: {damageInfo.finalDamage}");
         }
     }
 
@@ -114,8 +122,8 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
         HandleJump();
         
+        //Debug Interaction
         Physics.Raycast(cameraHolder.position, cameraHolder.forward * 5f, out RaycastHit hit, 5f);
-
         if (hit.collider && hit.collider.TryGetComponent(out IInteractable interactable)) {
             if (interactable != null) {
                 if (interactable.HasAltInteraction) {
@@ -140,45 +148,39 @@ public class PlayerController : MonoBehaviour
             PlayerHUDEvents.OnSetInteractionText?.Invoke("", false);
         }
         
+        //Debug Fire Ray
         if (inputs.PrimaryFire.Triggered) {
             Physics.Raycast(cameraHolder.position, cameraHolder.forward * 1000f, out RaycastHit hitInfo, 1000, enemyMask);
 
             if (hitInfo.collider && hitInfo.collider.TryGetComponent(out Statboard stats)) {
-                //Skewed random distribution to favor lower numbers
-                /*float t = Mathf.Pow(Random.value, 1.25f);
-                damage[0].amount = Mathf.Lerp(1, 1500000, t);*/
 
-                damage[0].amount = 100;
+                damage[0] = new DamageInstance(DamageInstance.DamageType.Physical, 100);
                 DamageInfo damageInfo = new(damage, this.stats) {
                     hitPoint = hitInfo.point,
-                    direction = (hitInfo.point - cameraHolder.position).normalized
                 };
                 damageInfo.statusEffects.Add(effect, 3);
                 
-                this.stats.eventManager.OnPreSendDamage?.Invoke(damageInfo, stats, this.stats);
+                this.stats.eventManager.OnPreSendDamage?.Invoke(ref damageInfo, stats, this.stats);
                 
                 stats.health.TakeDamage(damageInfo.Copy());
             }
         }
 
+        // Debug Take Damage
         if (Input.GetKeyDown(KeyCode.Q)) {
             PlayerHUDEvents.DebugText("Trying to take damage");
             float t = Mathf.Pow(Random.value, 3f);
-            damage[0].amount = Mathf.Lerp(0, 20, t);
+            damage[0].baseAmount = Mathf.Lerp(0, 20, t);
             
             DamageInfo damageInfo = new(damage, stats) {
                 hitPoint = transform.position,
-                direction = (transform.position - cameraHolder.position).normalized,
                 selfDamage = true
             };
             damageInfo.statusEffects.Add(effect, 3);
             stats.health.TakeDamage(damageInfo.Copy());
         }
 
-        if (Input.GetKeyDown(KeyCode.R)) {
-            ObjectPool.InitialisePool<DamageNumber>(1);
-        }
-
+        //Debug Swap Status Effect Type
         if (Input.GetKeyDown(KeyCode.Z)) {
             int index = Random.Range(1, 7);
             switch (index) {
@@ -224,7 +226,6 @@ public class PlayerController : MonoBehaviour
         moveInput = (transform.right * inputVector.x + transform.forward * inputVector.y).normalized;
 
         if (inputs.Jump) {
-            //print("Jump Triggered");
             jumpQueued = true;
         }
     }

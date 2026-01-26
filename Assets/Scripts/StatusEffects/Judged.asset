@@ -19,18 +19,25 @@ MonoBehaviour:
   maxStacks: 10
   tickInterval: 1
   baseDamage:
-  - type: 5
-    amount: 0.25
+  - damageType: 0
+    baseAmount: 0
+    additiveMultiplier: 0
+    multiplicativeMultiplier: 0
+    finalMultiplier: 0
   damagePerStack:
-  - type: 5
-    amount: 0.1
-  statusEffectType:
-    rid: 7033823840363610402
+  - damageType: 0
+    baseAmount: 0
+    additiveMultiplier: 0
+    multiplicativeMultiplier: 0
+    finalMultiplier: 0
+  statusEffectClass:
+    rid: 7033823864606163079
   references:
     version: 2
     RefIds:
-    - rid: 7033823840363610402
+    - rid: 7033823864606163079
       type: {class: Judged, ns: , asm: Assembly-CSharp}
       data:
         eyeSprite: {fileID: 21300000, guid: 335a89464a44d354e98e30ff10c4d556, type: 3}
+        eyeColor: {r: 3.84, g: 2.68, b: 0.16, a: 2}
         offset: 0.35

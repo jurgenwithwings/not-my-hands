@@ -20,15 +20,21 @@ MonoBehaviour:
   tickInterval: 0.1
   baseDamage:
   - damageType: 0
-    amount: 0.06
+    baseAmount: 0
+    additiveMultiplier: 0
+    multiplicativeMultiplier: 0
+    finalMultiplier: 0
   damagePerStack:
   - damageType: 0
-    amount: 0.005
-  statusEffectType:
-    rid: 7033823840363610403
+    baseAmount: 0
+    additiveMultiplier: 0
+    multiplicativeMultiplier: 0
+    finalMultiplier: 0
+  statusEffectClass:
+    rid: 7033823864606163077
   references:
     version: 2
     RefIds:
-    - rid: 7033823840363610403
+    - rid: 7033823864606163077
       type: {class: Charged, ns: , asm: Assembly-CSharp}
       data: 

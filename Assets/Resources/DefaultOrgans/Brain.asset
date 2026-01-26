@@ -27,4 +27,11 @@ MonoBehaviour:
   - statType: 6
     value: 1
   organClass:
-    className: Brain, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    rid: 7033823858230296662
+  references:
+    version: 2
+    RefIds:
+    - rid: 7033823858230296662
+      type: {class: Brain, ns: , asm: Assembly-CSharp}
+      data:
+        data: {fileID: 0}
