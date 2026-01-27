@@ -98,11 +98,11 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard
 
     private void Update() {
         for (int i = StatusEffects.Count - 1; i >= 0; i--) {
-            StatusEffects[i].Tick();
+            StatusEffects[i].Update();
         }
 
         for (int i = BuffEffects.Count - 1; i >= 0; i--) {
-            BuffEffects[i].Tick();
+            BuffEffects[i].Update();
         }
     }
 

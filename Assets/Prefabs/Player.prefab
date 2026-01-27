@@ -370,10 +370,11 @@ MonoBehaviour:
   damage:
   - damageType: 0
     baseAmount: 100
-    additiveMultiplier: 0
-    multiplicativeMultiplier: 0
-    finalMultiplier: 0
-  effect: {fileID: 11400000, guid: 9134f1496d127624bbb93ca2d339dde0, type: 2}
+    flat: 0
+    additive: 0
+    multiplicative: 0
+    final: 0
+  effect: {fileID: 11400000, guid: 6a8abcd812891224a9b1e89fa30e0d43, type: 2}
   enemyMask:
     serializedVersion: 2
     m_Bits: 1024

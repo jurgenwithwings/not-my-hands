@@ -17,19 +17,7 @@ MonoBehaviour:
   maxDuration: 8
   StacksLostOnDurationEnd: 999
   maxStacks: 10
-  tickInterval: 0.3
-  baseDamage:
-  - damageType: 0
-    baseAmount: 0
-    additiveMultiplier: 0
-    multiplicativeMultiplier: 0
-    finalMultiplier: 0
-  damagePerStack:
-  - damageType: 0
-    baseAmount: 0
-    additiveMultiplier: 0
-    multiplicativeMultiplier: 0
-    finalMultiplier: 0
+  refillDurationWhenGainingStack: 0
   statusEffectClass:
     rid: 7033823864606163075
   references:
@@ -37,4 +25,22 @@ MonoBehaviour:
     RefIds:
     - rid: 7033823864606163075
       type: {class: Bleed, ns: , asm: Assembly-CSharp}
-      data: 
+      data:
+        dot:
+          baseDamage:
+          - damageType: 0
+            baseAmount: 0.12
+            flat: 0
+            additive: 0
+            multiplicative: 0
+            final: 0
+          damagePerStack:
+          - damageType: 0
+            baseAmount: 0.03
+            flat: 0
+            additive: 0
+            multiplicative: 0
+            final: 0
+          tickInterval: 0.3
+          timer: 0
+        healthPercentDamage: 7.5

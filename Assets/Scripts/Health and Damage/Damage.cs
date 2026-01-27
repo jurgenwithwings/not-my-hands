@@ -25,12 +25,25 @@ using UnityEngine;
     public DamageInstance(DamageType damageType, float baseAmount) {
         this.damageType = damageType;
         this.baseAmount = baseAmount;
-        this.flat = 0f;
-        this.additive = 0f;
-        this.multiplicative = 1f;
-        this.final = 1f;
+        flat = 0f;
+        additive = 0f;
+        multiplicative = 1f;
+        final = 1f;
+        Initialised = true;
     }
 
+    public bool Initialised { get; private set; }
+    public void SetDefault() {
+        if (!Initialised) {
+            flat = 0f;
+            additive = 0f;
+            multiplicative = 1f;
+            final = 1f;
+            
+            Initialised = true;
+        }
+    }
+    
     // Resolve instance damage (no global modifiers applied yet)
     public float Resolve() {
         float value = baseAmount + flat;
@@ -42,27 +55,32 @@ using UnityEngine;
 
     public void SetBaseAmount(float amount) {
         baseAmount = amount;
-        //isDirty = true;
     }
 
-    public void AddFlatAmount(float amount) {
-        flat += amount;
-        //isDirty = true;
-    }
+    public void AddModifier(float amount, ModifierType modifierType = ModifierType.Additive) {
+        if (!Initialised) {
+            SetDefault();
+        }
 
-    public void AddAdditiveMultiplier(float amount) {
-        additive += amount;
-        //isDirty = true;
+        switch (modifierType) {
+            case ModifierType.BaseAdd:
+                flat += amount;
+                break;
+            case ModifierType.Additive:
+                additive += amount;
+                break;
+            case ModifierType.Multiply:
+                multiplicative *= (1 +amount);
+                break;
+            case ModifierType.Final:
+                final *= amount;
+                break;
+        }
     }
-
-    public void AddMultiplicativeMultiplier(float amount) {
-        multiplicative *= (1 + amount);
-        //isDirty = true;
-    }
-
-    public void AddTotalMultiplier(float amount) {
-        final *= amount;
-        //isDirty = true;
+    
+    // --- Operators ---
+    public static implicit operator float(DamageInstance damage) {
+        return damage.baseAmount;
     }
 }
 
@@ -93,10 +111,24 @@ using UnityEngine;
         multiplicativeAll = 1f;
         finalAll = 1f;
 
+        Initialised = true;
+        
         debug = false;
         
         source = statboard;
         this.damageInstances = damageInstances;
+    }
+    
+    public bool Initialised { get; private set; }
+    public void SetDefault() {
+        if (!Initialised) {
+            flatAll = 0f;
+            additiveAll = 0f;
+            multiplicativeAll = 1f;
+            finalAll = 1f;
+            
+            Initialised = true;
+        }
     }
 
     // Sum base without modifiers (optional convenience)
@@ -116,9 +148,8 @@ using UnityEngine;
 
         for (int i = 0; i < damageInstances.Length; i++) {
             var inst = damageInstances[i];
-
-            if (debug) {
-                PlayerHUDEvents.DebugText($"{inst.baseAmount.GetModifiedValue(inst.flat + flatAll, inst.additive + additiveAll, inst.multiplicative * multiplicativeAll, inst.final * finalAll)}");
+            if (!inst.Initialised) {
+                inst.SetDefault();
             }
             total += inst.baseAmount.GetModifiedValue(inst.flat + flatAll, inst.additive + additiveAll, 
                 inst.multiplicative * multiplicativeAll, inst.final * finalAll, debug);
@@ -145,16 +176,25 @@ using UnityEngine;
         return damagePercentages;
     }*/
     
-    public void AddAdditiveMultiplierToAll(float amount) {
-        additiveAll += amount;
-    }
+    public void AddModifier(float amount, ModifierType modifierType = ModifierType.Additive) {
+        if (!Initialised) {
+            SetDefault();
+        }
 
-    public void AddMultiplicativeMultiplierToAll(float amount) {
-        multiplicativeAll *= (1 +amount);
-    }
-
-    public void AddTotalMultiplierToAll(float amount) {
-        finalAll *= (1 + amount);
+        switch (modifierType) {
+            case ModifierType.BaseAdd:
+                flatAll += amount;
+                break;
+            case ModifierType.Additive:
+                additiveAll += amount;
+                break;
+            case ModifierType.Multiply:
+                multiplicativeAll *= (1 +amount);
+                break;
+            case ModifierType.Final:
+                finalAll *= amount;
+                break;
+        }
     }
 
     // --- Helpers ---

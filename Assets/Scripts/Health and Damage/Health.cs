@@ -70,7 +70,7 @@ public class Health : MonoBehaviour, IStatboard
         //Debug.Log(damageInfo.damageInstances[0].additiveMultiplier);
         
         //TEMP TEMP TEMP TEMP
-        OnDeath?.Invoke(damageInfo.source);
+        //OnDeath?.Invoke(damageInfo.source);
         
         return totalDamageTaken;
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor.Rendering.Universal;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "StatusEffect", menuName = "ScriptableObjects/StatusEffect", order = 1)]
@@ -9,10 +10,7 @@ public class StatusEffectData : ScriptableObject {
     public float maxDuration = 5;
     public int StacksLostOnDurationEnd = 999;
     public int maxStacks = 10;
-    public float tickInterval = 1;
-    
-    public List<DamageInstance> baseDamage;
-    public List<DamageInstance> damagePerStack;
+    public bool refillDurationWhenGainingStack = true;
     [SerializeReference, SubclassSelector] public StatusEffect statusEffectClass;
 
     public Type Type() {

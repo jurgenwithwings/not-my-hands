@@ -17,19 +17,7 @@ MonoBehaviour:
   maxDuration: 10
   StacksLostOnDurationEnd: 3
   maxStacks: 15
-  tickInterval: 1.5
-  baseDamage:
-  - damageType: 0
-    baseAmount: 0
-    additiveMultiplier: 0
-    multiplicativeMultiplier: 0
-    finalMultiplier: 0
-  damagePerStack:
-  - damageType: 0
-    baseAmount: 0
-    additiveMultiplier: 0
-    multiplicativeMultiplier: 0
-    finalMultiplier: 0
+  refillDurationWhenGainingStack: 1
   statusEffectClass:
     rid: 7033823864606163080
   references:
@@ -37,4 +25,22 @@ MonoBehaviour:
     RefIds:
     - rid: 7033823864606163080
       type: {class: Poison, ns: , asm: Assembly-CSharp}
-      data: 
+      data:
+        dot:
+          baseDamage:
+          - damageType: 4
+            baseAmount: 0.3
+            flat: 0
+            additive: 0
+            multiplicative: 0
+            final: 0
+          damagePerStack:
+          - damageType: 4
+            baseAmount: 0.09
+            flat: 0
+            additive: 0
+            multiplicative: 0
+            final: 0
+          tickInterval: 1.5
+          timer: 0
+        damageReductionPerStack: 0.02

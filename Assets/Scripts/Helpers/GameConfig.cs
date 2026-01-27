@@ -1,20 +1,34 @@
+using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Game Config", menuName = "Game Config")]
 public class GameConfig : ScriptableObject
 {
-    private static GameConfig _instance;
+    private static GameConfig instance;
     public static GameConfig Instance
     {
         get
         {
-            if (_instance == null)
+            if (instance == null)
             {
-                _instance = Resources.Load<GameConfig>("Game Config");
+                instance = Resources.Load<GameConfig>("Game Config");
             }
-            return _instance;
+            return instance;
         }
     }
+
+    private static bool dirtyDamageTypes = true;
+    private static int damageTypes;
+    public static int DamageTypesCount {
+        get {
+            switch (dirtyDamageTypes) {
+                case true:
+                    damageTypes = Enum.GetValues(typeof(DamageInstance.DamageType)).Length; break;
+            }
+            return damageTypes;
+        }
+    }
+    
 
     [Header("Base Status Effects")]
     public StatusEffectData bleed;

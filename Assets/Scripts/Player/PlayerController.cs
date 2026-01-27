@@ -112,7 +112,7 @@ public class PlayerController : MonoBehaviour
         if (victim == stats) return;
         if (ObjectPool.TryPull(damageInfo.hitPoint, transform.rotation, out DamageNumber damageNumber)) {
             damageNumber.SetDamage(damageInfo.finalDamage);
-            //PlayerHUDEvents.DebugText($"Damage Dealt: {damageInfo.finalDamage}");
+            PlayerHUDEvents.DebugText($"Damage Dealt: {damageInfo.finalDamage}");
         }
     }
 
@@ -158,7 +158,7 @@ public class PlayerController : MonoBehaviour
                 DamageInfo damageInfo = new(damage, this.stats) {
                     hitPoint = hitInfo.point,
                 };
-                damageInfo.statusEffects.Add(effect, 3);
+                damageInfo.statusEffects.Add(effect, 1);
                 
                 this.stats.eventManager.OnPreSendDamage?.Invoke(ref damageInfo, stats, this.stats);
                 
@@ -176,7 +176,7 @@ public class PlayerController : MonoBehaviour
                 hitPoint = transform.position,
                 selfDamage = true
             };
-            damageInfo.statusEffects.Add(effect, 3);
+            damageInfo.statusEffects.Add(effect, 1);
             stats.health.TakeDamage(damageInfo.Copy());
         }
 
