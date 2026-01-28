@@ -9,7 +9,7 @@ public class RelicManager : MonoBehaviour, IStatboard
     public List<Relic> relics { get; private set; } = new();
     
     public void AddRelic(RelicData data, int amount = 1) {
-        if (GetRelicFromList(data.Type(), out Relic relic)) {
+        if (GetRelicFromList(data, out Relic relic)) {
             relic.AddStack(amount);
             statboard.eventManager?.OnRelicAdded?.Invoke(relic.data);
         }
@@ -25,7 +25,7 @@ public class RelicManager : MonoBehaviour, IStatboard
     }
 
     public void RemoveRelic(RelicData data) {
-        if (GetRelicFromList(data.Type(), out Relic relic)) {
+        if (GetRelicFromList(data, out Relic relic)) {
             relic.Remove();
             relics.Remove(relic);
         }
@@ -37,8 +37,8 @@ public class RelicManager : MonoBehaviour, IStatboard
         }
     }
 
-    private bool GetRelicFromList(Type type, out Relic relic) {
-        relic = relics.Find(r => r.GetType() == type);
+    private bool GetRelicFromList(RelicData dataType, out Relic relic) {
+        relic = relics.Find(r => r.data == dataType);
         return relic != null;
     }
 }

@@ -6,7 +6,7 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard
 {
     public Statboard statboard { get; set; }
     public void StatboardFinishedSet() {
-        statboard.eventManager.OnDamageTaken += HandleStatusEffects;
+        statboard.eventManager.OnDamageTaken += HandleStatusEffectsFromDamage;
     }
 
     public List<StatusEffect> StatusEffects { get; private set; } = new();
@@ -14,14 +14,14 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard
     
     public int TotalEffects => BuffEffects.Count + StatusEffects.Count;
 
-    private void HandleStatusEffects(DamageInfo damageInfo) {
+    private void HandleStatusEffectsFromDamage(DamageInfo damageInfo) {
         foreach (int effectNum in damageInfo.statusEffects.Values) {
             AddStacks(damageInfo, effectNum);
         }
     }
 
     private void OnDestroy() {
-        statboard.eventManager.OnDamageTaken -= HandleStatusEffects;
+        statboard.eventManager.OnDamageTaken -= HandleStatusEffectsFromDamage;
         
         foreach (var effect in StatusEffects) {
             effect.RemoveEffect();
@@ -30,12 +30,13 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard
             effect.RemoveEffect();
         }
     }
-
-    public void AddStacks(DamageInfo damageInfo, int stacks = 1) {
+    
+    public StatusEffect AddStacks(DamageInfo damageInfo, int stacks = 1) {
         foreach (StatusEffectData effectData in damageInfo.statusEffects.Keys) {
             if (typeof(BuffEffect).IsAssignableFrom(effectData.Type())) {
-                if (GetBuffFromList(effectData.Type(), out BuffEffect effect)) {
+                if (GetBuffFromList(effectData, out BuffEffect effect)) {
                     effect.AddStack(damageInfo, stacks);
+                    return effect;
                 }
                 else {
                     BuffEffect newEffect = Activator.CreateInstance(effectData.Type()) as BuffEffect;
@@ -45,31 +46,33 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard
                             newEffect.AddStack(damageInfo, stacks - 1);
                         }
                         BuffEffects.Add(newEffect);
+                        return newEffect;
                     }
                 }
             }
             else {
-                if (GetEffectFromList(effectData.Type(), out StatusEffect effect)) {
+                if (GetEffectFromList(effectData, out StatusEffect effect)) {
                     effect.AddStack(damageInfo, stacks);
-                    print("Added Stack to existing Status Effect");
+                    return effect;
                 }
                 else {
                     StatusEffect newEffect = Activator.CreateInstance(effectData.Type()) as StatusEffect;
                     if (newEffect != null) {
-                        print("Added New Status Effect");
                         newEffect.Initialise(effectData, this, damageInfo);
                         if (stacks > 1) {
                             newEffect.AddStack(damageInfo, stacks - 1);
                         }
                         StatusEffects.Add(newEffect);
+                        return newEffect;
                     }
                 }
             }
         }
+        return null;
     }
 
-    public void RemoveStacks(Type type, int stacks = 1) {
-        if (typeof(BuffEffect).IsAssignableFrom(type)) {
+    public void RemoveStacks(StatusEffectData type, int stacks = 1) {
+        if (typeof(BuffEffect).IsAssignableFrom(type.Type())) {
             if (GetBuffFromList(type, out BuffEffect effect)) {
                 effect.RemoveStacks(stacks);
             }
@@ -81,8 +84,8 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard
         }
     }
 
-    public void RemoveEffect(Type type) {
-        if (typeof(BuffEffect).IsAssignableFrom(type)) {
+    public void RemoveEffect(StatusEffectData type) {
+        if (typeof(BuffEffect).IsAssignableFrom(type.Type())) {
             if (GetBuffFromList(type, out BuffEffect effect)) {
                 effect.RemoveEffect();
                 BuffEffects.Remove(effect);
@@ -106,13 +109,21 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard
         }
     }
 
-    private bool GetEffectFromList(Type type, out StatusEffect effect) {
-        effect = StatusEffects.Find(e => e.GetType() == type);
+    public bool GetEffectFromList(StatusEffectData dataType) {
+        return GetEffectFromList(dataType, out _);
+    }
+
+    public bool GetEffectFromList(StatusEffectData dataType, out StatusEffect effect) {
+        effect = StatusEffects.Find(e => e.Data == dataType);
         return effect != null;
     }
-    
-    private bool GetBuffFromList(Type type, out BuffEffect effect) {
-        effect = BuffEffects.Find(e => e.GetType() == type);
+
+    public bool GetBuffFromList(StatusEffectData dataType) {
+        return GetBuffFromList(dataType, out _);
+    }
+
+    public bool GetBuffFromList(StatusEffectData dataType, out BuffEffect effect) {
+        effect = BuffEffects.Find(e => e.Data == dataType);
         return effect != null;
     }
 }

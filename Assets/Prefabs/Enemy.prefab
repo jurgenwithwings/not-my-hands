@@ -157,14 +157,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7a5c3b14b3c89f49b1dfbdfd12faf77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  relicManager: {fileID: 6052328491181967940}
-  statusEffectManager: {fileID: 6195785506168083407}
   eventManager: {fileID: 5988398498091909213}
+  statusEffectManager: {fileID: 6195785506168083407}
   health: {fileID: 9047510863568201356}
+  relicManager: {fileID: 6052328491181967940}
+  organManager: {fileID: 0}
   healthBar: {fileID: 7929674769736282749}
   rigidbody: {fileID: 7271274723162091676}
   maxHealth:
-    BaseValue: 200000
+    BaseValue: 4000
   damageResistance:
     BaseValue: 0
   healingEffectiveness:
@@ -242,6 +243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthRegenDelay: 5
+  maxHealth: 0
 --- !u!114 &6195785506168083407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -291,14 +293,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lootTable: {fileID: 11400000, guid: ac67b5592e744ff428d4e2beaf60f8ae, type: 2}
-  uniqueLoot:
-  - data: {fileID: 11400000, guid: 7461959b4bbc0304699da405319d0e2c, type: 2}
-    dropWeight: 5
+  uniqueLoot: []
   initialDropChance: 100
   extraDropChance: 10
   maxDrops: 2
   additionalLoot: {fileID: 11400000, guid: 3a41230910b2e504b9900b4bec9fb567, type: 2}
-  additionalInitialDropChance: 100
+  additionalInitialDropChance: 0
   additionalExtraDropChance: 10
   additionalMaxDrops: 1
   enemyInfluence: 1

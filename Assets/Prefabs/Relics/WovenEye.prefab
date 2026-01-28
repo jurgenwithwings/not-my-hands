@@ -1092,7 +1092,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cbf6924e80a4bd8a243641b2721c200, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lootObject: {fileID: 6475130721988651969}
+  lootHolder: {fileID: 8185883691808338151}
   data: {fileID: 11400000, guid: 99ceb88fb6540fa40bc06e6fe35742d5, type: 2}
 --- !u!54 &4977770430379883760
 Rigidbody:

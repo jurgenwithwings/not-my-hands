@@ -128,7 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 918d74071c4843a582ecc8ec74dcaac2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lootObject: {fileID: 4312323908362178284}
+  lootHolder: {fileID: 4312323908362178284}
   data: {fileID: 11400000, guid: 52e129641dd0126419868557fcd66201, type: 2}
 --- !u!1001 &325444498098370854
 PrefabInstance:

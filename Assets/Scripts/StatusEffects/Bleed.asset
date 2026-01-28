@@ -43,4 +43,4 @@ MonoBehaviour:
             final: 0
           tickInterval: 0.3
           timer: 0
-        healthPercentDamage: 7.5
+        healthPercentDamage: 0.075

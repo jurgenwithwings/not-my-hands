@@ -17,9 +17,7 @@ MonoBehaviour:
   maxDuration: 6
   StacksLostOnDurationEnd: 999
   maxStacks: 10
-  tickInterval: 1
-  baseDamage: []
-  damagePerStack: []
+  refillDurationWhenGainingStack: 1
   statusEffectClass:
     rid: 7033823864606163078
   references:
@@ -28,5 +26,8 @@ MonoBehaviour:
     - rid: 7033823864606163078
       type: {class: Freeze, ns: , asm: Assembly-CSharp}
       data:
-        baseSpeedMultiplier: 0.1
-        perStackSpeedMultiplier: 0.05
+        effect:
+          statType: 10
+          baseValue: 0.1
+          stackValue: 0.05
+          modifierType: 400

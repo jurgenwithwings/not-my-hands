@@ -47,7 +47,7 @@ public class InventoryInfoPanel : MonoBehaviour {
                 break;
         }
         iconImage.color = rarityColor;
-        nameText.text = itemData.name;
+        nameText.text = itemData.itemName;
         rarityText.text = itemData.rarity.ToString();
         rarityText.color = rarityColor;
         flavourText.text = itemData.itemFlavourText;

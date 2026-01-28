@@ -43,4 +43,8 @@ MonoBehaviour:
             final: 0
           tickInterval: 1.5
           timer: 0
-        damageReductionPerStack: 0.02
+        effect:
+          statType: 14
+          baseValue: 0.07
+          stackValue: 0.02
+          modifierType: 400

@@ -29,6 +29,15 @@ public class EntityEventManager : MonoBehaviour, IStatboard
     public delegate void PreSendDamage(ref DamageInfo damageInfo, Statboard victim, Statboard self);
     
     /// <summary>
+    /// Called before damage is applied to this entity.
+    /// <para><c>DamageInfo</c> - DamageInfo to be modified</para>
+    /// <para><c>Victim</c> - Victim's statboard</para>
+    /// </summary>
+    //public Action<DamageInfo, Statboard, Statboard> OnPreSendDamage;
+    public PreApplyDamage OnPreApplyDamage;
+    public delegate void PreApplyDamage(ref DamageInfo damageInfo, Statboard victim);
+    
+    /// <summary>
     /// Called when health is changes but not through taking damage.
     /// <para><c>CurrentHealth</c> - The new current amount of health.</para>
     /// <para><c>MaxHealth</c> - The new maximum health.</para>

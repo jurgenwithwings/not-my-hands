@@ -1,12 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using Stats;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.VFX;
 using Object = UnityEngine.Object;
 
 [Serializable]
@@ -17,7 +11,7 @@ public abstract class StatusEffect {
     public StatusEffectData Data { get; protected set; }
     
     protected float currentDuration;
-    protected int currentStacks = 1;
+    protected int stacks = 1;
     
     protected DamageInfo highestDamageReceived;
     
@@ -26,13 +20,12 @@ public abstract class StatusEffect {
         attachedManager = manager;
         highestDamageReceived = damageInfo;
         currentDuration = Data.maxDuration;
-        PlayerHUDEvents.DebugText($"Entered Damage: {damageInfo.finalDamage}");
     }
     
     public virtual void AddStack(DamageInfo damageInfo, int stacks) {
-        currentStacks += stacks;
-        if (currentStacks > Data.maxStacks) {
-            currentStacks = Data.maxStacks;
+        this.stacks += stacks;
+        if (this.stacks > Data.maxStacks) {
+            this.stacks = Data.maxStacks;
         }
         
         if (damageInfo.finalDamage > highestDamageReceived.finalDamage) {
@@ -53,10 +46,10 @@ public abstract class StatusEffect {
     }
     
     public virtual void RemoveStacks(int stacks) {
-        currentStacks -= stacks;
-        if (currentStacks <= 0) {
-            currentStacks = 0;
-            attachedManager.RemoveEffect(GetType());
+        this.stacks -= stacks;
+        if (this.stacks <= 0) {
+            this.stacks = 0;
+            attachedManager.RemoveEffect(Data);
         }
     }
     
@@ -112,8 +105,7 @@ public abstract class BuffEffect : StatusEffect {
     }
 }
 
-[Serializable]
-public class Bleed : StatusEffect {
+[Serializable] public class Bleed : StatusEffect {
     [SerializeField] private DoT dot = new DoT();
     [SerializeField] private float healthPercentDamage = 5f;
 
@@ -123,22 +115,18 @@ public class Bleed : StatusEffect {
         Bleed config = data.statusEffectClass as Bleed;
         dot = config.dot;
         healthPercentDamage = config.healthPercentDamage;
-        
-        PlayerHUDEvents.DebugText($"Entered Bleed: {damageInfo.finalDamage}");
-        PlayerHUDEvents.DebugText($"Dot Damage: {dot.baseDamage[0].baseAmount}");
-        PlayerHUDEvents.DebugText($"Dot Calculated Damage: {dot.GetTickDamage(currentStacks, highestDamageReceived.finalDamage)[0].baseAmount}");
     }
 
     public override void AddStack(DamageInfo damageInfo, int stacks) {
         base.AddStack(damageInfo, stacks);
-        if (currentStacks >= Data.maxStacks) {
+        if (base.stacks >= Data.maxStacks) {
             DamageInstance inst = new (DamageInstance.DamageType.Physical, stats.maxHealth * healthPercentDamage);
             DamageInfo info = new (new[]{inst}, highestDamageReceived.source) {
                 hitPoint = stats.transform.position,
                 ignoreResistances = true
             };
             stats.health.TakeDamage(info);
-            attachedManager.RemoveEffect(GetType());
+            attachedManager.RemoveEffect(Data);
         }
     }
 
@@ -146,19 +134,17 @@ public class Bleed : StatusEffect {
         base.Update();
         dot.Update();
         if (dot.CanTick()) {
-            DamageInfo info = new(dot.GetTickDamage(currentStacks, highestDamageReceived.finalDamage), highestDamageReceived.source) {
+            DamageInfo info = new(dot.GetTickDamage(stacks, highestDamageReceived.finalDamage), highestDamageReceived.source) {
                 hitPoint = stats.transform.position,
                 ignoreResistances = true,
             };
-            PlayerHUDEvents.DebugText($"Damage Info Damage: {info.finalDamage} | Current Stacks: {currentStacks}");
             stats?.health?.TakeDamage(info);
             dot.ResetTimer();
         }
     }
 }
 
-[Serializable]
-public class Burn : StatusEffect {
+[Serializable] public class Burn : StatusEffect {
     private float totalDuration;
     private float bonusMultiplier;
     [SerializeField] private DoT dot;
@@ -177,7 +163,7 @@ public class Burn : StatusEffect {
         if (dot.CanTick()) {
             bonusMultiplier = 1 + (percentDamageIncreasePerSecond * totalDuration);
             
-            DamageInfo info = new(dot.GetTickDamage(currentStacks, bonusMultiplier * highestDamageReceived.finalDamage), highestDamageReceived.source) {
+            DamageInfo info = new(dot.GetTickDamage(stacks, bonusMultiplier * highestDamageReceived.finalDamage), highestDamageReceived.source) {
                 hitPoint = stats.transform.position,
                 ignoreResistances = true,
             };
@@ -193,24 +179,19 @@ public class Burn : StatusEffect {
     }
 }
 
-[Serializable]
-public class Freeze : StatusEffect {
+[Serializable] public class Freeze : StatusEffect {
     string source = "Freeze";
     private Modifier mod;
-    [SerializeField] private float baseSpeedMultiplier = 0.1f;
-    [SerializeField] private float perStackSpeedMultiplier = 0.05f;
+    [SerializeField] private StackableEffect effect;
 
     public override void Initialise(StatusEffectData data, EntityStatusEffectManager manager, DamageInfo damageInfo) {
         base.Initialise(data, manager, damageInfo);
         
         Freeze config = data.statusEffectClass as Freeze;
-        baseSpeedMultiplier = config.baseSpeedMultiplier;
-        perStackSpeedMultiplier = config.perStackSpeedMultiplier;
+        effect = config.effect;
         
-        mod = new Modifier(baseSpeedMultiplier, ModifierType.Final, source);
+        mod = new Modifier(effect.effectValue(stacks), effect.modifierType, source);
         ReplaceModifier();
-        
-        stats.moveSpeed.AddModifier(mod);
     }
 
     public override void AddStack(DamageInfo damageInfo, int stacks) {
@@ -221,13 +202,15 @@ public class Freeze : StatusEffect {
 
     private void ReplaceModifier() {
         stats.moveSpeed.RemoveModifier(mod);
-        mod = new Modifier(baseSpeedMultiplier + (perStackSpeedMultiplier * currentStacks), mod.Type, mod.Source);
+        mod = new Modifier(1 - effect.effectValue(stacks), effect.modifierType, source);
         stats.moveSpeed.AddModifier(mod);
     }
 
     public override void RemoveStacks(int stacks) {
         base.RemoveStacks(stacks);
-        ReplaceModifier();
+        if (this.stacks > 0) {
+            ReplaceModifier();
+        }
     }
 
     public override void RemoveEffect() {
@@ -235,10 +218,10 @@ public class Freeze : StatusEffect {
     }
 }
 
-[Serializable]
-public class Poison : StatusEffect {
+[Serializable] public class Poison : StatusEffect {
+    private string source = "Poison";
     [SerializeField] DoT dot;
-    [SerializeField] private float damageReductionPerStack = 0.02f;
+    [SerializeField] private StackableEffect effect;
     private Modifier mod;
 
     public override void Initialise(StatusEffectData data, EntityStatusEffectManager manager, DamageInfo damageInfo) {
@@ -246,9 +229,9 @@ public class Poison : StatusEffect {
         
         Poison config = data.statusEffectClass as Poison;
         dot = config.dot;
-        damageReductionPerStack = config.damageReductionPerStack;
+        effect = config.effect;
 
-        mod = new Modifier(damageReductionPerStack * currentStacks, ModifierType.Final, "Poison");
+        mod = new Modifier(effect.effectValue(stacks), effect.modifierType, source);
         ReplaceModifier();
     }
 
@@ -258,14 +241,16 @@ public class Poison : StatusEffect {
     }
 
     private void ReplaceModifier() {
-        stats.moveSpeed.RemoveModifier(mod);
-        mod = new Modifier(damageReductionPerStack * currentStacks, mod.Type, mod.Source);
-        stats.moveSpeed.AddModifier(mod);
+        stats.damageMultiplier.RemoveModifier(mod);
+        mod = new Modifier(1 - effect.effectValue(stacks), effect.modifierType, source);
+        stats.damageMultiplier.AddModifier(mod);
     }
 
     public override void RemoveStacks(int stacks) {
         base.RemoveStacks(stacks);
-        ReplaceModifier();
+        if (this.stacks > 0) {
+            ReplaceModifier();
+        }
     }
 
     public override void RemoveEffect() {
@@ -277,7 +262,7 @@ public class Poison : StatusEffect {
         base.Update();
         dot.Update();
         if (dot.CanTick()) {
-            DamageInfo info = new(dot.GetTickDamage(currentStacks, highestDamageReceived.finalDamage), highestDamageReceived.source) {
+            DamageInfo info = new(dot.GetTickDamage(stacks, highestDamageReceived.finalDamage), highestDamageReceived.source) {
                 hitPoint = stats.transform.position,
                 ignoreResistances = true,
             };
@@ -287,11 +272,12 @@ public class Poison : StatusEffect {
     }
 }
 
-[Serializable]
-public class Charged : StatusEffect {
+[Serializable] public class Charged : StatusEffect {
     [SerializeField] DoT dot;
     [SerializeField] private float chanceToArc = 0.35f;
     [SerializeField] private float arcRadius = 5.5f;
+    [SerializeField] private float damageTransferPercent = 0.2f;
+    [SerializeField] private float damageArcThreshold = 10f;
     private float arcTimer;
 
     public override void Initialise(StatusEffectData data, EntityStatusEffectManager manager, DamageInfo damageInfo) {
@@ -301,29 +287,35 @@ public class Charged : StatusEffect {
         dot = config.dot;
         chanceToArc = config.chanceToArc;
         arcRadius = config.arcRadius;
+        damageArcThreshold = config.damageArcThreshold;
     }
 
     public override void Update() {
         base.Update();
         arcTimer += Time.deltaTime;
-        if (arcTimer >= 1) {
-            Collider[] collisions = Physics.OverlapSphere(stats.transform.position, arcRadius, LayerMask.NameToLayer("Pawn"));
+        if (arcTimer >= 1 && highestDamageReceived.finalDamage > damageArcThreshold) {
+            Collider[] collisions = Physics.OverlapSphere(stats.transform.position, arcRadius);
             if (collisions.Length > 0) {
                 foreach (Collider collider in collisions) {
                     if (collider.TryGetComponent(out Statboard statboard) && statboard != stats) {
-                        DamageInfo info = new(dot.GetTickDamage(currentStacks, highestDamageReceived.finalDamage), highestDamageReceived.source) {
-                            hitPoint = statboard.transform.position,
-                            statusEffects = new() { { Data, 1 } },
-                        };
-                        statboard.health.TakeDamage(info);
+                        if (!statboard.statusEffectManager.GetEffectFromList(Data)) {
+                            DamageInstance[] damage = { new(DamageInstance.DamageType.Electric, highestDamageReceived.finalDamage) };
+                            DamageInfo info = new(damage, highestDamageReceived.source) {
+                                hitPoint = statboard.transform.position,
+                                statusEffects = new() { { Data, 1 } },
+                            };
+                            info.AddModifier(damageTransferPercent, ModifierType.Final);
+                            statboard.health.TakeDamage(info);
+                            PlayerHUDEvents.DebugText($"Arced to {stats.gameObject.name}");
+                        }
                     }
                 }
             }
-            arcTimer--;
+            arcTimer -= 1;
         }
         dot.Update();
         if (dot.CanTick()) {
-            DamageInfo info = new(dot.GetTickDamage(currentStacks, highestDamageReceived.finalDamage), highestDamageReceived.source) {
+            DamageInfo info = new(dot.GetTickDamage(stacks, highestDamageReceived.finalDamage), highestDamageReceived.source) {
                 hitPoint = stats.transform.position,
                 ignoreResistances = true,
             };
@@ -333,8 +325,7 @@ public class Charged : StatusEffect {
     }
 }
 
-[Serializable]
-public class Judged : StatusEffect {
+[Serializable] public class Judged : StatusEffect {
     private float damageAbsorbed;
     private SpriteRenderer spriteRenderer;
     [SerializeField] private Sprite eyeSprite;
@@ -368,7 +359,7 @@ public class Judged : StatusEffect {
     }
     
     public override void Update() {
-        if (currentDuration <= 0 || damageAbsorbed * (basePercentDamage.baseAmount + (perStackPercentDamage.baseAmount * (currentStacks - 1))) >= stats?.health?.CurrentHealth) {
+        if (currentDuration <= 0 || damageAbsorbed * (basePercentDamage.baseAmount + (perStackPercentDamage.baseAmount * (stacks - 1))) >= stats?.health?.CurrentHealth) {
             Detonate();
         }
         if (spriteRenderer == null || stats.healthBar == null) return;
@@ -378,7 +369,7 @@ public class Judged : StatusEffect {
     }
 
     private void Detonate() {
-        float damage = damageAbsorbed * (basePercentDamage.baseAmount + (perStackPercentDamage.baseAmount * (currentStacks - 1)));
+        float damage = damageAbsorbed * (basePercentDamage.baseAmount + (perStackPercentDamage.baseAmount * (stacks - 1)));
         DamageInstance[] damageInstance = { new(basePercentDamage.damageType, damage) };
         DamageInfo damageInfo = new(damageInstance, highestDamageReceived.source) {
             hitPoint = spriteRenderer.transform.position,
@@ -397,7 +388,7 @@ public class Judged : StatusEffect {
 }
 
 
-
+// TEMP TEMP TEMP
 public class SpeedBoost : BuffEffect {
     string source = "SpeedBoost";
     private Modifier mod;
@@ -419,14 +410,16 @@ public class SpeedBoost : BuffEffect {
     }
 
     private void ReplaceModifier() {
-        mod = new Modifier(baseSpeedBoost + (perStackSpeedBoost * currentStacks), mod.Type, mod.Source);
+        mod = new Modifier(baseSpeedBoost + (perStackSpeedBoost * stacks), mod.Type, mod.Source);
         stats.moveSpeed.RemoveAllModifiersFromSource(source);
         stats.moveSpeed.AddModifier(mod);
     }
 
     public override void RemoveStacks(int stacks) {
         base.RemoveStacks(stacks);
-        ReplaceModifier();
+        if (this.stacks > 0) {
+            ReplaceModifier();
+        }
     }
 
     public override void RemoveEffect() {

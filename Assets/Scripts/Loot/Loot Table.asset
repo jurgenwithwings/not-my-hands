@@ -13,7 +13,15 @@ MonoBehaviour:
   m_Name: Loot Table
   m_EditorClassIdentifier: 
   items:
-  - data: {fileID: 11400000, guid: 5592fd48d972a794a9ed68631c7c3da3, type: 2}
-    dropWeight: 20
+  - data: {fileID: 11400000, guid: c75e7a369d1c7264dab2ca22cb5a16ff, type: 2}
+    dropWeight: 100
+  - data: {fileID: 11400000, guid: 977eb751f852f624b9f4ea019205519b, type: 2}
+    dropWeight: 100
   - data: {fileID: 11400000, guid: 99ceb88fb6540fa40bc06e6fe35742d5, type: 2}
+    dropWeight: 100
+  - data: {fileID: 11400000, guid: f67887612d720af47b6a4cfa9a3862d5, type: 2}
+    dropWeight: 100
+  - data: {fileID: 11400000, guid: 4a3df53de77495c4f86e4afe7542ce5a, type: 2}
+    dropWeight: 50
+  - data: {fileID: 11400000, guid: d4f0c9f9dcca5d9478f44b9052aa6a03, type: 2}
     dropWeight: 100

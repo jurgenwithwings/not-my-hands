@@ -12,17 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ac37012d41647d480c62cf24bc9c6f8, type: 3}
   m_Name: WovenEye
   m_EditorClassIdentifier: 
-  itemName: WovenEye
+  itemName: Woven Eye
   itemDescription: '+5% (+3%/st) crit damage. '
   itemFlavourText: "A watcher\u2019s gaze seeps though. "
   rarity: 1
-  itemIcon: {fileID: -285354508, guid: 0fc7ca9a14c8abd42819b2057609176b, type: 3}
+  itemIcon: {fileID: 21300000, guid: 85207626f9a38c8458f2a7d741825275, type: 3}
   prefab: {fileID: 3387581230344646663, guid: 31be3142fdb4a4d45864f7cd3ece0d67, type: 3}
   relicClass:
-    rid: 7033823864606163073
+    rid: 7033823901134094468
   references:
     version: 2
     RefIds:
-    - rid: 7033823864606163073
-      type: {class: WovenEye, ns: , asm: Assembly-CSharp}
-      data: 
+    - rid: 7033823901134094468
+      type: {class: BasicModifierRelic, ns: , asm: Assembly-CSharp}
+      data:
+        source: Woven Eye
+        stackableEffects:
+        - statType: 5
+          baseValue: 0.05
+          stackValue: 0.03
+          modifierType: 200

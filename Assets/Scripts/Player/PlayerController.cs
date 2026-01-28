@@ -112,7 +112,7 @@ public class PlayerController : MonoBehaviour
         if (victim == stats) return;
         if (ObjectPool.TryPull(damageInfo.hitPoint, transform.rotation, out DamageNumber damageNumber)) {
             damageNumber.SetDamage(damageInfo.finalDamage);
-            PlayerHUDEvents.DebugText($"Damage Dealt: {damageInfo.finalDamage}");
+            //PlayerHUDEvents.DebugText($"Damage Dealt: {damageInfo.finalDamage}");
         }
     }
 

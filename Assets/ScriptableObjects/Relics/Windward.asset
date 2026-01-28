@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ac37012d41647d480c62cf24bc9c6f8, type: 3}
+  m_Name: Windward
+  m_EditorClassIdentifier: 
+  itemName: Windward Charm
+  itemDescription: '+10% (+3%/st) movement speed for 2s (+0.5s/st) after using leg
+    ability. '
+  itemFlavourText: '...just as I drift away. '
+  rarity: 2
+  itemIcon: {fileID: 21300000, guid: 85207626f9a38c8458f2a7d741825275, type: 3}
+  prefab: {fileID: 8888213157780935681, guid: ffdc156e9d6dd724081cffd5d169a028, type: 3}
+  relicClass:
+    rid: 7033823901134094487
+  references:
+    version: 2
+    RefIds:
+    - rid: 7033823901134094487
+      type: {class: Windward, ns: , asm: Assembly-CSharp}
+      data:
+        speedEffect:
+          statType: 10
+          baseValue: 0.1
+          stackValue: 0.03
+          modifierType: 200
+        durationEffect:
+          statType: 0
+          baseValue: 2
+          stackValue: 0.5
+          modifierType: 200
+        buffData: {fileID: 11400000, guid: 66fdfc15536b47e4b8f80bd6c014b4ed, type: 2}

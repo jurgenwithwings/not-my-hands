@@ -97,6 +97,7 @@ using UnityEngine;
     public float additiveAll;        // +X% to all types (0.20 = +20%)
     public float multiplicativeAll;  // x multiplier to all damage
     public float finalAll;           // final multiplier for whole hit
+    public float finalFlatAll;       // final +X damage to the whole hit.
 
     public bool debug;
 
@@ -110,7 +111,8 @@ using UnityEngine;
         additiveAll = 0f;
         multiplicativeAll = 1f;
         finalAll = 1f;
-
+        finalFlatAll = 0f;
+        
         Initialised = true;
         
         debug = false;
@@ -152,7 +154,7 @@ using UnityEngine;
                 inst.SetDefault();
             }
             total += inst.baseAmount.GetModifiedValue(inst.flat + flatAll, inst.additive + additiveAll, 
-                inst.multiplicative * multiplicativeAll, inst.final * finalAll, debug);
+                inst.multiplicative * multiplicativeAll, inst.final * finalAll, debug) + finalFlatAll;
         }
 
         return total;
@@ -195,6 +197,10 @@ using UnityEngine;
                 finalAll *= amount;
                 break;
         }
+    }
+
+    public void AddFinalFlatModifier(float amount) {
+        finalFlatAll += amount;
     }
 
     // --- Helpers ---
