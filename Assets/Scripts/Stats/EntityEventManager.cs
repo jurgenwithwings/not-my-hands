@@ -7,13 +7,19 @@ public class EntityEventManager : MonoBehaviour, IStatboard
     
     /// <summary>
     /// Called when this entity takes damage.
-    /// <para><c>DamageInfo</c> - The damage that was taken</para>
+    /// <para><c>DamageTaken</c> - The damage that was taken</para>
     /// </summary>
     public Action<DamageInfo> OnDamageTaken;
+    
+    /// <summary>
+    /// Called when this entity heals.
+    /// <para><c>healAmount</c> - The amount of health healed</para>
+    /// </summary>
+    public Action<float> OnHealed;
 
     /// <summary>
     /// Called when a Health component has received damage from this entity.
-    /// <para><c>DamageInfo</c> - The Damage that was received</para>
+    /// <para><c>Damage Taken</c> - The Damage that was received</para>
     /// <para><c>Victim</c> - Victim's statboard</para>
     /// </summary>
     public Action<DamageInfo, Statboard> OnReceivedYourDamage;
@@ -70,4 +76,10 @@ public class EntityEventManager : MonoBehaviour, IStatboard
     /// <para><c>Old Limb</c> - The Limb being dropped for the new one.</para>
     /// </summary>
     public Action<LimbData, LimbSide, LimbData> OnLimbChanged;
+
+    /// <summary>
+    /// Called when this entity kills another.
+    /// <para><c>Victim</c> - The entity that was killed.</para>
+    /// </summary>
+    public Action<Statboard> OnKilledTarget;
 }

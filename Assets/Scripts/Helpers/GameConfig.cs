@@ -29,6 +29,10 @@ public class GameConfig : ScriptableObject
         }
     }
     
+    [Header("Layers")]
+    public LayerMask PawnLayer;
+    public LayerMask IgnoreRaycastLayer;
+    
 
     [Header("Base Status Effects")]
     public StatusEffectData bleed;

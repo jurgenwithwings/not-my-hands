@@ -31,7 +31,7 @@ public abstract class Relic {
         
     }
 
-    public virtual void Tick() {
+    public virtual void Update() {
         
     }
     
@@ -50,6 +50,10 @@ public abstract class Relic {
 
     protected void ReplaceModifier(ref StackableEffect stackableEffect, object source) {
         ReplaceModifier(stackableEffect.statType, stackableEffect.modifierType, stackableEffect.baseValue, stackableEffect.stackValue, source, ref stackableEffect.currentModifier);
+    }
+
+    protected float GetStackValue(float baseValue, float stackValue, int stacks) {
+        return baseValue + (stackValue * (stacks - 1));
     }
 }
 

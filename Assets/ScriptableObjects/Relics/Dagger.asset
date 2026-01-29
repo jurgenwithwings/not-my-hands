@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ac37012d41647d480c62cf24bc9c6f8, type: 3}
+  m_Name: Dagger
+  m_EditorClassIdentifier: 
+  itemName: Dagger
+  itemDescription: '6 (+1/st) Daggers orbit the player and seek out enemies. When
+    a dagger hits and enemy heal for 1% (+0.5%/st) health. '
+  itemFlavourText: New Flavour Text
+  rarity: 3
+  itemIcon: {fileID: 21300000, guid: 1cece60c88c25e540ab4cf4b25bffe9f, type: 3}
+  prefab: {fileID: 2882600643640320409, guid: 34381412989b6bb4abb4b9388bf06649, type: 3}
+  relicClass:
+    rid: 7033823926051405950
+  references:
+    version: 2
+    RefIds:
+    - rid: 7033823926051405950
+      type: {class: DaggerRelic, ns: , asm: Assembly-CSharp}
+      data:
+        daggerPrefab: {fileID: 6984055323524716988, guid: f6eb6043e5593ec429a8fa6588dc8dbf, type: 3}
+        seekRange: 20
+        seekTimer:
+          baseDamage:
+          - damageType: 0
+            baseAmount: 40
+            flat: 0
+            additive: 0
+            multiplicative: 0
+            final: 0
+          - damageType: 1
+            baseAmount: 15
+            flat: 0
+            additive: 0
+            multiplicative: 0
+            final: 0
+          damagePerStack:
+          - damageType: 0
+            baseAmount: 1
+            flat: 0
+            additive: 0
+            multiplicative: 0
+            final: 0
+          - damageType: 1
+            baseAmount: 0.375
+            flat: 0
+            additive: 0
+            multiplicative: 0
+            final: 0
+          tickInterval: 3
+          timer: 0
+        targetLayer:
+          serializedVersion: 2
+          m_Bits: 1024
+        groundLayer:
+          serializedVersion: 2
+          m_Bits: 4101
+        baseHealPercent: 0.01
+        stackHealPercent: 0.005
+        baseDaggers: 6
+        stackDaggers: 1
+        daggerOrbitRange: 1
+        daggerOrbitSpeed: 7.5

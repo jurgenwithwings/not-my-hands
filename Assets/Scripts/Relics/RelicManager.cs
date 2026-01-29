@@ -33,7 +33,7 @@ public class RelicManager : MonoBehaviour, IStatboard
 
     private void Update() {
         for (int i = relics.Count - 1; i >= 0; i--) {
-            relics[i].Tick();
+            relics[i].Update();
         }
     }
 

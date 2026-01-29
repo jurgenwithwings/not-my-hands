@@ -77,6 +77,21 @@ public class Health : MonoBehaviour, IStatboard
         return totalDamageTaken;
     }
 
+    public float Heal(float amount) {
+        if (CurrentHealth >= maxHealth) {
+            return 0;
+        }
+        
+        float originalHealth = CurrentHealth;
+        
+        CurrentHealth += amount;
+        if (CurrentHealth > maxHealth) {
+            CurrentHealth = maxHealth;
+        }
+        statboard.eventManager.OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
+        return CurrentHealth - originalHealth;
+    }
+
     private void Update() {
         if (CurrentHealth < maxHealth && Time.time - lastTimeDamaged > healthRegenDelay) {
             CurrentHealth += statboard.passiveRegenRate * Time.deltaTime;
@@ -86,6 +101,7 @@ public class Health : MonoBehaviour, IStatboard
 
     private void Die(Statboard killer) {
         OnDeath?.Invoke(killer);
+        killer.eventManager.OnKilledTarget?.Invoke(statboard);
         Destroy(gameObject);
     }
 }

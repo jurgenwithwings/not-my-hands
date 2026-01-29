@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e54d0b4a7bd4a02a51e593580900e45, type: 3}
+  m_Name: HollowVictoryBuff
+  m_EditorClassIdentifier: 
+  displayName: Hollow Victory
+  icon: {fileID: 0}
+  maxDuration: 10
+  StacksLostOnDurationEnd: 3
+  maxStacks: 10
+  refillDurationWhenGainingStack: 1
+  statusEffectClass:
+    rid: 7033823926051405906
+  references:
+    version: 2
+    RefIds:
+    - rid: 7033823926051405906
+      type: {class: HollowVictoryBuff, ns: , asm: Assembly-CSharp}
+      data:
+        damageEffect:
+          statType: 14
+          baseValue: 0.01
+          stackValue: 0.0025
+          modifierType: 200

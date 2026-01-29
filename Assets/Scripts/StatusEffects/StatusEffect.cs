@@ -306,7 +306,7 @@ public abstract class BuffEffect : StatusEffect {
                             };
                             info.AddModifier(damageTransferPercent, ModifierType.Final);
                             statboard.health.TakeDamage(info);
-                            PlayerHUDEvents.DebugText($"Arced to {stats.gameObject.name}");
+                            //PlayerHUDEvents.DebugText($"Arced to {stats.gameObject.name}");
                         }
                     }
                 }

@@ -189,11 +189,14 @@ using UnityEngine;
                 break;
             case ModifierType.Additive:
                 additiveAll += amount;
+                PlayerHUDEvents.DebugText($"Added Additive: {amount}");
                 break;
             case ModifierType.Multiply:
+                if (amount <= 0.01f) break;
                 multiplicativeAll *= (1 +amount);
                 break;
             case ModifierType.Final:
+                if (amount <= 0.01f) break;
                 finalAll *= amount;
                 break;
         }
