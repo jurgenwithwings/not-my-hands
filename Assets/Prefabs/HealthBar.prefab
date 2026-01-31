@@ -167,8 +167,7 @@ MonoBehaviour:
   secondaryHealthSlider: {fileID: 4331825823799438194}
   visibleDuration: 2
   lookTarget: {fileID: 0}
-  screeSize: 0.1
-  stats: {fileID: 0}
+  screeSize: 0.16
 --- !u!1 &2601368899406997372
 GameObject:
   m_ObjectHideFlags: 0

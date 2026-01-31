@@ -1,16 +1,13 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Game Config", menuName = "Game Config")]
+//[CreateAssetMenu(fileName = "Game Config", menuName = "Game Config")]
 public class GameConfig : ScriptableObject
 {
     private static GameConfig instance;
-    public static GameConfig Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
+    public static GameConfig Instance {
+        get {
+            if (instance == null) {
                 instance = Resources.Load<GameConfig>("Game Config");
             }
             return instance;
@@ -23,15 +20,18 @@ public class GameConfig : ScriptableObject
         get {
             switch (dirtyDamageTypes) {
                 case true:
-                    damageTypes = Enum.GetValues(typeof(DamageInstance.DamageType)).Length; break;
+                    damageTypes = Enum.GetValues(typeof(DamageInstance.DamageType)).Length;
+                    dirtyDamageTypes = false;
+                    break;
             }
             return damageTypes;
         }
     }
     
     [Header("Layers")]
-    public LayerMask PawnLayer;
-    public LayerMask IgnoreRaycastLayer;
+    public LayerMask pawnLayer;
+    public LayerMask ignoreRaycastLayer;
+    public LayerMask levelCollisionLayer;
     
 
     [Header("Base Status Effects")]

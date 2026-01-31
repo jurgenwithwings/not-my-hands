@@ -12,12 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d03f45086d9278a4784478cb94c1acf8, type: 3}
   m_Name: Game Config
   m_EditorClassIdentifier: 
-  PawnLayer:
+  pawnLayer:
     serializedVersion: 2
     m_Bits: 1024
-  IgnoreRaycastLayer:
+  ignoreRaycastLayer:
     serializedVersion: 2
     m_Bits: 4
+  levelCollisionLayer:
+    serializedVersion: 2
+    m_Bits: 4097
   bleed: {fileID: 11400000, guid: 6a8abcd812891224a9b1e89fa30e0d43, type: 2}
   burn: {fileID: 11400000, guid: 9134f1496d127624bbb93ca2d339dde0, type: 2}
   freeze: {fileID: 11400000, guid: 42ff55d49295db94da043f0333877f3e, type: 2}

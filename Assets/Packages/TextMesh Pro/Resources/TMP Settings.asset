@@ -43,7 +43,7 @@ MonoBehaviour:
   m_EmojiFallbackTextAssets:
   - {fileID: 11400000, guid: 0d52cbea429e97844abe6786f17191d9, type: 2}
   m_defaultColorGradientPresetsPath: Color Gradient Presets/
-  m_defaultStyleSheet: {fileID: 11400000, guid: f952c082cb03451daed3ee968ac6c63e, type: 2}
+  m_defaultStyleSheet: {fileID: 11400000, guid: 10c4cd8a3c7374c47a08c647502487bb, type: 2}
   m_StyleSheetsResourcePath: 
   m_leadingCharacters: {fileID: 4900000, guid: d82c1b31c7e74239bff1220585707d2b, type: 3}
   m_followingCharacters: {fileID: 4900000, guid: fade42e8bc714b018fac513c043d323b, type: 3}

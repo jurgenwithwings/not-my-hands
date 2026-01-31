@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: Hollow Tree
   m_EditorClassIdentifier: 
   itemName: Hollow Tree
-  itemDescription: '-10 (-3/st) flat damage reduction per attack (Up to 70% of damage). '
+  itemDescription: '+5% Max Health.
+
+
+    <style="FinePrint">+3% per subsequent stack.</style>'
   itemFlavourText: 'You hear a heartbeat inside the wood. '
   rarity: 1
   itemIcon: {fileID: 21300000, guid: 7397ada3a5d40a14da9a9edbf29a4326, type: 3}

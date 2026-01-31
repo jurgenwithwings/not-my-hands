@@ -1,5 +1,7 @@
 using System;
+using ObjectPooling;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.VFX;
 
 public class DaggerRelicProjectile : MonoBehaviour {
@@ -8,6 +10,7 @@ public class DaggerRelicProjectile : MonoBehaviour {
     [SerializeField] private float seekRotationSpeed;
     [SerializeField] private float seekMoveSpeed;
     [SerializeField] private float stuckTime;
+    [SerializeField] private ParentConstraint parentConstraint;
     [SerializeField] private VisualEffect vfx;
 
     private DaggerRelic owningRelic;
@@ -19,10 +22,12 @@ public class DaggerRelicProjectile : MonoBehaviour {
 
     private GameObject target;
 
+    private ImpactProxy impactProxy;
     private float stuckDuration;
 
     private void Start() {
         EnterState(State.Idle);
+        ObjectPool.InitialisePool<ImpactProxy>(50);
     }
     
     public void Setup(GameObject orbitPoint, DaggerRelic owningRelic, Statboard owningEntity) {
@@ -51,7 +56,6 @@ public class DaggerRelicProjectile : MonoBehaviour {
             case State.Stuck:
                 stuckDuration -= Time.deltaTime;
                 if (stuckDuration <= 0) {
-                    target = orbitPoint;
                     EnterState(State.Returning);
                 }
                 break;
@@ -59,6 +63,10 @@ public class DaggerRelicProjectile : MonoBehaviour {
     }
 
     private void MoveToTarget(float scale) {
+        if (target == null) {
+            target = orbitPoint;
+            EnterState(State.Returning);
+        }
         Vector3 direction = target.transform.position - transform.position;
                 
         Quaternion targetRotation = Quaternion.LookRotation(direction);
@@ -73,19 +81,22 @@ public class DaggerRelicProjectile : MonoBehaviour {
         switch (state) {
             case State.Idle:
                 vfx.Stop();
-                transform.SetParent(orbitPoint.transform);
+                transform.SetParent(orbitPoint.transform, worldPositionStays: false);
                 transform.localRotation = Quaternion.Euler(idleRotation);
                 transform.localPosition = Vector3.zero;
                 owningRelic.DaggerReturned(this);
                 break;
-            case State.Seeking or State.Returning:
+            case State.Seeking:
                 vfx.Play();
                 transform.parent = null;
+                break;
+            case State.Returning:
+                target = orbitPoint;
+                parentConstraint.constraintActive = false;
                 break;
             case State.Stuck:
                 vfx.Stop();
                 stuckDuration = stuckTime;
-                transform.SetParent(target.transform, worldPositionStays: true);
                 break;
         }
     }
@@ -93,20 +104,43 @@ public class DaggerRelicProjectile : MonoBehaviour {
     private void OnTriggerEnter(Collider other) {
         switch (state) {
             case State.Seeking:
-                if (other.gameObject == owningEntity.gameObject) return;
-                if (other.TryGetComponent(out Statboard victim)) {
-                    owningRelic.DaggerHit(victim, this);
+                LayerMask levelAndPawnMask = GameConfig.Instance.levelCollisionLayer.AddLayerToMask(10);
+                if (other.gameObject != owningEntity.gameObject && other.gameObject.IsInLayerMask(levelAndPawnMask)) {
+                    if (other.TryGetComponent(out Statboard victim)) {
+                        owningRelic.DaggerHit(victim, this);
+                    }
+                    target = other.gameObject;
+                    SetImpactProxy(other.gameObject);
+                    EnterState(State.Stuck);
                 }
-                target = other.gameObject;
-                transform.SetParent(other.transform, worldPositionStays: true);
-                EnterState(State.Stuck);
                 break;
             case State.Returning:
                 if (other.gameObject == target) {
-                    transform.SetParent(other.transform, worldPositionStays:false);
+                    transform.SetParent(target.transform, worldPositionStays:false);
                     EnterState(State.Idle);
                 }
                 break;
         }
+    }
+
+    private void SetImpactProxy(GameObject impactedObject) {
+        if (ObjectPool.TryPull(transform.position, transform.rotation, out impactProxy)) {
+            impactProxy.Setup(impactedObject.transform);
+            impactProxy.OnDestroyed += ReturnFromProxy;
+
+            ConstraintSource cs = new ConstraintSource() {
+                sourceTransform = impactProxy.transform,
+                weight = 1f
+            };
+        
+            parentConstraint.SetSource(0, cs);
+            parentConstraint.constraintActive = true;
+            parentConstraint.locked = true;
+        }
+        
+    }
+
+    private void ReturnFromProxy() {
+        EnterState(State.Returning);
     }
 }

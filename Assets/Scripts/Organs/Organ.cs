@@ -29,7 +29,7 @@ public abstract class Organ {
         }
     }
 
-    public virtual void Tick() { }
+    public virtual void Update() { }
 
     public virtual void Remove() { }
 }

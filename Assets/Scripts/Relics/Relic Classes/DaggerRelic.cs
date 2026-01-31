@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Animations;
 using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 [Serializable] public class DaggerRelic : Relic {
     [SerializeField] private GameObject daggerPrefab;
@@ -61,8 +62,8 @@ using Object = UnityEngine.Object;
                 orbitPoints.Add(new GameObject($"OrbitPoint{i}"));
                 SphereCollider coll = orbitPoints[i].AddComponent<SphereCollider>();
                 coll.isTrigger = true;
-                coll.radius = 0.2f;
-                coll.gameObject.layer = GameConfig.Instance.IgnoreRaycastLayer;
+                coll.radius = 0.7f;
+                coll.gameObject.layer = GameConfig.Instance.ignoreRaycastLayer;
             }
             
             orbitPoints[i].transform.SetParent(orbitCenter.transform, worldPositionStays: false);
@@ -131,10 +132,13 @@ using Object = UnityEngine.Object;
     }
 
     private void LookForTarget() {
-        foreach (Collider collider in Physics.OverlapSphere(stats.transform.position, seekRange, targetLayer)) {
-            if (daggerStack.Count <= 0) return;
+        Collider[] colliders = Physics.OverlapSphere(stats.transform.position, seekRange, targetLayer);
+        for (int i = 0; i < daggerStack.Count; i++) {
+            int colliderIndex = Random.Range(0, colliders.Length);
             
-            Physics.Raycast(stats.transform.position, collider.transform.position - stats.transform.position, out RaycastHit hit, seekRange);
+            LayerMask targetAndGroundLayer = targetLayer;
+            targetAndGroundLayer |= (1 << GameConfig.Instance.levelCollisionLayer);
+            Physics.Raycast(stats.transform.position, colliders[colliderIndex].transform.position - stats.transform.position, out RaycastHit hit, seekRange, targetAndGroundLayer);
             
             if (hit.collider != null && hit.collider.TryGetComponent(out Statboard target)) {
                  var pop = daggerStack.Pop();

@@ -24,7 +24,7 @@ public class OrganManager : MonoBehaviour, IStatboard {
 
     public void Update() {
         foreach (Organ organ in organs) {
-            organ.Tick();
+            organ.Update();
         }
     }
 

@@ -197,47 +197,54 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
         }
     }
 
-    public InputEvent<bool> PrimaryFire;
+    public InputEvent<float> PrimaryFire;
     public void OnPrimaryFire(InputAction.CallbackContext context) {
         DefaultHandle(context);
+        PlayerHUDEvents.DebugText("Pew");
         if (Interact.Context.performed) {
+            PrimaryFire.SetAndInvoke(0, 0, context);
             return;
         }
-        if (context.performed || context.canceled) {
-            PrimaryFire.SetAndInvoke(context.performed, context.performed, context);
-        }
+        float value = context.ReadValue<float>();
+        PrimaryFire.SetAndInvoke(value, value, context);
     }
 
-    public InputEvent<bool> SecondaryFire;
+    public InputEvent<float> SecondaryFire;
     public void OnSecondaryFire(InputAction.CallbackContext context) {
         DefaultHandle(context);
         if (Interact.Context.performed) {
+            SecondaryFire.SetAndInvoke(0, 0, context);
             return;
         }
+        float value = context.ReadValue<float>();
         if (context.performed || context.canceled) {
-            SecondaryFire.SetAndInvoke(context.performed, context.performed, context);
+            SecondaryFire.SetAndInvoke(value, value, context);
         }
     }
     
-    public InputEvent<bool> PrimaryKick;
+    public InputEvent<float> PrimaryKick;
     public void OnPrimaryKick(InputAction.CallbackContext context) {
         DefaultHandle(context);
         if (Interact.Context.performed) {
+            PrimaryKick.SetAndInvoke(0, 0, context);
             return;
         }
+        float value = context.ReadValue<float>();
         if (context.performed || context.canceled) {
-            PrimaryKick.SetAndInvoke(context.performed, context.performed, context);
+            PrimaryKick.SetAndInvoke(value, value, context);
         }
     }
     
-    public InputEvent<bool> SecondaryKick;
+    public InputEvent<float> SecondaryKick;
     public void OnSecondaryKick(InputAction.CallbackContext context) {
         DefaultHandle(context);
         if (Interact.Context.performed) {
+            SecondaryKick.SetAndInvoke(0, 0, context);
             return;
         }
+        float value = context.ReadValue<float>();
         if (context.performed || context.canceled) {
-            SecondaryKick.SetAndInvoke(context.performed, context.performed, context);
+            SecondaryKick.SetAndInvoke(value, value, context);
         }
     }
     
@@ -290,11 +297,7 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
     public void OnClick(InputAction.CallbackContext context) { }
     public void OnRightClick(InputAction.CallbackContext context) { }
 
-    public void OnMiddleClick(InputAction.CallbackContext context) {
-        if (context.performed) {
-            EnableActionMap(InputMap.Player);
-        }
-    }
+    public void OnMiddleClick(InputAction.CallbackContext context) { }
     public void OnScrollWheel(InputAction.CallbackContext context) { }
 
     public InputEvent<bool> UIExit;

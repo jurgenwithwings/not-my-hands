@@ -13,8 +13,13 @@ MonoBehaviour:
   m_Name: HollowVictory
   m_EditorClassIdentifier: 
   itemName: Effigy of Hollow Victory
-  itemDescription: On kill, gain +1% (+0.25%/st) damage for 10 seconds (stacks up
-    to 10x (+1/st)).
+  itemDescription: 'On kill, gain +1% Damage for 10 seconds (stacks up to 10x).
+
+
+    <style="FinePrint">+0.25%
+    Damage per subsequent stack.
+
+    +1 Max Stacks per subsequent stack.</style>'
   itemFlavourText: New Flavour Text
   rarity: 3
   itemIcon: {fileID: 21300000, guid: 2bcd001b356435b48936fa6699cdb6f9, type: 3}

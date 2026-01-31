@@ -406,7 +406,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   duration: 1.7
-  screeSize: 0.065
+  screeSize: 0.085
   floatAmount: 2.2
   positionVarianceAmount: 0.5
   abbreviate: 0

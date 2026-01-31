@@ -24,7 +24,6 @@ using UnityEngine;
     }
 
     private void OnKilledTarget(Statboard obj) {
-        PlayerHUDEvents.DebugText("Got killed target");
         DamageInfo damage = new(Array.Empty<DamageInstance>(), stats);
         damage.statusEffects.Add(damageBuff, 1);
         HollowVictoryBuff buff = stats.statusEffectManager.AddStacks(damage) as HollowVictoryBuff;
@@ -67,7 +66,6 @@ using UnityEngine;
     }
 
     public void UpdateValues(float newBase, float newStack, int newMaxStacks) {
-        PlayerHUDEvents.DebugText("Updated Stats");
         damageEffect.baseValue = newBase;
         damageEffect.stackValue = newStack;
         maxStacks = newMaxStacks;
@@ -98,11 +96,6 @@ using UnityEngine;
         }
         
         ReplaceModifier();
-    }
-
-    public override void Update() {
-        base.Update();
-        PlayerHUDEvents.DebugText($"HVBuff: {damageEffect.effectValue(stacks)} Max Stacks {maxStacks} | Current Stacks: {stacks} | Current Duration {currentDuration}", 0.1f, "HVBuff");
     }
 
     public override void RemoveStacks(int stacks) {

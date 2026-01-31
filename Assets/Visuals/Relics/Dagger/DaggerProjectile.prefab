@@ -728,6 +728,7 @@ GameObject:
   - component: {fileID: 7425998299145623423}
   - component: {fileID: 3543306304053078804}
   - component: {fileID: 5319151342522579827}
+  - component: {fileID: 3613817762532132217}
   m_Layer: 20
   m_Name: DaggerProjectile
   m_TagString: Untagged
@@ -776,6 +777,7 @@ MonoBehaviour:
   seekRotationSpeed: 360
   seekMoveSpeed: 10
   stuckTime: 3
+  parentConstraint: {fileID: 3613817762532132217}
   vfx: {fileID: 8401655443894756994}
 --- !u!136 &3543306304053078804
 CapsuleCollider:
@@ -827,6 +829,33 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1773428102 &3613817762532132217
+ParentConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6984055323524716988}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_TranslationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_TranslationOffsets:
+  - {x: 0, y: 0, z: 0}
+  m_RotationOffsets:
+  - {x: 0, y: 0, z: 0}
+  m_AffectTranslationX: 1
+  m_AffectTranslationY: 1
+  m_AffectTranslationZ: 1
+  m_AffectRotationX: 1
+  m_AffectRotationY: 1
+  m_AffectRotationZ: 1
+  m_Active: 0
+  m_IsLocked: 0
+  m_Sources:
+  - sourceTransform: {fileID: 0}
+    weight: 1
 --- !u!1 &9026897846278349112
 GameObject:
   m_ObjectHideFlags: 0

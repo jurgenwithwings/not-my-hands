@@ -25,7 +25,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7310876204686584294
 Transform:
   m_ObjectHideFlags: 0
@@ -165,7 +165,7 @@ MonoBehaviour:
   healthBar: {fileID: 7929674769736282749}
   rigidbody: {fileID: 7271274723162091676}
   maxHealth:
-    BaseValue: 4000
+    BaseValue: 100
   damageResistance:
     BaseValue: 0
   healingEffectiveness:
@@ -294,8 +294,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lootTable: {fileID: 11400000, guid: ac67b5592e744ff428d4e2beaf60f8ae, type: 2}
   uniqueLoot: []
-  initialDropChance: 100
-  extraDropChance: 10
+  initialDropChance: 6
+  extraDropChance: 15
   maxDrops: 2
   additionalLoot: {fileID: 11400000, guid: 3a41230910b2e504b9900b4bec9fb567, type: 2}
   additionalInitialDropChance: 0
@@ -310,6 +310,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7310876204686584294}
     m_Modifications:
+    - target: {fileID: 1082528986873458200, guid: 156fbfae76ca49343bbff2a0101db5a4, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.741
+      objectReference: {fileID: 0}
+    - target: {fileID: 1082528986873458200, guid: 156fbfae76ca49343bbff2a0101db5a4, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1279447376688634299, guid: 156fbfae76ca49343bbff2a0101db5a4, type: 3}
       propertyPath: m_Name
       value: HealthBar
@@ -329,6 +337,14 @@ PrefabInstance:
     - target: {fileID: 6437981580256508123, guid: 156fbfae76ca49343bbff2a0101db5a4, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8260369122831228973, guid: 156fbfae76ca49343bbff2a0101db5a4, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.796
+      objectReference: {fileID: 0}
+    - target: {fileID: 8260369122831228973, guid: 156fbfae76ca49343bbff2a0101db5a4, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8278456987857694511, guid: 156fbfae76ca49343bbff2a0101db5a4, type: 3}
       propertyPath: m_Pivot.x
@@ -396,7 +412,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8278456987857694511, guid: 156fbfae76ca49343bbff2a0101db5a4, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1.205
+      value: 1.39
       objectReference: {fileID: 0}
     - target: {fileID: 8278456987857694511, guid: 156fbfae76ca49343bbff2a0101db5a4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

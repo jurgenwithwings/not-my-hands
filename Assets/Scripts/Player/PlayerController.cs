@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
     private Statboard statboard;
 
     private InputManager inputs;
+
+    private LimbManager limbManager;
     
     [Header("Movement")]
     public float moveSpeed => statboard.moveSpeed;
@@ -51,6 +53,8 @@ public class PlayerController : MonoBehaviour
         }
         
         inputs = GetComponent<InputManager>();
+        
+        limbManager = GetComponent<LimbManager>();
     }
 
     private void Start() {
@@ -132,15 +136,18 @@ public class PlayerController : MonoBehaviour
 
                     if (inputs.Interact.Context.performed && (inputs.PrimaryInteract.Triggered)) {
                         interactable.Interact(statboard);
+                        limbManager.HandleInteractAnim();
                     }
                     else if (inputs.Interact.Context.performed && (inputs.SecondaryInteract.Triggered))
                     {
                         interactable.AltInteract(statboard);
+                        limbManager.HandleInteractAnim();
                     }
                 }
                 else {
                     if (inputs.Interact.Triggered) {
                         interactable.Interact(statboard);
+                        limbManager.HandleInteractAnim();
                     }
                 }
                 PlayerHUDEvents.OnSetInteractionText?.Invoke($"to pick up {interactable.InteractionName()}", interactable.HasAltInteraction);
@@ -173,7 +180,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Debug Take Damage
-        if (Input.GetKeyDown(KeyCode.Q)) {
+        if (Input.GetKeyDown(KeyCode.T)) {
             PlayerHUDEvents.DebugText("Trying to take damage");
             float t = Mathf.Pow(Random.value, 3f);
             damage[0].baseAmount = Mathf.Lerp(0, 20, t);

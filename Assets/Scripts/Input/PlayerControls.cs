@@ -148,39 +148,39 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""PrimaryFire"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""415e9f9d-72b4-4279-ba38-9e882ed651b1"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Analog"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""SecondaryFire"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""8b6f86f5-96ab-482e-a55b-72b6be1101bb"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Analog"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""PrimaryKick"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""3a9bf834-1480-441d-a42b-604c55142d3f"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Analog"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""SecondaryKick"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""263a5ec7-fbfe-4d3e-993d-b87da6163155"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Analog"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""SwapArms"",
@@ -452,7 +452,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Keyboard"",
                     ""id"": ""a90ee7f1-c775-4697-adc2-4a1c7e1bf86f"",
-                    ""path"": ""OneModifier"",
+                    ""path"": ""OneModifier(modifiersOrder=1)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -485,7 +485,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Gamepad"",
                     ""id"": ""d136c0c6-2e4c-437e-803b-05f01fcd0ed2"",
-                    ""path"": ""OneModifier"",
+                    ""path"": ""OneModifier(modifiersOrder=1)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -529,7 +529,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Keyboard"",
                     ""id"": ""dc2de106-a2cd-4f4b-b762-28fcca158ec3"",
-                    ""path"": ""OneModifier"",
+                    ""path"": ""OneModifier(modifiersOrder=1)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -562,7 +562,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Gamepad"",
                     ""id"": ""3616bdfd-17a2-499d-8bfc-a5ec5d3740b8"",
-                    ""path"": ""OneModifier"",
+                    ""path"": ""OneModifier(modifiersOrder=1)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
