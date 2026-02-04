@@ -16,7 +16,7 @@ MonoBehaviour:
   itemDescription: 'On kill, gain +1% Damage for 10 seconds (stacks up to 10x).
 
 
-    <style="FinePrint">+0.25%
+    <style="Fine">+0.25%
     Damage per subsequent stack.
 
     +1 Max Stacks per subsequent stack.</style>'

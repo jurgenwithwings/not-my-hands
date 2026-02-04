@@ -342,7 +342,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""0c77848e-668f-4bfc-a260-9664f3ce70d7"",
-                    ""path"": ""<Keyboard>/e"",
+                    ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard"",
@@ -363,22 +363,22 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""e9c3e2da-625f-4c24-9384-dca111d48757"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""id"": ""cfb3dcd8-01ed-43e7-885e-400671fa121d"",
+                    ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Controller"",
+                    ""groups"": "";Keyboard"",
                     ""action"": ""PrimaryKick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""cfb3dcd8-01ed-43e7-885e-400671fa121d"",
-                    ""path"": ""<Keyboard>/q"",
+                    ""id"": ""e9c3e2da-625f-4c24-9384-dca111d48757"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Keyboard"",
+                    ""groups"": "";Controller"",
                     ""action"": ""PrimaryKick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false

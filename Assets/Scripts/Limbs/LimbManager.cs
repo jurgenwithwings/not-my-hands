@@ -43,7 +43,7 @@ public class LimbManager : MonoBehaviour {
         secondaryKickEvent = input => InputEvent(2, input);
         inputManager.SecondaryKick.Event += secondaryKickEvent;
 
-        for (int i = 0; i < 2/*limbAnchors.Length*/; i++) {
+        for (int i = 0; i < limbAnchors.Length; i++) {
             limbs[i] = LimbHelper.CreateDefaultLimb((LimbType)((int)(i * 0.5f) + 1), limbAnchors[i]);
             limbs[i].Initialise(LimbHelper.LoadLimbData(limbs[i].data.limbType), statboard);
         }
@@ -83,6 +83,9 @@ public class LimbManager : MonoBehaviour {
     }
 }
 
+
+
+
 public static class LimbHelper {
     private static string LimbDataPath = "DefaultLimbs/";
     
@@ -114,6 +117,10 @@ public abstract class Limb : MonoBehaviour {
     protected InputEvent<float> input;
     public virtual void ReceiveInput(InputEvent<float> inputEvent) {
         input = inputEvent;
+    }
+
+    private void LateUpdate() {
+        input.ResetState();
     }
 
     public virtual void Remove() { }

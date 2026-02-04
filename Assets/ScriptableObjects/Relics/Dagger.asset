@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Dagger
   itemDescription: "6 Daggers orbit the player and seek out enemies. When a dagger
-    hits and enemy Heal for 1% Max Health. \n\n<style=\"FinePrint\">+1 Dagger per
-    subsequent stack.\n+0.5% Health per subsequent stack.</style>"
+    hits and enemy Heal for 1% Max Health. \n\n<style=\"Fine\">+1 Dagger per subsequent
+    stack.\n+0.5% Health per subsequent stack.</style>"
   itemFlavourText: New Flavour Text
   rarity: 3
   itemIcon: {fileID: 21300000, guid: 1cece60c88c25e540ab4cf4b25bffe9f, type: 3}

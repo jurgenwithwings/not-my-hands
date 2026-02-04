@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: WovenEye
   m_EditorClassIdentifier: 
   itemName: Woven Eye
-  itemDescription: "+5% Crit Damage. \n\n<style=\"FinePrint\">+3% per subsequent
-    stack.</style>"
+  itemDescription: "+5% Crit Damage. \n\n<style=\"Fine\">+3% per subsequent stack.</style>"
   itemFlavourText: "A watcher\u2019s gaze seeps though. "
   rarity: 1
   itemIcon: {fileID: 21300000, guid: 85207626f9a38c8458f2a7d741825275, type: 3}

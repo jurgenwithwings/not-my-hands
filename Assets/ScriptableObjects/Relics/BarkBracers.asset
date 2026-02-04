@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BarkBracers
   m_EditorClassIdentifier: 
   itemName: Bark Bracers
-  itemDescription: "-10 Damage Taken. \n\nCan only reduce a maximum of 70% per attack.\n\n<style=\"FinePrint>-3
+  itemDescription: "-10 Damage Taken. \n\nCan only reduce a maximum of 70% per attack.\n\n<style=\"Fine\">-3
     Damage per subsequent stack.</style>"
   itemFlavourText: 'Stillness is the skin of the forest. '
   rarity: 1
@@ -27,9 +27,6 @@ MonoBehaviour:
     - rid: 7033823901134094452
       type: {class: BarkBracers, ns: , asm: Assembly-CSharp}
       data:
-        stackableEffect:
-          statType: 0
-          baseValue: 10
-          stackValue: 3
-          modifierType: 0
+        baseValue: 10
+        stackValue: 3
         maxReductionPerHitPercent: 0.7

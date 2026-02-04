@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: Pale Tooth
   m_EditorClassIdentifier: 
   itemName: Pale Tooth
-  itemDescription: "+5% Crit Chance. \n\n<style=\"FinePrint\">+5% per subsequent
-    stack.</style>"
+  itemDescription: "+5% Crit Chance. \n\n<style=\"Fine\">+5% per subsequent stack.</style>"
   itemFlavourText: 'Into the jaws of fate. '
   rarity: 1
   itemIcon: {fileID: 21300000, guid: b55349386d324804c9ebab4bddbbae32, type: 3}
