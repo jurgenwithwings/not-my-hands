@@ -18,6 +18,9 @@ public class LimbManager : MonoBehaviour {
     
     private Statboard statboard;
     
+    public bool IsArmBusy => limbs[0].IsBusy || limbs[1].IsBusy;
+    public bool IsLegBusy => limbs[2].IsBusy || limbs[3].IsBusy;
+    
     // Input
     private InputManager inputManager;
     private Action<InputEvent<float>> primaryFireEvent;
@@ -45,8 +48,11 @@ public class LimbManager : MonoBehaviour {
 
         for (int i = 0; i < limbAnchors.Length; i++) {
             limbs[i] = LimbHelper.CreateDefaultLimb((LimbType)((int)(i * 0.5f) + 1), limbAnchors[i]);
-            limbs[i].Initialise(LimbHelper.LoadLimbData(limbs[i].data.limbType), statboard);
+            limbs[i].Initialise(LimbHelper.LoadLimbData(limbs[i].data.limbType), this, statboard);
         }
+
+        statboard = GetComponent<Statboard>();
+        statboard.moveSpeed.BaseValue = ((Leg)limbs[2]).MoveSpeed + ((Leg)limbs[3]).MoveSpeed;
     }
 
     public void HandleInteractAnim() {
@@ -73,13 +79,23 @@ public class LimbManager : MonoBehaviour {
             index++;
         }
         
-        //LimbData old = limbs[index]?.data;
-        //Destroy(limbs[index]?.gameObject);
+        Limb old = limbs[index];
+        if (old != null) {
+            //Drop the last limb held
+            Instantiate(old.data.prefab, transform.position, Quaternion.identity).GetComponent<Rigidbody>().AddForce(transform.forward + (transform.up * 0.4f) * 2f);
+            
+            //Destroy the physical limb from the player
+            Destroy(limbs[index]?.gameObject);
+        }
         
+        //Create the new physical limb for the player
         limbs[index] = Instantiate(limbData.limbPrefab, limbAnchors[index].position, limbAnchors[index].rotation, limbAnchors[index]).GetComponent<Limb>();
-        limbs[index].Initialise(limbData, statboard);
-        
-        //Instantiate(old.prefab, transform.position, Quaternion.identity).GetComponent<Rigidbody>().AddForce(transform.forward + (transform.up * 0.4f) * 2f);
+        limbs[index].Initialise(limbData, this, statboard);
+
+        if (limbData.limbType == LimbType.Leg) {
+            statboard.moveSpeed.BaseValue -= ((Leg)old).MoveSpeed;
+            statboard.moveSpeed.BaseValue += ((Leg)limbs[index]).MoveSpeed;
+        }
     }
 }
 
@@ -99,18 +115,27 @@ public static class LimbHelper {
     }
 }
 
+
+
+
 public abstract class Limb : MonoBehaviour {
     public LimbData data;
     protected Statboard statboard;
+    protected LimbManager manager;
     
     protected Animator animator;
+    protected static readonly int AnimIdle = Animator.StringToHash("Idle");
+    protected static readonly int AnimCollect = Animator.StringToHash("Collect");
 
-    private void Start() {
+    public bool IsBusy { get; protected set; }
+    
+    private void Awake() {
         animator = GetComponent<Animator>();
     }
 
-    public virtual void Initialise(LimbData data, Statboard statboard) {
+    public virtual void Initialise(LimbData data, LimbManager manager, Statboard statboard) {
         this.data = data;
+        this.manager = manager;
         this.statboard = statboard;
     }
 
@@ -125,11 +150,32 @@ public abstract class Limb : MonoBehaviour {
 
     public virtual void Remove() { }
 
+    
+    // Arm Specific
     public bool PlayInteractionAnim() {
-        if (animator.GetBool("Idle")) {
-            animator.SetTrigger("Collect");
+        if (animator.GetBool(AnimIdle)) {
+            animator.SetTrigger(AnimCollect);
             return true;
         }
         return false;
+    }
+}
+
+
+
+public abstract class Arm : Limb {
+    
+}
+
+
+
+public abstract class Leg : Limb {
+    [SerializeField] private float moveSpeed = 2.5f;
+    public float MoveSpeed => moveSpeed;
+
+    // Used by the Idle Anim on the Animator.
+    public void ResetIdle() {
+        IsBusy = false;
+        PlayerHUDEvents.DebugText("Reset Idle");
     }
 }
