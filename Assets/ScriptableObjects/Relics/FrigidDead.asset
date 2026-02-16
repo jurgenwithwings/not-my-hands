@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ac37012d41647d480c62cf24bc9c6f8, type: 3}
+  m_Name: FrigidDead
+  m_EditorClassIdentifier: 
+  itemName: The Fridig Dead
+  itemDescription: "Upon killing an Enemy affected by Freeze, release 3 skulls that
+    last 12 seconds. The skull will follow and attack targets dealing small damage
+    and adding a stack of <style=Me>Soul Debt</style>. <style=Me>Soul Debt</style>
+    stores damage dealt to the target, after 5 seconds or when the target dies, cause
+    a <style=Me>4m</style> explosion dealing <style=Me>60%</style> of the stored
+    damage. \r\n\r\n<style=Fine><style=FMe>+0.5m</style> Radius per subsequent stack.\n<style=FMe>+15%</style>
+    Damage per subsequent stack.</style>"
+  itemFlavourText: 
+  rarity: 2
+  itemIcon: {fileID: 21300000, guid: 93ac8ee27ed4b2d4481cb4b2a7330a57, type: 3}
+  prefab: {fileID: 2436704099190823724, guid: 8bda2b13016c69e4b9612ba5ecb6d76a, type: 3}
+  relicClass:
+    rid: -2
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

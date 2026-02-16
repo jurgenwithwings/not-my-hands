@@ -85,7 +85,7 @@ using UnityEngine;
 }
 
 [Serializable] public struct DamageInfo {
-    public DamageInstance[] damageInstances;
+    public DamageInstance damage;
     public Statboard source;
     public Dictionary<StatusEffectData, int> statusEffects;
     public Vector3 hitPoint;

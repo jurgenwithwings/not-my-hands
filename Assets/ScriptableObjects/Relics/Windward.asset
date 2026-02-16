@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: Windward
   m_EditorClassIdentifier: 
   itemName: Windward Charm
-  itemDescription: "+10% Movement Speed for 2s after using leg ability. \n\n<style=\"Fine\">+3%
-    Speed per subsequent stack.\n+0.5s Duration per subsequent stack.</style>"
+  itemDescription: "<style=Me>+10%</style> Movement Speed for <style=Me>2s</style>
+    after using leg ability. \n\n<style=Fine><style=FMe>+3%</style> Speed per subsequent
+    stack.\n<style=FMe>+0.5s</style> Duration per subsequent stack.</style>"
   itemFlavourText: '...just as I drift away. '
   rarity: 2
   itemIcon: {fileID: 21300000, guid: 85207626f9a38c8458f2a7d741825275, type: 3}

@@ -8,10 +8,17 @@ using UnityEngine.UI;
 public struct UITab {
     [Header("Required")]
     public Button button;
-    [Space]
-    [Header("Requires One")]
     public RectTransform rectTransform;
+    [Space]
+    [Header("Optional")]
     public ScrollRect scrollRect;
+
+    public UITab(Button button, RectTransform rectTransform) {
+        this.rectTransform = rectTransform;
+        this.button = button;
+
+        scrollRect = null;
+    }
 }
 
 public class UITabController : MonoBehaviour {
@@ -23,27 +30,38 @@ public class UITabController : MonoBehaviour {
     [SerializeField] private List<UITab> tabs;
     private float containerWidth => container.rect.size.x + tabSpacing;
     private Coroutine tabCoroutine;
+    
+    private bool init = false;
 
     private void Awake() {
         for (int i = 0; i < tabs.Count; i++) {
             int index = i;
             tabs[i].button.onClick.AddListener(() => OnTabButtonClicked(index));
         }
-
-        StartCoroutine(CorrectTabPosition());
     }
 
-    private IEnumerator CorrectTabPosition() {
+    private void OnEnable() {
+        if (!init) {
+            SetTabPositions();
+        }
+    }
+    
+    //Waits to set init to true so that the canvas has 3 frames to not be ass.
+    private IEnumerator Init() {        
+        yield return null;
         yield return null;
         yield return null;
 
-        SetTabPositions();
+        init = true;
     }
 
     private void SetTabPositions() {
         for (int i = 0; i < tabs.Count; i++) {
+            Vector2 currPos = tabs[i].rectTransform.anchoredPosition;
             tabs[i].rectTransform.anchoredPosition = containerWidth * i * Vector2.right;
+            print($"Curr Pos: {currPos} | ContainerSize: {container.rect.x} + Spacing: {tabSpacing} * i: {i} = {(container.rect.x + tabSpacing) * i})");
         }
+        StartCoroutine(Init());
     }
 
     private void OnTabButtonClicked(int index) {
@@ -78,27 +96,5 @@ public class UITabController : MonoBehaviour {
         interactionBlocker.raycastTarget = false;
 
         tabCoroutine = null;
-    }
-
-    private void OnValidate() {
-        //Tabs
-        if (tabs.Count > 0) {
-            for (int i = 0; i < tabs.Count; i++) {
-                UITab uiTab = tabs[i];
-                
-                if (uiTab.rectTransform != null && uiTab.scrollRect == null) {
-                    uiTab.scrollRect = uiTab.rectTransform.GetComponent<ScrollRect>();
-                }
-                else if (uiTab.scrollRect != null && uiTab.rectTransform == null) {
-                    uiTab.rectTransform = uiTab.scrollRect.GetComponent<RectTransform>();
-                }
-
-                if (uiTab.rectTransform != null) {
-                    uiTab.rectTransform.anchoredPosition = container.rect.size.x * i * Vector2.right;
-                }
-                
-                tabs[i] = uiTab;
-            }
-        }
     }
 }
