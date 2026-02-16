@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-public class EntityStatusEffectManager : MonoBehaviour, IStatboard
-{
+public class EntityStatusEffectManager : MonoBehaviour, IStatboard {
     public Statboard statboard { get; set; }
     public void StatboardFinishedSet() {
         statboard.eventManager.OnDamageTaken += HandleStatusEffectsFromDamage;
@@ -15,8 +16,60 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard
     public int TotalEffects => BuffEffects.Count + StatusEffects.Count;
 
     private void HandleStatusEffectsFromDamage(DamageInfo damageInfo) {
-        foreach (int effectNum in damageInfo.statusEffects.Values) {
-            AddStacks(damageInfo, effectNum);
+        // Handle Additional Status Effects
+        foreach (StatusEffectData effect in damageInfo.additionalStatusEffects) {
+            AddStacks(effect, new DamageInfo(new Damage(), damageInfo.source, transform.position));
+        }
+        
+        // Handle Status Effects From Damage
+        if (damageInfo.ignoreResistances) return;
+        
+        float statusChance = damageInfo.source.statusChanceMultiplier * damageInfo.sourceStatusChance;
+        //print($"Status Chance: {statusChance}"); //Pass
+        int numOfEffects = Mathf.FloorToInt(statusChance);
+        statusChance -= numOfEffects;
+
+        float random = Random.value;
+        if (random < statusChance) {
+            numOfEffects++;
+        }
+        //print($"Number of Effects: {numOfEffects}"); //Pass
+        
+        float[] percentages = damageInfo.GetDamagePercentages();
+        for (int i = 0; i < numOfEffects; i++) {
+            //Calculates not including Physical.
+            random = Random.Range(0, 1 - percentages[DamageType.Physical.Index()]);
+            print($"Random: {random}");
+
+            float runningTotal = 0;
+            for (int j = 1; j < percentages.Length; j++) {
+                runningTotal += percentages[j];
+                if (random < runningTotal) {
+                    switch (j) {
+                        case 1:
+                            print("Applied Burn");
+                            AddStacks(GameConfig.Instance.burn, damageInfo);
+                            break;
+                        case 2:
+                            print("Applied Freeze");
+                            AddStacks(GameConfig.Instance.freeze, damageInfo);
+                            break;
+                        case 3:
+                            print("Applied Charged");
+                            AddStacks(GameConfig.Instance.charged, damageInfo);
+                            break;
+                        case 4:
+                            print("Applied Poison");
+                            AddStacks(GameConfig.Instance.poison, damageInfo);
+                            break;
+                        case 5:
+                            print("Applied Judged");
+                            AddStacks(GameConfig.Instance.judged, damageInfo);
+                            break;
+                    }
+                    break;
+                }
+            }
         }
     }
 
@@ -31,43 +84,41 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard
         }
     }
     
-    public StatusEffect AddStacks(DamageInfo damageInfo, int stacks = 1) {
-        foreach (StatusEffectData effectData in damageInfo.statusEffects.Keys) {
-            if (typeof(BuffEffect).IsAssignableFrom(effectData.Type())) {
-                if (GetBuffFromList(effectData, out BuffEffect effect)) {
-                    effect.AddStack(damageInfo, stacks);
-                    return effect;
-                }
-                else {
-                    BuffEffect newEffect = Activator.CreateInstance(effectData.Type()) as BuffEffect;
-                    if (newEffect != null) {
-                        newEffect.Initialise(effectData, this, damageInfo);
-                        if (stacks > 1) {
-                            newEffect.AddStack(damageInfo, stacks - 1);
-                        }
-                        BuffEffects.Add(newEffect);
-                        return newEffect;
-                    }
-                }
+    public StatusEffect AddStacks(StatusEffectData effectData, DamageInfo damageInfo) {
+        print("Add Stacks Start");
+        if (typeof(BuffEffect).IsAssignableFrom(effectData.Type())) {
+            print("BuffEffect Add");
+            if (GetBuffFromList(effectData, out BuffEffect effect)) {
+                effect.AddStack(damageInfo);
+                return effect;
             }
             else {
-                if (GetEffectFromList(effectData, out StatusEffect effect)) {
-                    effect.AddStack(damageInfo, stacks);
-                    return effect;
-                }
-                else {
-                    StatusEffect newEffect = Activator.CreateInstance(effectData.Type()) as StatusEffect;
-                    if (newEffect != null) {
-                        newEffect.Initialise(effectData, this, damageInfo);
-                        if (stacks > 1) {
-                            newEffect.AddStack(damageInfo, stacks - 1);
-                        }
-                        StatusEffects.Add(newEffect);
-                        return newEffect;
-                    }
+                BuffEffect newEffect = Activator.CreateInstance(effectData.Type()) as BuffEffect;
+                if (newEffect != null) {
+                    print("BuffEffect New");
+                    newEffect.Initialise(effectData, this, damageInfo);
+                    BuffEffects.Add(newEffect);
+                    return newEffect;
                 }
             }
         }
+        else {
+            if (GetEffectFromList(effectData, out StatusEffect effect)) {
+                print("StatusEffect Add");
+                effect.AddStack(damageInfo);
+                return effect;
+            }
+            else {
+                StatusEffect newEffect = Activator.CreateInstance(effectData.Type()) as StatusEffect;
+                if (newEffect != null) {
+                    print("StatusEffect New");
+                    newEffect.Initialise(effectData, this, damageInfo);
+                    StatusEffects.Add(newEffect);
+                    return newEffect;
+                }
+            }
+        }
+        print("Null");
         return null;
     }
 

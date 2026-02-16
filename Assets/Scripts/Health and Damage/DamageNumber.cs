@@ -47,7 +47,7 @@ public class DamageNumber : MonoBehaviour, IPoolable<DamageNumber> {
     }
     
     public void SetDamage(float damage) {
-        text.text = abbreviate ? Damage.AbbreviateNumber(Mathf.Round(damage)) : damage.ToString("###,###,###,###");
+        text.text = abbreviate ? DamageExtensions.AbbreviateNumber(Mathf.Round(damage)) : damage.ToString("###,###,###,###");
         
         float t = Mathf.InverseLerp(1, DamageScaleEnd, damage);
         damageScale = damageScaleCurve.Evaluate(t);

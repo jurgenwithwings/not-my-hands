@@ -112,9 +112,8 @@ using Random = UnityEngine.Random;
     }
 
     public void DaggerHit(Statboard victim, DaggerRelicProjectile dagger) {
-        DamageInfo damage = new(seekTimer.GetTickDamage(stacks), stats) {
-            hitPoint = dagger.transform.position,
-        };
+        DamageInfo damage = new(seekTimer.GetTickDamage(stacks), stats, dagger.transform.position);
+        
         victim?.health?.TakeDamage(damage);
         stats?.health?.Heal(stats.maxHealth * GetStackValue(baseHealPercent, stackHealPercent, stacks));
     }

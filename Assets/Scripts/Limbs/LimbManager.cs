@@ -46,12 +46,13 @@ public class LimbManager : MonoBehaviour {
         secondaryKickEvent = input => InputEvent(2, input);
         inputManager.SecondaryKick.Event += secondaryKickEvent;
 
+        statboard = GetComponent<Statboard>();
+        
         for (int i = 0; i < limbAnchors.Length; i++) {
             limbs[i] = LimbHelper.CreateDefaultLimb((LimbType)((int)(i * 0.5f) + 1), limbAnchors[i]);
             limbs[i].Initialise(LimbHelper.LoadLimbData(limbs[i].data.limbType), this, statboard);
         }
-
-        statboard = GetComponent<Statboard>();
+        
         statboard.moveSpeed.BaseValue = ((Leg)limbs[2]).MoveSpeed + ((Leg)limbs[3]).MoveSpeed;
     }
 

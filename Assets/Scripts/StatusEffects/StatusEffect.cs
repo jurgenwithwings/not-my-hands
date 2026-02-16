@@ -22,10 +22,10 @@ public abstract class StatusEffect {
         currentDuration = Data.maxDuration;
     }
     
-    public virtual void AddStack(DamageInfo damageInfo, int stacks) {
-        this.stacks += stacks;
-        if (this.stacks > Data.maxStacks) {
-            this.stacks = Data.maxStacks;
+    public virtual void AddStack(DamageInfo damageInfo) {
+        stacks++;
+        if (stacks > Data.maxStacks) {
+            stacks = Data.maxStacks;
         }
         
         if (damageInfo.finalDamage > highestDamageReceived.finalDamage) {
@@ -72,8 +72,8 @@ public abstract class BuffEffect : StatusEffect {
 }
 
 [Serializable] public struct DoT {
-    public DamageInstance[] baseDamage;
-    public DamageInstance[] damagePerStack;
+    public Damage damage;
+    public Damage damagePerStack;
 
     public float tickInterval;
     
@@ -91,17 +91,16 @@ public abstract class BuffEffect : StatusEffect {
         timer += Time.deltaTime;
     }
 
-    public DamageInstance[] GetTickDamage(int currentStacks, float scale = 1) {
-        DamageInstance[] result = new DamageInstance[GameConfig.DamageTypesCount];
-        foreach (DamageInstance inst in baseDamage) {
-            result[(int)inst.damageType] = inst;
-            result[(int)inst.damageType].baseAmount *= scale;
+    public Damage GetTickDamage(int currentStacks, float scale = 1) {
+        DamageInstance[] result = damage.ToArray();
+        DamageInstance[] stackDamage = damagePerStack.ToArray();
+        
+        for (int i = 0; i < result.Length; i++) {
+            result[i].baseAmount *= scale;
+            result[i].baseAmount += stackDamage[i].baseAmount * (currentStacks - 1) * scale;
         }
-
-        foreach (DamageInstance inst in damagePerStack) {
-            result[(int)inst.damageType].baseAmount += inst.baseAmount * (currentStacks - 1) * scale;
-        }
-        return result;
+        
+        return new Damage(result);
     }
 }
 
@@ -117,12 +116,13 @@ public abstract class BuffEffect : StatusEffect {
         healthPercentDamage = config.healthPercentDamage;
     }
 
-    public override void AddStack(DamageInfo damageInfo, int stacks) {
-        base.AddStack(damageInfo, stacks);
-        if (base.stacks >= Data.maxStacks) {
-            DamageInstance inst = new (DamageInstance.DamageType.Physical, stats.maxHealth * healthPercentDamage);
-            DamageInfo info = new (new[]{inst}, highestDamageReceived.source) {
-                hitPoint = stats.transform.position,
+    public override void AddStack(DamageInfo damageInfo) {
+        base.AddStack(damageInfo);
+        if (stacks >= Data.maxStacks) {
+            Damage damage = new() {
+                physical = stats.maxHealth * healthPercentDamage
+            };
+            DamageInfo info = new (damage, highestDamageReceived.source, stats.transform.position) {
                 ignoreResistances = true
             };
             stats.health.TakeDamage(info);
@@ -134,8 +134,7 @@ public abstract class BuffEffect : StatusEffect {
         base.Update();
         dot.Update();
         if (dot.CanTick()) {
-            DamageInfo info = new(dot.GetTickDamage(stacks, highestDamageReceived.finalDamage), highestDamageReceived.source) {
-                hitPoint = stats.transform.position,
+            DamageInfo info = new(dot.GetTickDamage(stacks, highestDamageReceived.finalDamage), highestDamageReceived.source, stats.transform.position) {
                 ignoreResistances = true,
             };
             stats?.health?.TakeDamage(info);
@@ -152,6 +151,7 @@ public abstract class BuffEffect : StatusEffect {
 
     public override void Initialise(StatusEffectData data, EntityStatusEffectManager manager, DamageInfo damageInfo) {
         base.Initialise(data, manager, damageInfo);
+        Debug.Log("Initialised Burn");
         
         Burn config = data.statusEffectClass as Burn;
         dot = config.dot;
@@ -161,12 +161,13 @@ public abstract class BuffEffect : StatusEffect {
     public override void Update() {
         dot.Update();
         if (dot.CanTick()) {
+            Debug.Log("Tick Burn");
             bonusMultiplier = 1 + (percentDamageIncreasePerSecond * totalDuration);
             
-            DamageInfo info = new(dot.GetTickDamage(stacks, bonusMultiplier * highestDamageReceived.finalDamage), highestDamageReceived.source) {
-                hitPoint = stats.transform.position,
+            DamageInfo info = new(dot.GetTickDamage(stacks, bonusMultiplier * highestDamageReceived.finalDamage), highestDamageReceived.source, stats.transform.position) {
                 ignoreResistances = true,
             };
+            Debug.Log($"Tick Damage: {info.finalDamage}");
 
             stats.health.TakeDamage(info);
             
@@ -194,8 +195,8 @@ public abstract class BuffEffect : StatusEffect {
         ReplaceModifier();
     }
 
-    public override void AddStack(DamageInfo damageInfo, int stacks) {
-        base.AddStack(damageInfo, stacks);
+    public override void AddStack(DamageInfo damageInfo) {
+        base.AddStack(damageInfo);
         
         ReplaceModifier();
     }
@@ -235,8 +236,8 @@ public abstract class BuffEffect : StatusEffect {
         ReplaceModifier();
     }
 
-    public override void AddStack(DamageInfo damageInfo, int stacks) {
-        base.AddStack(damageInfo, stacks);
+    public override void AddStack(DamageInfo damageInfo) {
+        base.AddStack(damageInfo);
         ReplaceModifier();
     }
 
@@ -262,8 +263,7 @@ public abstract class BuffEffect : StatusEffect {
         base.Update();
         dot.Update();
         if (dot.CanTick()) {
-            DamageInfo info = new(dot.GetTickDamage(stacks, highestDamageReceived.finalDamage), highestDamageReceived.source) {
-                hitPoint = stats.transform.position,
+            DamageInfo info = new(dot.GetTickDamage(stacks, highestDamageReceived.finalDamage), highestDamageReceived.source, stats.transform.position) {
                 ignoreResistances = true,
             };
             stats?.health?.TakeDamage(info);
@@ -299,14 +299,14 @@ public abstract class BuffEffect : StatusEffect {
                 foreach (Collider collider in collisions) {
                     if (collider.TryGetComponent(out Statboard statboard) && statboard != stats) {
                         if (!statboard.statusEffectManager.GetEffectFromList(Data)) {
-                            DamageInstance[] damage = { new(DamageInstance.DamageType.Electric, highestDamageReceived.finalDamage) };
-                            DamageInfo info = new(damage, highestDamageReceived.source) {
-                                hitPoint = statboard.transform.position,
-                                statusEffects = new() { { Data, 1 } },
+                            Damage damage = new() {
+                                electric = highestDamageReceived.finalDamage
                             };
+                            DamageInfo info = new(damage, highestDamageReceived.source, statboard.transform.position);
+                            
+                            info.additionalStatusEffects.Add(Data);
                             info.AddModifier(damageTransferPercent, ModifierType.Final);
                             statboard.health.TakeDamage(info);
-                            //PlayerHUDEvents.DebugText($"Arced to {stats.gameObject.name}");
                         }
                     }
                 }
@@ -315,8 +315,7 @@ public abstract class BuffEffect : StatusEffect {
         }
         dot.Update();
         if (dot.CanTick()) {
-            DamageInfo info = new(dot.GetTickDamage(stacks, highestDamageReceived.finalDamage), highestDamageReceived.source) {
-                hitPoint = stats.transform.position,
+            DamageInfo info = new(dot.GetTickDamage(stacks, highestDamageReceived.finalDamage), highestDamageReceived.source, stats.transform.position) {
                 ignoreResistances = true,
             };
             stats?.health?.TakeDamage(info);
@@ -369,10 +368,11 @@ public abstract class BuffEffect : StatusEffect {
     }
 
     private void Detonate() {
-        float damage = damageAbsorbed * (basePercentDamage.baseAmount + (perStackPercentDamage.baseAmount * (stacks - 1)));
-        DamageInstance[] damageInstance = { new(basePercentDamage.damageType, damage) };
-        DamageInfo damageInfo = new(damageInstance, highestDamageReceived.source) {
-            hitPoint = spriteRenderer.transform.position,
+        float damageAmount = damageAbsorbed * (basePercentDamage.baseAmount + (perStackPercentDamage.baseAmount * (stacks - 1)));
+        Damage damage = new() {
+            light = damageAmount
+        };
+        DamageInfo damageInfo = new(damage, highestDamageReceived.source, stats.transform.position) {
             ignoreResistances = true,
         };
         stats?.health?.TakeDamage(damageInfo);
@@ -403,8 +403,8 @@ public class SpeedBoost : BuffEffect {
         stats.moveSpeed.AddModifier(mod);
     }
 
-    public override void AddStack(DamageInfo damageInfo, int stacks) {
-        base.AddStack(damageInfo, stacks);
+    public override void AddStack(DamageInfo damageInfo) {
+        base.AddStack(damageInfo);
         
         ReplaceModifier();
     }

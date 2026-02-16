@@ -20,7 +20,7 @@ public class GameConfig : ScriptableObject
         get {
             switch (dirtyDamageTypes) {
                 case true:
-                    damageTypes = Enum.GetValues(typeof(DamageInstance.DamageType)).Length;
+                    damageTypes = Enum.GetValues(typeof(DamageType)).Length;
                     dirtyDamageTypes = false;
                     break;
             }

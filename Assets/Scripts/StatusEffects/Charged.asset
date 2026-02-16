@@ -27,21 +27,23 @@ MonoBehaviour:
       type: {class: Charged, ns: , asm: Assembly-CSharp}
       data:
         dot:
-          baseDamage:
-          - damageType: 3
-            baseAmount: 0.06
-            flat: 0
-            additive: 0
-            multiplicative: 0
-            final: 0
+          damage:
+            physical: 0
+            fire: 0
+            ice: 0
+            electric: 0.03
+            poison: 0
+            light: 0
           damagePerStack:
-          - damageType: 3
-            baseAmount: 0.005
-            flat: 0
-            additive: 0
-            multiplicative: 0
-            final: 0
+            physical: 0
+            fire: 0
+            ice: 0
+            electric: 0.005
+            poison: 0
+            light: 0
           tickInterval: 0.1
           timer: 0
         chanceToArc: 0.35
         arcRadius: 5.5
+        damageTransferPercent: 0.2
+        damageArcThreshold: 10

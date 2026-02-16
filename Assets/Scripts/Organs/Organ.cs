@@ -93,7 +93,7 @@ public static class OrganHelper {
 
     private void ModifyDamage(ref DamageInfo damageInfo, Statboard victim, Statboard self) {
         Debug.Log("Got Pre Send Damage");
-        for (int i = 0; i < damageInfo.damageInstances.Length; i++) {
+        for (int i = 0; i < Enum.GetValues(typeof(DamageType)).Length; i++) {
             damageInfo.AddModifier(perStatusEffectBonus * victim.statusEffectManager.StatusEffects.Count);
         }
     }

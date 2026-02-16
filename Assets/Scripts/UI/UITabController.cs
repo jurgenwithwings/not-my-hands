@@ -57,9 +57,7 @@ public class UITabController : MonoBehaviour {
 
     private void SetTabPositions() {
         for (int i = 0; i < tabs.Count; i++) {
-            Vector2 currPos = tabs[i].rectTransform.anchoredPosition;
             tabs[i].rectTransform.anchoredPosition = containerWidth * i * Vector2.right;
-            print($"Curr Pos: {currPos} | ContainerSize: {container.rect.x} + Spacing: {tabSpacing} * i: {i} = {(container.rect.x + tabSpacing) * i})");
         }
         StartCoroutine(Init());
     }

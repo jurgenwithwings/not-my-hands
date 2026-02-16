@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
     public bool lockCursor = true;
     
     [Header("Testing")] 
-    [SerializeField] private DamageInstance[] damage;
+    [SerializeField] private Damage damage;
     [SerializeField] private StatusEffectData effect;
     [SerializeField] private LayerMask enemyMask;
     [SerializeField] private LayerMask interactionMask;
@@ -162,15 +162,12 @@ public class PlayerController : MonoBehaviour
             Physics.Raycast(cameraHolder.position, cameraHolder.forward * 1000f, out RaycastHit hitInfo, 1000, enemyMask);
 
             if (hitInfo.collider && hitInfo.collider.TryGetComponent(out Statboard stats)) {
-
-                damage[0] = new DamageInstance(DamageInstance.DamageType.Physical, 100);
-                DamageInfo damageInfo = new(damage, this.statboard) {
-                    hitPoint = hitInfo.point,
+                DamageInfo damageInfo = new(damage, statboard, hitInfo.point) {
                     debug = true,
                 };
-                damageInfo.statusEffects.Add(effect, 1);
+                damageInfo.additionalStatusEffects.Add(effect);
                 
-                damageInfo.AddModifier(statboard.damageMultiplier - 1f);
+                damageInfo.AddModifier(statboard.damageMultiplier);
                 damageInfo.debug = false;
                 
                 statboard.eventManager.OnPreSendDamage?.Invoke(ref damageInfo, stats, this.statboard);
@@ -182,14 +179,10 @@ public class PlayerController : MonoBehaviour
         // Debug Take Damage
         if (Input.GetKeyDown(KeyCode.T)) {
             PlayerHUDEvents.DebugText("Trying to take damage");
-            float t = Mathf.Pow(Random.value, 3f);
-            damage[0].baseAmount = Mathf.Lerp(0, 20, t);
             
-            DamageInfo damageInfo = new(damage, statboard) {
-                hitPoint = transform.position,
+            DamageInfo damageInfo = new(damage, statboard, transform.position) {
                 selfDamage = true
             };
-            damageInfo.statusEffects.Add(effect, 1);
             statboard.health.TakeDamage(damageInfo.Copy());
         }
 

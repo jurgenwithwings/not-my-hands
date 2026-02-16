@@ -22,10 +22,8 @@ using UnityEngine;
     }
 
     private void ApplyBuff(DamageInfo obj) {
-        DamageInfo statusDamage = new(Array.Empty<DamageInstance>(), stats);
-        statusDamage.statusEffects.Add(buffData, 1);
-        speedBuff = stats.statusEffectManager.AddStacks(statusDamage) as WindwardBuff;
-        speedBuff.ApplyStats(speedEffect.effectValue(stacks), durationEffect.effectValue(stacks));
+        speedBuff = stats.statusEffectManager.AddStacks(buffData, DamageInfo.Empty(stats)) as WindwardBuff;
+        speedBuff?.ApplyStats(speedEffect.effectValue(stacks), durationEffect.effectValue(stacks));
     }
 
     public override void Remove() {
@@ -59,8 +57,8 @@ using UnityEngine;
         currentDuration = maxDuration;
     }
 
-    public override void AddStack(DamageInfo damageInfo, int stacks) {
-        base.AddStack(damageInfo, stacks);
+    public override void AddStack(DamageInfo damageInfo) {
+        base.AddStack(damageInfo);
 
         ReplaceModifier();
     }

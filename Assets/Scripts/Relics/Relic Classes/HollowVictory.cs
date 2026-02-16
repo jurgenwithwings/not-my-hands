@@ -24,9 +24,7 @@ using UnityEngine;
     }
 
     private void OnKilledTarget(Statboard obj) {
-        DamageInfo damage = new(Array.Empty<DamageInstance>(), stats);
-        damage.statusEffects.Add(damageBuff, 1);
-        HollowVictoryBuff buff = stats.statusEffectManager.AddStacks(damage) as HollowVictoryBuff;
+        HollowVictoryBuff buff = stats.statusEffectManager.AddStacks(damageBuff, DamageInfo.Empty(stats)) as HollowVictoryBuff;
         buff?.UpdateValues(damageBuffBaseValue, damageBuffStackValue, (int)GetStackValue(damageBuffBaseMaxStacks, damageBuffStackMaxStacks, stacks));
     }
 
@@ -81,10 +79,10 @@ using UnityEngine;
         stat.AddModifier(damageEffect.currentModifier);
     }
 
-    public override void AddStack(DamageInfo damageInfo, int stacks) {
-        this.stacks += stacks;
-        if (this.stacks > maxStacks) {
-            this.stacks = maxStacks;
+    public override void AddStack(DamageInfo damageInfo) {
+        stacks += stacks;
+        if (stacks > maxStacks) {
+            stacks = maxStacks;
         }
         
         if (damageInfo.finalDamage > highestDamageReceived.finalDamage) {
