@@ -68,7 +68,17 @@ public class PlayerController : MonoBehaviour
         foreach (Organ organ in statboard.organManager.organs) {
             PlayerOrganChanged(organ.data, null);
         }
-        
+
+        for (int i = 0; i < limbManager.limbs.Length; i++) {
+            Limb limb = limbManager.limbs[i];
+            if (i == 0 || i == 2) {
+                PlayerLimbChanged(limb.data, LimbSide.Left, null);
+            }
+            else {
+                PlayerLimbChanged(limb.data, LimbSide.Right, null);
+            }
+        }
+
         PlayerHUDEvents.OnRegisterStatboard?.Invoke(statboard);
         PlayerHUDEvents.OnHealthChanged?.Invoke(statboard.health.CurrentHealth, statboard.maxHealth);
         

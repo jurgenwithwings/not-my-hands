@@ -773,6 +773,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80f52056c47b41f2a2b68349776b9fac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lifetime: 5
+  rigidbody: {fileID: 5319151342522579827}
+  collider: {fileID: 0}
+  destroyOnContact: 1
+  hideOnDestroyDelay: 0
+  visualEffects: []
   idleRotation: {x: -90, y: 0, z: 0}
   idleRotationSpeed: {x: 0, y: 45, z: 0}
   seekRotationSpeed: 360

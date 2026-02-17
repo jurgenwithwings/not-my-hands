@@ -1,14 +1,14 @@
 using UnityEngine;
 
 public class TempInventoryDebug : MonoBehaviour {
-    public GameObject Background;
+    public RectTransform Background;
 
     public void Start() {
         PlayerHUDEvents.OnDoTheInventory += ToggleInventory;
-        Background.SetActive(false);
+        Background.anchoredPosition = Vector2.up * 10000f;
     }
 
     private void ToggleInventory(bool isOn) {
-        Background.SetActive(isOn);
+        Background.anchoredPosition = Vector2.up * (isOn ? 0f : 10000f);
     }
 }

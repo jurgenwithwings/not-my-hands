@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.VFX;
 
-public class DaggerRelicProjectile : Projectile {
+public class DaggerRelicProjectile : MonoBehaviour {
     [SerializeField] private Vector3 idleRotation;
     [SerializeField] private Vector3 idleRotationSpeed;
     [SerializeField] private float seekRotationSpeed;

@@ -200,7 +200,6 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
     public InputEvent<float> PrimaryFire;
     public void OnPrimaryFire(InputAction.CallbackContext context) {
         DefaultHandle(context);
-        PlayerHUDEvents.DebugText("Pew");
         if (Interact.Context.performed) {
             PrimaryFire.SetAndInvoke(0, 0, context);
             return;

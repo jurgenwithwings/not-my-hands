@@ -13,8 +13,11 @@ public enum LimbSide {
 }
 
 public class LimbManager : MonoBehaviour {
-    [SerializeField] private Limb[] limbs;
+    [SerializeField] public Camera fpsCam;
+    
     [SerializeField] private Transform[] limbAnchors;
+    
+    public Limb[] limbs;
     
     private Statboard statboard;
     
@@ -70,7 +73,6 @@ public class LimbManager : MonoBehaviour {
     }
 
     private void InputEvent(int targetLimb, InputEvent<float> input) {
-        //PlayerHUDEvents.DebugText($"Input Sent To: {targetLimb}");
         limbs[targetLimb].ReceiveInput(input);
     }
 
@@ -97,6 +99,8 @@ public class LimbManager : MonoBehaviour {
             statboard.moveSpeed.BaseValue -= ((Leg)old).MoveSpeed;
             statboard.moveSpeed.BaseValue += ((Leg)limbs[index]).MoveSpeed;
         }
+        
+        statboard.eventManager.OnLimbChanged?.Invoke(limbs[index].data, limbSide, old.data);
     }
 }
 
@@ -177,6 +181,5 @@ public abstract class Leg : Limb {
     // Used by the Idle Anim on the Animator.
     public void ResetIdle() {
         IsBusy = false;
-        PlayerHUDEvents.DebugText("Reset Idle");
     }
 }

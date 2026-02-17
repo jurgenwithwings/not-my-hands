@@ -165,7 +165,7 @@ MonoBehaviour:
   healthBar: {fileID: 7929674769736282749}
   rigidbody: {fileID: 7271274723162091676}
   maxHealth:
-    BaseValue: 100
+    BaseValue: 10000
   damageResistance:
     BaseValue: 0
   healingEffectiveness:

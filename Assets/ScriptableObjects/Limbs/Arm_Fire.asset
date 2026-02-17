@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be49a1c370051624db5dce3dcc82ea63, type: 3}
+  m_Name: Arm_Fire
+  m_EditorClassIdentifier: 
+  itemName: Flame Arm
+  itemDescription: 'Test Arm
+
+
+    Its like a flamethrower.'
+  itemFlavourText: 
+  rarity: 1
+  itemIcon: {fileID: 1408298067, guid: bbae628087c99914caf8d799b5f1aad5, type: 3}
+  prefab: {fileID: 1840716901701088243, guid: 98831af1d3086f24cbec7427e8b8c1cb, type: 3}
+  limbType: 1
+  limbPrefab: {fileID: 5546810713354756587, guid: f8471a0912d52c74ea802936312b4c61, type: 3}

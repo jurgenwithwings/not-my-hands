@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2736075247730662941}
   - component: {fileID: 2744768711741614668}
   - component: {fileID: 3181199809619305873}
-  - component: {fileID: -363218660796656536}
+  - component: {fileID: -7886769196367679203}
   m_Layer: 20
   m_Name: TestArmProjectile
   m_TagString: Untagged
@@ -137,7 +137,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &-363218660796656536
+--- !u!114 &-7886769196367679203
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -146,8 +146,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 8198838231160519049}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5655dcfee20040959135a2f2ab4ad05c, type: 3}
+  m_Script: {fileID: 11500000, guid: 73c28131b82f9d047bee88e9bdb9a754, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   lifetime: 5
   rigidbody: {fileID: 3181199809619305873}
+  collider: {fileID: 2744768711741614668}
+  destroyOnContact: 1
+  hideOnDestroyDelay: 0
+  visualEffects: []
