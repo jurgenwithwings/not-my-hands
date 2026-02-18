@@ -42,7 +42,7 @@ public class UITabController : MonoBehaviour {
 
     private void OnEnable() {
         if (!init) {
-            SetTabPositions();
+            StartCoroutine(Init());
         }
     }
     
@@ -52,6 +52,7 @@ public class UITabController : MonoBehaviour {
         yield return null;
         yield return null;
 
+        SetTabPositions();
         init = true;
     }
 
@@ -59,7 +60,6 @@ public class UITabController : MonoBehaviour {
         for (int i = 0; i < tabs.Count; i++) {
             tabs[i].rectTransform.anchoredPosition = containerWidth * i * Vector2.right;
         }
-        StartCoroutine(Init());
     }
 
     private void OnTabButtonClicked(int index) {

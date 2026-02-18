@@ -43,7 +43,6 @@ public class InventoryInterface : MonoBehaviour
     private void UpdateLimb(LimbData limbData, LimbSide limbSide) {
         int limbSideCount = Enum.GetNames(typeof(LimbSide)).Length;
         int index = (((int)limbData.limbType * limbSideCount) + (int)limbSide) - (limbSideCount + 1); // Converts the Enum indexes to a unique number from 0-n grouped by type.
-        print($"Added Limb: {limbData.name} : {limbSide} | {index}");
 
         Button button = limbs[index].Set(limbData, InventoryItem.ItemType.Limb);
         button.onClick.RemoveAllListeners();

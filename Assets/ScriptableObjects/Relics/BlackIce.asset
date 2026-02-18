@@ -17,7 +17,7 @@ MonoBehaviour:
     per subsequent stack.</style>"
   itemFlavourText: Your pissin me off dude
   rarity: 1
-  itemIcon: {fileID: 21300000, guid: e683cae770d909746a1fe3caa7a668f3, type: 3}
+  itemIcon: {fileID: 21300000, guid: fa7a79cce44751b42a8b47b5b42b98d2, type: 3}
   prefab: {fileID: 912347615902101563, guid: 3c970d6b8bc9ee24396140ee9fa30995, type: 3}
   relicClass:
     rid: 7033823901134094507

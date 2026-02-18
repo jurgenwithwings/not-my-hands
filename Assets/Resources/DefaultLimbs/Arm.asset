@@ -16,7 +16,7 @@ MonoBehaviour:
   itemDescription: Your Arm
   itemFlavourText: ...
   rarity: 0
-  itemIcon: {fileID: 21300000, guid: 89abd4b4df942cc40af205260d7a7577, type: 3}
+  itemIcon: {fileID: 21300000, guid: 97791aca85b11e040b76d8ae10132985, type: 3}
   prefab: {fileID: 1840716901701088243, guid: f11a3fda5dda6c944ae862539c15c746, type: 3}
   limbType: 1
   limbPrefab: {fileID: 5546810713354756587, guid: 091b3e97e626a0c439bdd6a006a31e5f, type: 3}

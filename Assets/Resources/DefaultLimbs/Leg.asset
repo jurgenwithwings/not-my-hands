@@ -16,7 +16,7 @@ MonoBehaviour:
   itemDescription: Your Leg
   itemFlavourText: ...
   rarity: 0
-  itemIcon: {fileID: 21300000, guid: 1ebed6234f4b9ec4288d638775b46b83, type: 3}
+  itemIcon: {fileID: 21300000, guid: 53ed4ce1184475d4abaf25027b322a87, type: 3}
   prefab: {fileID: 4635067233800297436, guid: 445a5bdf625dc27448cdbca51f8ab909, type: 3}
   limbType: 2
   limbPrefab: {fileID: 700494102469556614, guid: 1ec6c78200a30f8499f5f05f3c92dfa8, type: 3}

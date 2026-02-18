@@ -51,7 +51,7 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 200
+      - m_Value: 250
         m_Name: SpawnRate
         m_Overridden: 1
       - m_Value: 0
@@ -65,8 +65,14 @@ VisualEffect:
       - m_Value: {x: 0.4, y: 0.6}
         m_Name: Lifetime
         m_Overridden: 1
+      - m_Value: {x: 0, y: 0.3}
+        m_Name: SpawnVelocityMagnitude
+        m_Overridden: 1
     m_Vector3f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 0, y: 1, z: 0}
+        m_Name: SpawnVelocityDirection
+        m_Overridden: 1
     m_Vector4f:
       m_Array: []
     m_Uint:
@@ -301,7 +307,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &4737882825213396516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -314,7 +320,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bd032b0426942db89bee3776af48784, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifetime: 0.7
+  lifetime: 0.4
   rigidbody: {fileID: 3181199809619305873}
   collider: {fileID: 2744768711741614668}
   destroyOnContact: 0
