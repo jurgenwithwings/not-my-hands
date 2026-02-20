@@ -1,6 +1,6 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
@@ -53,6 +53,8 @@ public struct InputEvent<T>{
 }
 
 public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
+    public static InputManager Instance { get; private set; }
+    
     public static PlayerControls controls { get; private set; }
     
     private List<InputEvent<Type>> inputFields;
@@ -60,19 +62,25 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
     public static event Action<ControlType> OnControlTypeChanged;
     public static ControlType CurrentControlDevice { get; private set; }
 
-    public void OnEnable() => EnablePlayerActions();
-    
-    public void EnablePlayerActions() {
+    private void Awake() {
+        Instance = this;
+        
         if (controls == null) {
             controls = new PlayerControls();
             
             controls.Player.SetCallbacks(this);
             controls.UI.SetCallbacks(this);
         }
-
-        EnableActionMap(InputMap.Player);
-
+    }
+    
+    private void Start() => StartCoroutine(EnablePlayerActions());
+    
+    private IEnumerator EnablePlayerActions() {
         SetUIModuleAsset();
+        
+        yield return null;
+        
+        EnableActionMap(InputMap.Player);
     }
 
     private void SetUIModuleAsset() {
@@ -108,12 +116,25 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
 
     private void GetCurrentInputDevice(InputAction.CallbackContext context) {
         ControlType controlType = CurrentControlDevice;
-        switch (context.control.device) {
-            case Gamepad:
-                CurrentControlDevice = ControlType.Controller;
-                break;
-            case Mouse or Keyboard:
-                CurrentControlDevice = ControlType.Keyboard;
+        //print(context.control.device.displayName);
+        switch (context.control.device.displayName) {
+            case "Gamepad" or "Wireless Controller" or "VirtualMouse":
+                CurrentControlDevice = ControlType.Controller; break;
+            
+            case "Mouse" or "Keyboard":
+                CurrentControlDevice = ControlType.Keyboard; break;
+            
+            default: // Fallback to device types if name is not found.
+                switch (context.control.device) {
+                    case Gamepad:
+                        CurrentControlDevice = ControlType.Controller; break;
+                    
+                    case Mouse:
+                        CurrentControlDevice = ControlType.Keyboard; break;
+                    
+                    default:
+                        CurrentControlDevice = ControlType.Keyboard; break;
+                }
                 break;
         }
 
@@ -124,6 +145,7 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
 
     // All Inputs Must be added to here to reset properly
     private void LateUpdate() {
+        // Player
         Move.ResetState();
         Look.ResetState();
         Jump.ResetState();
@@ -138,6 +160,22 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
         SwapLegs.ResetState();
         Inventory.ResetState();
         Recycle.ResetState();
+        Pause.ResetState();
+        
+        // UI
+        UINavigate.ResetState(); 
+        UISubmit.ResetState();
+        UICancel.ResetState();
+        UIPointer.ResetState();
+        UIClick.ResetState();
+        UIRightClick.ResetState();
+        UIMiddleClick.ResetState();
+        UIScrollWheel.ResetState();
+        UIExit.ResetState();
+        
+        // Controller UI Drivers
+        UIControllerCursorDriver.ResetState();
+        UIControllerScrollDriver.ResetState();
     }
 
     public void DefaultHandle(InputAction.CallbackContext context) {
@@ -289,26 +327,109 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
 
 
     // UI Actions
-    public void OnNavigate(InputAction.CallbackContext context) { }
-    public void OnSubmit(InputAction.CallbackContext context) { }
-    public void OnCancel(InputAction.CallbackContext context) { }
-    public void OnPoint(InputAction.CallbackContext context) { }
-    public void OnClick(InputAction.CallbackContext context) { }
-    public void OnRightClick(InputAction.CallbackContext context) { }
+    public InputEvent<Vector2> UINavigate;
+    public void OnNavigate(InputAction.CallbackContext context) {
+        print("UINavigate");
+        DefaultHandle(context);
+        if (context.performed || context.canceled) {
+            UINavigate.SetAndInvoke(context.ReadValue<Vector2>(), context.ReadValue<Vector2>(), context);
+        }
+    }
+    
+    public InputEvent<bool> UISubmit;
+    public void OnSubmit(InputAction.CallbackContext context) {
+        print("UISubmit");
+        DefaultHandle(context);
+        if (context.performed || context.canceled) {
+            UISubmit.SetAndInvoke(context.performed, context.performed, context);
+        }
+    }
+    
+    public InputEvent<bool> UICancel;
+    public void OnCancel(InputAction.CallbackContext context) {
+        print("UICancel");
+        DefaultHandle(context);
+        if (context.performed || context.canceled) {
+            UICancel.SetAndInvoke(context.performed, context.performed, context);
+        }
+    }
 
-    public void OnMiddleClick(InputAction.CallbackContext context) { }
-    public void OnScrollWheel(InputAction.CallbackContext context) { }
+    public InputEvent<Vector2> UIPointer;
+    public void OnPoint(InputAction.CallbackContext context) {
+        print("UIPointer");
+        DefaultHandle(context);
+        if (context.performed || context.canceled) {
+            UIPointer.SetAndInvoke(context.ReadValue<Vector2>(), context.ReadValue<Vector2>(), context);
+        }
+    }
+    
+    public InputEvent<bool> UIClick;
+    public void OnClick(InputAction.CallbackContext context) {
+        print("UIClick");
+        DefaultHandle(context);
+        if (context.performed || context.canceled) {
+            UIClick.SetAndInvoke(context.performed, context.performed, context);
+        }
+    }
+    
+    public InputEvent<bool> UIRightClick;
+    public void OnRightClick(InputAction.CallbackContext context) {
+        print("UIRightClick");
+        DefaultHandle(context);
+        if (context.performed || context.canceled) {
+            UIRightClick.SetAndInvoke(context.performed, context.performed, context);
+        }
+    }
+    
+    public InputEvent<bool> UIMiddleClick;
+    public void OnMiddleClick(InputAction.CallbackContext context) {
+        print("UIMiddleClick");
+        DefaultHandle(context);
+        if (context.performed || context.canceled) {
+            UIMiddleClick.SetAndInvoke(context.performed, context.performed, context);
+        }
+    }
+    
+    public InputEvent<Vector2> UIScrollWheel;
+    public void OnScrollWheel(InputAction.CallbackContext context) {
+        print("UIScrollWheel");
+        DefaultHandle(context);
+        if (context.performed || context.canceled) {
+            UIScrollWheel.SetAndInvoke(context.ReadValue<Vector2>(), context.ReadValue<Vector2>(), context);
+        }
+    }
 
     public InputEvent<bool> UIExit;
     public void OnExit(InputAction.CallbackContext context) {
+        print("UIExit");
         DefaultHandle(context);
         if (context.performed || context.canceled) {
             UIExit.SetAndInvoke(context.performed, context.performed, context);
             EnableActionMap(InputMap.Player);
+            
             //TEMP TEMP TEMP
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             PlayerHUDEvents.OnDoTheInventory.Invoke(false);
+        }
+    }
+    
+    // Controller UI Drivers
+    public InputEvent<Vector2> UIControllerCursorDriver;
+    public void OnControllerCursorDriver(InputAction.CallbackContext context) {
+        print("UIControllerCursorDriver");
+        DefaultHandle(context);
+        if (context.performed || context.canceled) {
+            UIControllerCursorDriver.SetAndInvoke(context.ReadValue<Vector2>(), context.ReadValue<Vector2>(), context);
+        }
+    }
+
+    public InputEvent<Vector2> UIControllerScrollDriver;
+    public void OnControllerScrollDriver(InputAction.CallbackContext context) {
+        print("UIControllerScrollDriver");
+        DefaultHandle(context);
+        if (context.performed || context.canceled) {
+            UIControllerScrollDriver.SetAndInvoke(context.ReadValue<Vector2>(), context.ReadValue<Vector2>(), context);
         }
     }
 }
@@ -408,18 +529,12 @@ public static class InputManagerExtensions {
             case ControlType.Keyboard:
                 control = controlPath; break;
             case ControlType.Controller:
-                string prefix = "XB";
-                switch (PlayerSettings.controllerUI) {
-                    case OnScreenControllerUI.Xbox:
-                        prefix = "XB";
-                        break;
-                    case OnScreenControllerUI.PlayStation:
-                        prefix = "PS";
-                        break;
-                    case OnScreenControllerUI.Switch:
-                        prefix = "SW";
-                        break;
-                }
+                string prefix = PlayerSettings.controllerUI switch {
+                    OnScreenControllerUI.Xbox => "XB",
+                    OnScreenControllerUI.PlayStation => "PS",
+                    OnScreenControllerUI.Switch => "SW",
+                    _ => "XB"
+                };
                 control = prefix + controlPath; break;
         }
 
