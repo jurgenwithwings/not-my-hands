@@ -20,7 +20,7 @@ MonoBehaviour:
     per subsequent stack.</style>'
   itemFlavourText: 'You hear a heartbeat inside the wood. '
   rarity: 1
-  itemIcon: {fileID: 21300000, guid: 7397ada3a5d40a14da9a9edbf29a4326, type: 3}
+  itemIcon: {fileID: 21300000, guid: 0e099cca1193c8a448a3fb8e7fcdadfc, type: 3}
   prefab: {fileID: 5484109217921636953, guid: bef2b703682fa0d4b97061ff41afe581, type: 3}
   relicClass:
     rid: 7033823901134094466

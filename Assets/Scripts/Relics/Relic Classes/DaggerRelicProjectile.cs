@@ -92,7 +92,9 @@ public class DaggerRelicProjectile : MonoBehaviour {
                 break;
             case State.Returning:
                 target = orbitPoint;
-                parentConstraint.constraintActive = false;
+                if (parentConstraint != null) {
+                    parentConstraint.constraintActive = false;
+                }
                 break;
             case State.Stuck:
                 vfx.Stop();

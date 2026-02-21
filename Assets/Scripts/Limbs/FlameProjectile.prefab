@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2366313230299610330}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -51,7 +51,7 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 250
+      - m_Value: 500
         m_Name: SpawnRate
         m_Overridden: 1
       - m_Value: 0
@@ -72,6 +72,15 @@ VisualEffect:
       m_Array:
       - m_Value: {x: 0, y: 1, z: 0}
         m_Name: SpawnVelocityDirection
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 0, z: 3}
+        m_Name: ExtraStartVelocity
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 0, z: 5}
+        m_Name: ExtraStartVelocityMin
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 0, z: 50}
+        m_Name: ExtraStartVelocityMax
         m_Overridden: 1
     m_Vector4f:
       m_Array: []
@@ -279,7 +288,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1
+  m_Radius: 1.66
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &3181199809619305873
 Rigidbody:
@@ -306,7 +315,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 1
 --- !u!114 &4737882825213396516
 MonoBehaviour:
@@ -320,10 +329,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bd032b0426942db89bee3776af48784, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifetime: 0.4
+  lifetime: 0.32
   rigidbody: {fileID: 3181199809619305873}
   collider: {fileID: 2744768711741614668}
   destroyOnContact: 0
-  hideOnDestroyDelay: 0.8
+  hideOnDestroyDelay: 1.5
   visualEffects:
   - {fileID: 1261393153891337957}
