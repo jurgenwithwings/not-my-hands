@@ -76,6 +76,11 @@ public class UITabController : MonoBehaviour {
             tabs[index].scrollRect.normalizedPosition = Vector2.one;
         }
 
+        for (int i = 0; i < tabs.Count; i++) { // Sets the y scale to zero so it is hidden when not active.
+            tabs[i].rectTransform.localScale = Vector3.right + Vector3.forward;
+        }
+        tabs[index].rectTransform.localScale = Vector3.one;
+
         float duration = 0.2f;
         float elapsed = 0f;
 
