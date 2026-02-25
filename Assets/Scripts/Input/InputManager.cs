@@ -329,7 +329,7 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
     // UI Actions
     public InputEvent<Vector2> UINavigate;
     public void OnNavigate(InputAction.CallbackContext context) {
-        print("UINavigate");
+        //print("UINavigate");
         DefaultHandle(context);
         if (context.performed || context.canceled) {
             UINavigate.SetAndInvoke(context.ReadValue<Vector2>(), context.ReadValue<Vector2>(), context);
@@ -338,7 +338,7 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
     
     public InputEvent<bool> UISubmit;
     public void OnSubmit(InputAction.CallbackContext context) {
-        print("UISubmit");
+        //print("UISubmit");
         DefaultHandle(context);
         if (context.performed || context.canceled) {
             UISubmit.SetAndInvoke(context.performed, context.performed, context);
@@ -347,7 +347,7 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
     
     public InputEvent<bool> UICancel;
     public void OnCancel(InputAction.CallbackContext context) {
-        print("UICancel");
+        //print("UICancel");
         DefaultHandle(context);
         if (context.performed || context.canceled) {
             UICancel.SetAndInvoke(context.performed, context.performed, context);
@@ -356,7 +356,7 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
 
     public InputEvent<Vector2> UIPointer;
     public void OnPoint(InputAction.CallbackContext context) {
-        print("UIPointer");
+        //print("UIPointer");
         DefaultHandle(context);
         if (context.performed || context.canceled) {
             UIPointer.SetAndInvoke(context.ReadValue<Vector2>(), context.ReadValue<Vector2>(), context);
@@ -365,7 +365,7 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
     
     public InputEvent<bool> UIClick;
     public void OnClick(InputAction.CallbackContext context) {
-        print("UIClick");
+        //print("UIClick");
         DefaultHandle(context);
         if (context.performed || context.canceled) {
             UIClick.SetAndInvoke(context.performed, context.performed, context);
@@ -374,7 +374,7 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
     
     public InputEvent<bool> UIRightClick;
     public void OnRightClick(InputAction.CallbackContext context) {
-        print("UIRightClick");
+        //print("UIRightClick");
         DefaultHandle(context);
         if (context.performed || context.canceled) {
             UIRightClick.SetAndInvoke(context.performed, context.performed, context);
@@ -383,7 +383,7 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
     
     public InputEvent<bool> UIMiddleClick;
     public void OnMiddleClick(InputAction.CallbackContext context) {
-        print("UIMiddleClick");
+        //print("UIMiddleClick");
         DefaultHandle(context);
         if (context.performed || context.canceled) {
             UIMiddleClick.SetAndInvoke(context.performed, context.performed, context);
@@ -392,7 +392,7 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
     
     public InputEvent<Vector2> UIScrollWheel;
     public void OnScrollWheel(InputAction.CallbackContext context) {
-        print("UIScrollWheel");
+        //print("UIScrollWheel");
         DefaultHandle(context);
         if (context.performed || context.canceled) {
             UIScrollWheel.SetAndInvoke(context.ReadValue<Vector2>(), context.ReadValue<Vector2>(), context);
@@ -401,15 +401,12 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
 
     public InputEvent<bool> UIExit;
     public void OnExit(InputAction.CallbackContext context) {
-        print("UIExit");
+        //print("UIExit");
         DefaultHandle(context);
         if (context.performed || context.canceled) {
             UIExit.SetAndInvoke(context.performed, context.performed, context);
             EnableActionMap(InputMap.Player);
             
-            //TEMP TEMP TEMP
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
             PlayerHUDEvents.OnDoTheInventory.Invoke(false);
         }
     }
@@ -417,7 +414,7 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
     // Controller UI Drivers
     public InputEvent<Vector2> UIControllerCursorDriver;
     public void OnControllerCursorDriver(InputAction.CallbackContext context) {
-        print("UIControllerCursorDriver");
+        //print("UIControllerCursorDriver");
         DefaultHandle(context);
         if (context.performed || context.canceled) {
             UIControllerCursorDriver.SetAndInvoke(context.ReadValue<Vector2>(), context.ReadValue<Vector2>(), context);
@@ -426,7 +423,7 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
 
     public InputEvent<Vector2> UIControllerScrollDriver;
     public void OnControllerScrollDriver(InputAction.CallbackContext context) {
-        print("UIControllerScrollDriver");
+        //print("UIControllerScrollDriver");
         DefaultHandle(context);
         if (context.performed || context.canceled) {
             UIControllerScrollDriver.SetAndInvoke(context.ReadValue<Vector2>(), context.ReadValue<Vector2>(), context);
@@ -444,7 +441,7 @@ public struct CachedGlyph {
     public CachedGlyph(string name) {
         actionName = name;
         controlType = InputManager.CurrentControlDevice;
-        controllerSetting = PlayerSettings.controllerUI;
+        controllerSetting = PlayerSettings.ControllerUI;
         glyph = "";
     }
     
@@ -452,7 +449,7 @@ public struct CachedGlyph {
         if (string.IsNullOrEmpty(glyph)) {
             return Get(includeModifier);
         }
-        if (InputManager.CurrentControlDevice == controlType && PlayerSettings.controllerUI == controllerSetting) {
+        if (InputManager.CurrentControlDevice == controlType && PlayerSettings.ControllerUI == controllerSetting) {
             return glyph;
         }
         return Get(includeModifier);
@@ -460,7 +457,7 @@ public struct CachedGlyph {
         
     private string Get(bool includeModifier) {
         controlType = InputManager.CurrentControlDevice;
-        controllerSetting = PlayerSettings.controllerUI;
+        controllerSetting = PlayerSettings.ControllerUI;
         glyph = InputManager.controls.FindAction(actionName, true).Glyph(includeModifier);
         return glyph;
     }
@@ -529,7 +526,7 @@ public static class InputManagerExtensions {
             case ControlType.Keyboard:
                 control = controlPath; break;
             case ControlType.Controller:
-                string prefix = PlayerSettings.controllerUI switch {
+                string prefix = PlayerSettings.ControllerUI switch {
                     OnScreenControllerUI.Xbox => "XB",
                     OnScreenControllerUI.PlayStation => "PS",
                     OnScreenControllerUI.Switch => "SW",

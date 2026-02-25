@@ -92,9 +92,6 @@ public class PlayerController : MonoBehaviour
     private void InventoryDebugEvent(InputEvent<bool> inputEvent) {
         if (inputEvent.Triggered) {
             PlayerHUDEvents.OnDoTheInventory.Invoke(true);
-            inputs.EnableActionMap(InputMap.UI);
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
         }
     }
 

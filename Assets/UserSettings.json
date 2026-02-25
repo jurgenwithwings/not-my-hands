@@ -1,0 +1,19 @@
+{
+  "AbbreviateDamageNumbers": false,
+  "ControllerUI": 1,
+  "Resolution": 0,
+  "DisplayMode": 0,
+  "FramerateLimit": 0,
+  "VSync": false,
+  "QualityPreset": 3,
+  "MouseSensitivity": 30.0,
+  "ControllerSensitivity": 150.0,
+  "IsInvertedMouseY": false,
+  "InnerDeadzone": 0.125,
+  "OuterDeadzone": 0.125,
+  "AimAssistStrength": 100.0,
+  "MasterVolume": 0.35,
+  "MusicVolume": 1.0,
+  "AmbientVolume": 1.0,
+  "EffectsVolume": 1.0
+}

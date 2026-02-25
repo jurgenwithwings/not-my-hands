@@ -16,8 +16,6 @@ public class DamageNumber : MonoBehaviour, IPoolable<DamageNumber> {
     [SerializeField] private float screeSize = 0.1f;
     [SerializeField] private float floatAmount = 2.2f;
     [SerializeField] private float positionVarianceAmount = 1f;
-
-    [SerializeField] private bool abbreviate;
     
     private const float DamageScaleEnd = 1000000;
     
@@ -47,7 +45,9 @@ public class DamageNumber : MonoBehaviour, IPoolable<DamageNumber> {
     }
     
     public void SetDamage(float damage) {
-        text.text = abbreviate ? DamageExtensions.AbbreviateNumber(Mathf.Round(damage)) : damage.ToString("###,###,###,###");
+        text.text = PlayerSettings.AbbreviateDamageNumbers ? 
+            DamageExtensions.AbbreviateNumber(Mathf.Round(damage)) : 
+            damage.ToString("###,###,###,###");
         
         float t = Mathf.InverseLerp(1, DamageScaleEnd, damage);
         damageScale = damageScaleCurve.Evaluate(t);

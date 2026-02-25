@@ -9,7 +9,22 @@ public class TempInventoryDebug : MonoBehaviour {
     }
 
     private void ToggleInventory(bool isOn) {
-        Background.anchoredPosition = Vector2.up * (isOn ? 0f : 10000f);
-        Time.timeScale = isOn ? 0f : 1f;
+        float position = 10000f;
+        float timeScale = 1f;
+        InputMap activeInput = InputMap.Player;
+        CursorLockMode cursorMode = CursorLockMode.Locked;
+        
+        if (isOn) {
+            position = 0f;
+            timeScale = 0f;
+            activeInput = InputMap.UI;
+            cursorMode = CursorLockMode.None;
+        }
+        
+        Background.anchoredPosition = Vector2.up * position;
+        Time.timeScale = timeScale;
+        InputManager.Instance.EnableActionMap(activeInput);
+        Cursor.lockState = cursorMode;
+        Cursor.visible = isOn;
     }
 }

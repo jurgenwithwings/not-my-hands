@@ -38,4 +38,6 @@ public static class PlayerHUDEvents {
     public static Action<bool> OnDoTheInventory;
 
     public static Action<Statboard> OnRegisterStatboard;
+    
+    public static Action OnUnstuckPlayer;
 }

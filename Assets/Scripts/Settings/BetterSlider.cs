@@ -1,15 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BetterSlider : Slider
-{
+public class BetterSlider : Slider {
     [Header("Text Value Settings")]
     [SerializeField] private TMP_InputField text;
-    [SerializeField] private string format;
+    [SerializeField] private string format = "0.0#";
     
     [Header("Snap Settings")]
     [SerializeField] private float snapInterval;
@@ -19,8 +15,7 @@ public class BetterSlider : Slider
     [SerializeField] private Button leftButton;
     [SerializeField] private Button rightButton;
     
-    protected override void Start()
-    {
+    protected override void Start() {
         base.Start();
         text.text = m_Value.ToString(format);
         text.onEndEdit.AddListener(ParseTextInput);
@@ -29,32 +24,29 @@ public class BetterSlider : Slider
         rightButton.onClick.AddListener(() => ButtonClicked(true));
     }
 
-    private void ParseTextInput(string input)
-    {
-        if (float.TryParse(input, out float parsedValue))
-        {
+    private void ParseTextInput(string input) {
+        if (float.TryParse(input, out float parsedValue)) {
             Set(parsedValue, false);
+            onValueChanged.Invoke(parsedValue);
         }
-        else
-        {
+        else {
             text.text = m_Value.ToString(format);
         }
     }
 
-    private void ButtonClicked(bool positive)
-    {
+    private void ButtonClicked(bool positive) {
         float increment = positive ? buttonIncrement : -buttonIncrement;
         float newValue = m_Value + increment;
 
         Set(newValue, false);
+        
+        onValueChanged.Invoke(newValue);
     }
 
-    protected override void Set(float input, bool sendCallback = true)
-    {
+    protected override void Set(float input, bool sendCallback = true) {
         base.Set(input, sendCallback);
         
-        if (snapInterval != 0f)
-        {
+        if (snapInterval != 0f) {
             input = SnapSlider();
         }
         
@@ -63,8 +55,7 @@ public class BetterSlider : Slider
         text.text = m_Value.ToString(format);
     }
     
-    private float SnapSlider()
-    {
+    private float SnapSlider() {
         return Mathf.Round(m_Value / snapInterval) * snapInterval;
     }
 }
