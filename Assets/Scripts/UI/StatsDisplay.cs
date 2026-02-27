@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Stats;
 using TMPro;
 using UnityEngine;
 
@@ -27,55 +29,84 @@ public class StatsDisplay : MonoBehaviour
         List<string> result = new();
         
         result.Add("Heart:");
-        result.Add($"   Max Health: {statboard.maxHealth.Value:0}HP");
-        result.Add($"   Damage Resistance: {statboard.damageResistance * 100f:0.#}%");
-        result.Add($"   Healing Effectiveness: {statboard.healingEffectiveness * 100f:0.#}%");
-        result.Add($"   Passive Regen Rate: {statboard.passiveRegenRate.Value:0.#}HP/s");
+        result.Add($"   Max Health: {DisplayStat(statboard.maxHealth, 1, "0")}HP");
+        result.Add($"   Damage Resistance: {DisplayStat(statboard.damageResistance, 100, "0.#")}%");
+        result.Add($"   Healing Effectiveness: {DisplayStat(statboard.healingEffectiveness, 100f, "0.#")}%");
+        result.Add($"   Passive Regen Rate: {DisplayStat(statboard.passiveRegenRate, 1, "0.#")}HP/s");
         result.Add("");
         result.Add("Brain:");
-        result.Add($"   Critical Chance: {statboard.criticalChanceMultiplier * 100f:0.#}%");
-        result.Add($"   Critical Damage: {statboard.criticalDamageMultiplier * 100f:0.#}%");
-        result.Add($"   Luck: {statboard.luck.Value:0}");
+        result.Add($"   Critical Chance: {DisplayStat(statboard.criticalChanceMultiplier, 100, "0.#")}%");
+        result.Add($"   Critical Damage: {DisplayStat(statboard.criticalDamageMultiplier, 100, "0.#")}%");
+        result.Add($"   Luck: {DisplayStat(statboard.luck, 1, "0")}");
         result.Add("");
         result.Add("Liver:");
-        result.Add($"   Status Chance: {statboard.statusChanceMultiplier * 100f:0.#}%");
-        result.Add($"   Buff Duration: {statboard.buffDurationMultiplier * 100f:0.#}%");
-        result.Add($"   Buff Potency: {statboard.buffPotencyMultiplier * 100f:0.#}%");
+        result.Add($"   Status Chance: {DisplayStat(statboard.statusChanceMultiplier, 100, "0.#")}%");
+        result.Add($"   Buff Duration: {DisplayStat(statboard.buffDurationMultiplier, 100, "0.#")}%");
+        result.Add($"   Buff Potency: {DisplayStat(statboard.buffPotencyMultiplier, 100, "0.#")}%");
         result.Add("");
         result.Add("Movement:");
-        result.Add($"   Move Speed: {statboard.moveSpeed.Value:0.#}m/s");
-        result.Add($"   Jump Count: {statboard.jumpCount.Value:0}");
+        result.Add($"   Move Speed: {DisplayStat(statboard.moveSpeed, 1, "0.#")}m/s");
+        result.Add($"   Jump Count: {DisplayStat(statboard.jumpCount, 1, "0")}");
         result.Add("");
         result.Add("Mana:");
-        result.Add($"   Max Mana: {statboard.maxMana.Value:0}Mana");
-        result.Add($"   Mana Regen Rate: {statboard.manaRegenRate.Value:0.#}Mana/s");
+        result.Add($"   Max Mana: {DisplayStat(statboard.maxMana, 1, "0")}Mana");
+        result.Add($"   Mana Regen Rate: {DisplayStat(statboard.manaRegenRate, 1, "0.#")}Mana/s");
         result.Add("");
         result.Add("Combat:");
-        result.Add($"   All Damage: {statboard.damageMultiplier * 100f:0.#}%");
-        result.Add($"   Melee Damage: {statboard.meleeDamageMultiplier * 100f:0.#}%");
-        result.Add($"   Ranged Damage: {statboard.rangedDamageMultiplier * 100f:0.#}%");
-        result.Add($"   Elemental Damage: {statboard.elementalDamageMultiplier * 100f:0.#}%");
-        result.Add($"   Projectile Speed: {statboard.projectileSpeedMultiplier * 100f:0.#}%");
+        result.Add($"   All Damage: {DisplayStat(statboard.damageMultiplier, 100, "0.#")}%");
+        result.Add($"   Melee Damage: {DisplayStat(statboard.meleeDamageMultiplier, 100, "0.#")}%");
+        result.Add($"   Ranged Damage: {DisplayStat(statboard.rangedDamageMultiplier, 100, "0.#")}%");
+        result.Add($"   Elemental Damage: {DisplayStat(statboard.elementalDamageMultiplier, 100, "0.#")}%");
+        result.Add($"   Projectile Speed: {DisplayStat(statboard.projectileSpeedMultiplier, 100, "0.#")}%");
         result.Add("");
         result.Add("Elemental:");
         result.Add("   Damage:");
-        result.Add($"       Physical: {statboard.damageMultipliers.physical * 100f:0.#}%");
-        result.Add($"       Fire: {statboard.damageMultipliers.fire * 100f:0.#}%");
-        result.Add($"       Ice: {statboard.damageMultipliers.ice * 100f:0.#}%");
-        result.Add($"       Electric: {statboard.damageMultipliers.electric * 100f:0.#}%");
-        result.Add($"       Poison: {statboard.damageMultipliers.poison * 100f:0.#}%");
-        result.Add($"       Light: {statboard.damageMultipliers.light * 100f:0.#}%");
+        result.Add($"       Physical: {DisplayStat(statboard.damageMultipliers.physical, 100, "0.#")}%");
+        result.Add($"       Fire: {DisplayStat(statboard.damageMultipliers.fire, 100, "0.#")}%");
+        result.Add($"       Ice: {DisplayStat(statboard.damageMultipliers.ice, 100, "0.#")}%");
+        result.Add($"       Electric: {DisplayStat(statboard.damageMultipliers.electric, 100, "0.#")}%");
+        result.Add($"       Poison: {DisplayStat(statboard.damageMultipliers.poison, 100, "0.#")}%");
+        result.Add($"       Light: {DisplayStat(statboard.damageMultipliers.light, 100, "0.#")}%");
         result.Add("");
         result.Add("   Resistance:");
-        result.Add($"       Physical: {statboard.damageResistances.physical * 100f:0.#}%");
-        result.Add($"       Fire: {statboard.damageResistances.fire * 100f:0.#}%");
-        result.Add($"       Ice: {statboard.damageResistances.ice * 100f:0.#}%");
-        result.Add($"       Electric: {statboard.damageResistances.electric * 100f:0.#}%");
-        result.Add($"       Poison: {statboard.damageResistances.poison * 100f:0.#}%");
-        result.Add($"       Light: {statboard.damageResistances.light * 100f:0.#}%");
+        result.Add($"       Physical: {DisplayStat(statboard.damageResistances.physical, 100, "0.#")}%");
+        result.Add($"       Fire: {DisplayStat(statboard.damageResistances.fire, 100, "0.#")}%");
+        result.Add($"       Ice: {DisplayStat(statboard.damageResistances.ice, 100, "0.#")}%");
+        result.Add($"       Electric: {DisplayStat(statboard.damageResistances.electric, 100, "0.#")}%");
+        result.Add($"       Poison: {DisplayStat(statboard.damageResistances.poison, 100, "0.#")}%");
+        result.Add($"       Light: {DisplayStat(statboard.damageResistances.light, 100, "0.#")}%");
         result.Add("Misc:");
-        result.Add($"   Currency Bonus{statboard.currencyMultiplier* 100f:0.#}%");
+        result.Add($"   Currency Bonus{DisplayStat(statboard.currencyMultiplier, 100, "0.#")}%");
         
         text.text = string.Join("\n", result);
+    }
+
+    private string DisplayStat(Stat stat, float mult, string format) {
+        string result = GetModifiedColour(stat);
+        bool diff = !String.IsNullOrEmpty(result);
+
+        result += (stat.Value * mult).ToString(format);
+
+        if (diff) {
+            result += "</color>";
+        }
+        
+        return result;
+    }
+
+    private string GetModifiedColour(Stat stat) {
+        string result = "<color=#";
+        
+        if (stat.Value < stat.BaseValue) {
+            result += "ff0000>";
+        }
+        else if (stat.Value > stat.BaseValue) {
+            result += "00ff00>";
+        }
+        else {
+            result = "";
+        }
+
+        return result;
     }
 }
