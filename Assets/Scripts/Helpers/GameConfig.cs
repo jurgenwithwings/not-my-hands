@@ -45,4 +45,7 @@ public class GameConfig : ScriptableObject
     [Space]
     [Header("Empty GameObject")]
     public GameObject emptyGameObject;
+    
+    [Header("Aim Assist")]
+    public AimAssistSettings aimAssistSettings;
 }

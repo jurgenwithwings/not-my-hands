@@ -191,11 +191,20 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
         }
     }
 
+    
+    private AimAssistController aimAssist = new();
     public InputEvent<Vector2> Look;
     public void OnLook(InputAction.CallbackContext context) {
         DefaultHandle(context);
+        Vector2 look = context.ReadValue<Vector2>();
+        
+        // Aim Assist
+        if (CurrentControlDevice == ControlType.Controller) {
+            look = aimAssist.Process(look, Camera.main, Time.deltaTime);
+        }
+        
         if (context.performed || context.canceled) {
-            Vector2 look = context.ReadValue<Vector2>() * (CurrentControlDevice == ControlType.Keyboard ? PlayerSettings.MouseSensitivity : PlayerSettings.ControllerSensitivity);
+            look *= CurrentControlDevice == ControlType.Keyboard ? PlayerSettings.MouseSensitivity : PlayerSettings.ControllerSensitivity;
             if (PlayerSettings.IsInvertedMouseY) {
                 look.y *= -1;
             }
