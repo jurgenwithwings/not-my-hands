@@ -11,15 +11,13 @@ public class Projectile : MonoBehaviour {
     
     protected Statboard source;
     protected Damage damage;
-    protected float statusChance;
 
     protected float elapsedTime;
     protected float T => elapsedTime / lifetime;
     
-    public virtual void Initialise(Statboard source, Damage damage, float statusChance, Vector3 force) {
+    public virtual void Initialise(Statboard source, Damage damage, Vector3 force) {
         this.source = source;
         this.damage = damage;
-        this.statusChance = statusChance;
         
         rigidbody.AddForce(force, ForceMode.Impulse);
         
@@ -41,9 +39,7 @@ public class Projectile : MonoBehaviour {
     }
 
     protected virtual void HitTarget(Collider other, Statboard victim) {
-        DamageInfo info = new(damage, source, transform.position) {
-            sourceStatusChance = statusChance,
-        };
+        DamageInfo info = new(damage, source, transform.position);
         victim.health?.TakeDamage(info);
     }
     

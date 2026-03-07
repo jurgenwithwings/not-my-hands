@@ -28,3 +28,4 @@ MonoBehaviour:
   poison: {fileID: 11400000, guid: f2048e26671785945815c27d89b7757b, type: 2}
   judged: {fileID: 11400000, guid: aa886e554fef2064f88d58f39e9831db, type: 2}
   emptyGameObject: {fileID: 4182543657292015240, guid: 82f6cbb20542e604499751be1d1e195d, type: 3}
+  aimAssistSettings: {fileID: 11400000, guid: ecfbdc9a29a064a42bcf8fc4a76d0e0d, type: 2}

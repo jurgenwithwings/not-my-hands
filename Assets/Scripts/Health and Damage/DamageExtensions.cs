@@ -96,6 +96,8 @@ public enum DamageType {
     public float electric;
     public float poison;
     public float light;
+    [Space] 
+    public float statusChance;
     
     public DamageInstance[] ToArray() {
         return new DamageInstance[] { physical, fire, ice, electric, poison, light };
@@ -155,7 +157,7 @@ public enum DamageType {
     
     public bool debug;
 
-    public DamageInfo(Damage damage, Statboard statboard, Vector3 hitPoint) {
+    public DamageInfo(Damage damage, Statboard source, Vector3 hitPoint) {
         // Damage Types
         DamageInstance[] dInst = damage.ToArray();
         
@@ -167,11 +169,11 @@ public enum DamageType {
         lightDamage = dInst[DamageType.Light.Index()];
     
         // Status Effect
-        sourceStatusChance = 0f;
+        sourceStatusChance = damage.statusChance;
         additionalStatusEffects = new();
         
         // Additional Data
-        source = statboard;
+        this.source = source;
         this.hitPoint = hitPoint;
         selfDamage = false;
         ignoreResistances = false;

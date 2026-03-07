@@ -8,10 +8,6 @@ public class CanvasInteractionText : MonoBehaviour {
     private CachedGlyph interact = new ("Player/Interact");
     private CachedGlyph primaryInteract = new ("Player/PrimaryInteract");
     private CachedGlyph secondaryInteract = new ("Player/SecondaryInteract");
-
-    private void Awake() {
-        text = GetComponent<TMP_Text>();
-    }
     
     private void Start() {
         PlayerHUDEvents.OnSetInteractionText += SetText;
@@ -24,9 +20,11 @@ public class CanvasInteractionText : MonoBehaviour {
     // ReSharper disable Unity.PerformanceAnalysis
     private void SetText(string promptText, bool isDualAction) {
         if (string.IsNullOrEmpty(promptText)) {
-            text.text = "";
+            transform.localScale = Vector3.zero;
             return;
         }
+        
+        transform.localScale = Vector3.one;
 
         if (isDualAction) {
             text.text = $"Press {primaryInteract.Glyph()} or {secondaryInteract.Glyph(false)} {promptText}";

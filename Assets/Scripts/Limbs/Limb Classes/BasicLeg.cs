@@ -10,7 +10,7 @@ public class BasicLeg : Leg {
     }
 
     private void Kick() {
-        IsBusy = true;
+        IsExtraBusy = true;
         animator.SetTrigger("Sweep");
     }
 }

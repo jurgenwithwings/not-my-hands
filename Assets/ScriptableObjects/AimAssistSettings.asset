@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
   maxDistance: 40
   maxAngle: 8
   angleFalloff:
@@ -42,8 +42,3 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   useFriction: 1
-  frictionStrength: 0.5
-  useRotationalPull: 1
-  rotationalStrength: 4
-  useStickyTracking: 1
-  trackingStrength: 2

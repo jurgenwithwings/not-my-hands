@@ -5,7 +5,6 @@ public class BasicArm : Arm {
     [SerializeField] private Transform projectilePoint;
     [SerializeField] private float projectileForce = 5;
     [SerializeField] private Damage damage;
-    [SerializeField, Range(0, 1)] private float statusChance = 0.2f;
     [SerializeField] private float fireRate = 0.17f;
     
     private float fireCooldown;
@@ -19,18 +18,13 @@ public class BasicArm : Arm {
         }
         
         fireCooldown -= Time.deltaTime;
-
-        if (animator.GetBool(AnimIdle)) {
-            IsBusy = false;
-        }
     }
     
     private void Shoot() {
         if (fireCooldown > 0) return;
         fireCooldown = fireRate;
-        IsBusy = true;
         animator.SetBool("Attack", true);
         Instantiate(projectilePrefab, projectilePoint.position, transform.rotation)
-            .GetComponent<Projectile>().Initialise(statboard, damage, statusChance, transform.forward * projectileForce);
+            .GetComponent<Projectile>().Initialise(statboard, damage, transform.forward * projectileForce);
     }
 }

@@ -132,8 +132,9 @@ public abstract class Limb : MonoBehaviour {
     protected static readonly int AnimIdle = Animator.StringToHash("Idle");
     protected static readonly int AnimCollect = Animator.StringToHash("Collect");
 
-    public bool IsBusy { get; protected set; }
-    
+    public bool IsBusy => animator.GetBool(AnimIdle) || IsExtraBusy;
+    protected bool IsExtraBusy;
+
     private void Awake() {
         animator = GetComponent<Animator>();
     }
@@ -180,6 +181,6 @@ public abstract class Leg : Limb {
 
     // Used by the Idle Anim on the Animator.
     public void ResetIdle() {
-        IsBusy = false;
+        IsExtraBusy = false;
     }
 }
