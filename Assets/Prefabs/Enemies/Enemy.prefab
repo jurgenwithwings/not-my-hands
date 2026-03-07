@@ -219,7 +219,7 @@ MonoBehaviour:
     physical:
       BaseValue: 0
     fire:
-      BaseValue: 0.5
+      BaseValue: 0
     ice:
       BaseValue: 0
     electric:

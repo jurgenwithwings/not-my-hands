@@ -569,12 +569,13 @@ MonoBehaviour:
   verticalClamp: 85
   lockCursor: 1
   damage:
-  - damageType: 0
-    baseAmount: 100
-    flat: 0
-    additive: 0
-    multiplicative: 0
-    final: 0
+    physical: 0
+    fire: 0
+    ice: 0
+    electric: 0
+    poison: 0
+    light: 0
+    statusChance: 0
   effect: {fileID: 11400000, guid: 6a8abcd812891224a9b1e89fa30e0d43, type: 2}
   enemyMask:
     serializedVersion: 2
@@ -753,16 +754,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3aa1e1e317f478a8dbad82c44c90624, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  limbs:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  fpsCam: {fileID: 6695041447206126384}
   limbAnchors:
   - {fileID: 5216700544068312263}
   - {fileID: 768079342430364912}
   - {fileID: 2493915657545797332}
   - {fileID: 7899244841488704129}
+  limbs:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &8582221234687208834
 GameObject:
   m_ObjectHideFlags: 0

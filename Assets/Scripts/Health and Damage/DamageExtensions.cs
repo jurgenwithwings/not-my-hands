@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Stats;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public enum DamageType {
@@ -229,7 +230,7 @@ public enum DamageType {
                 inst.SetDefault();
             }
             individualDamage[i] = inst.baseAmount.GetModifiedValue(inst.flat + flatAll, inst.additive + additiveAll, 
-                inst.multiplicative * multiplicativeAll, inst.final * finalAll, debug) + finalFlatAll;;
+                inst.multiplicative * multiplicativeAll, inst.final * finalAll, debug) + finalFlatAll;
             finalDamage += individualDamage[i];
         }
 
@@ -308,8 +309,7 @@ public enum DamageType {
         lightDamage.AddModifier(stats.light, ModifierType.Final);
     }
 
-    public void SetResistanceMultipliers(DamageTypeStats stats)
-    {
+    public void SetResistanceMultipliers(DamageTypeStats stats) {
         physicalDamage.AddModifier(1- stats.physical, ModifierType.Final);
         fireDamage.AddModifier(1 - stats.fire, ModifierType.Final);
         iceDamage.AddModifier(1 - stats.ice, ModifierType.Final);
@@ -320,13 +320,11 @@ public enum DamageType {
 }
 
 public static class DamageExtensions {
-    public static string AbbreviateNumber(float number)
-    {
+    public static string AbbreviateNumber(float number) {
         return AbbreviateNumber(number, out _);
     }
     
-    public static string AbbreviateNumber(float number, out float resultingNumber)
-    {
+    public static string AbbreviateNumber(float number, out float resultingNumber) {
         if (number < 1000) {
             resultingNumber = number;
             return number.ToString();
@@ -337,8 +335,7 @@ public static class DamageExtensions {
         int suffixIndex = 0;
         float abbreviatedNumber = number;
 
-        while (abbreviatedNumber >= 1000 && suffixIndex < suffixes.Length - 1)
-        {
+        while (abbreviatedNumber >= 1000 && suffixIndex < suffixes.Length - 1) {
             abbreviatedNumber /= 1000;
             suffixIndex++;
         }
@@ -356,18 +353,14 @@ public static class DamageExtensions {
         return $"{abbreviatedNumber.ToString(format)}{suffixes[suffixIndex]}";
     }
 
-    public static int Index(this DamageType damageType) {
-        return (int)damageType;
-    }
-
     public static DamageInstance[] DamageToArray(this DamageInfo damageInfo) {
         DamageInstance[] result = new[] {
             damageInfo.physicalDamage,
             damageInfo.fireDamage,
             damageInfo.iceDamage,
-            damageInfo.poisonDamage,
             damageInfo.electricDamage,
             damageInfo.poisonDamage,
+            damageInfo.lightDamage,
         };
         return result;
     }

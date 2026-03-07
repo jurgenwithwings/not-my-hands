@@ -39,7 +39,6 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard {
         for (int i = 0; i < numOfEffects; i++) {
             //Calculates not including Physical.
             random = Random.Range(0, 1 - percentages[DamageType.Physical.Index()]);
-            print($"Random: {random}");
 
             float runningTotal = 0;
             for (int j = 1; j < percentages.Length; j++) {
@@ -47,23 +46,18 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard {
                 if (random < runningTotal) {
                     switch (j) {
                         case 1:
-                            print("Applied Burn");
                             AddStacks(GameConfig.Instance.burn, damageInfo);
                             break;
                         case 2:
-                            print("Applied Freeze");
                             AddStacks(GameConfig.Instance.freeze, damageInfo);
                             break;
                         case 3:
-                            print("Applied Charged");
                             AddStacks(GameConfig.Instance.charged, damageInfo);
                             break;
                         case 4:
-                            print("Applied Poison");
                             AddStacks(GameConfig.Instance.poison, damageInfo);
                             break;
                         case 5:
-                            print("Applied Judged");
                             AddStacks(GameConfig.Instance.judged, damageInfo);
                             break;
                     }
@@ -85,9 +79,7 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard {
     }
     
     public StatusEffect AddStacks(StatusEffectData effectData, DamageInfo damageInfo) {
-        print("Add Stacks Start");
         if (typeof(BuffEffect).IsAssignableFrom(effectData.Type())) {
-            print("BuffEffect Add");
             if (GetBuffFromList(effectData, out BuffEffect effect)) {
                 effect.AddStack(damageInfo);
                 return effect;
@@ -95,7 +87,6 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard {
             else {
                 BuffEffect newEffect = Activator.CreateInstance(effectData.Type()) as BuffEffect;
                 if (newEffect != null) {
-                    print("BuffEffect New");
                     newEffect.Initialise(effectData, this, damageInfo);
                     BuffEffects.Add(newEffect);
                     return newEffect;
@@ -104,21 +95,18 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard {
         }
         else {
             if (GetEffectFromList(effectData, out StatusEffect effect)) {
-                print("StatusEffect Add");
                 effect.AddStack(damageInfo);
                 return effect;
             }
             else {
                 StatusEffect newEffect = Activator.CreateInstance(effectData.Type()) as StatusEffect;
                 if (newEffect != null) {
-                    print("StatusEffect New");
                     newEffect.Initialise(effectData, this, damageInfo);
                     StatusEffects.Add(newEffect);
                     return newEffect;
                 }
             }
         }
-        print("Null");
         return null;
     }
 
