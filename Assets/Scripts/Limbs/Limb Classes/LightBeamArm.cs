@@ -41,13 +41,13 @@ public class LightBeamArm : Arm {
         LayerMask mask = GameConfig.Instance.pawnLayer;
         mask.AddLayerToMask(GameConfig.Instance.levelCollisionLayer);
         
-        Vector3 endPoint = manager.fpsCam.transform.position + (Vector3.forward * range);
-        RaycastHit[] hits = Physics.CapsuleCastAll(manager.fpsCam.transform.position, endPoint, 0.7f, manager.fpsCam.transform.forward, mask);
+        RaycastHit[] hits = Physics.SphereCastAll(manager.fpsCam.transform.position, 0.7f, manager.fpsCam.transform.forward, range, mask);
         foreach (RaycastHit hit in hits) {
             if (hit.collider.gameObject == manager.gameObject) {
                 continue;
             }
 
+            Debug.DrawRay(hit.point, Vector3.up, Color.red, 60);
             if (hit.collider.gameObject.layer == GameConfig.Instance.levelCollisionLayer) {
                 break;
             }
