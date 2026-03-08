@@ -320,6 +320,8 @@ public enum DamageType {
 }
 
 public static class DamageExtensions {
+    public static string damageNumberFormat = "###,###,###,##0.#";
+    
     public static string AbbreviateNumber(float number) {
         return AbbreviateNumber(number, out _);
     }
@@ -327,7 +329,7 @@ public static class DamageExtensions {
     public static string AbbreviateNumber(float number, out float resultingNumber) {
         if (number < 1000) {
             resultingNumber = number;
-            return number.ToString();
+            return number.ToString(damageNumberFormat);
         }
 
         // Limited to Qi due to 64-bit constraints

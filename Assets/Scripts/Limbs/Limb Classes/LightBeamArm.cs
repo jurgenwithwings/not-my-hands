@@ -18,7 +18,7 @@ public class LightBeamArm : Arm {
     }
     
     private void Update() {
-        if (input.Value > 0 && fireCooldown <= 0 && shootRoutine ==  null) {
+        if (input.Value > 0 && fireCooldown <= 0 && shootRoutine ==  null && statboard.mana.RemoveMana(manaCost)) {
             shootRoutine = StartCoroutine(Shoot());
         }
         /*else {

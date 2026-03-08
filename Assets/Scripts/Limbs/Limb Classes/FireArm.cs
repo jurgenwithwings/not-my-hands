@@ -11,7 +11,7 @@ public class FireArm : Arm {
     private float fireCooldown;
 
     private void Update() {
-        if (input.Value > 0) {
+        if (input.Value > 0 && statboard.mana.HasEnoughMana(manaCost)) {
             Shoot();
         }
         else {
@@ -19,11 +19,11 @@ public class FireArm : Arm {
         }
         
         fireCooldown -= Time.deltaTime;
-
     }
     
     private void Shoot() {
         if (fireCooldown > 0) return;
+        if (!statboard.mana.RemoveMana(manaCost)) return;
         fireCooldown = fireRate;
         animator.SetBool("Attack", true);
         Vector3 force = transform.forward * projectileForce;

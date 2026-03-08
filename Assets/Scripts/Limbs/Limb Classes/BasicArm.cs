@@ -10,7 +10,7 @@ public class BasicArm : Arm {
     private float fireCooldown;
 
     private void Update() {
-        if (input.Value > 0) {
+        if (input.Value > 0 && statboard.mana.HasEnoughMana(manaCost)) {
             Shoot();
         }
         else {
@@ -22,6 +22,7 @@ public class BasicArm : Arm {
     
     private void Shoot() {
         if (fireCooldown > 0) return;
+        if (!statboard.mana.RemoveMana(manaCost)) return;
         fireCooldown = fireRate;
         animator.SetBool("Attack", true);
         Instantiate(projectilePrefab, projectilePoint.position, transform.rotation)

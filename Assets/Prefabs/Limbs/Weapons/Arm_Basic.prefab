@@ -1518,17 +1518,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 561566e34a6e6b7499d7b86f023f6706, type: 2}
+  manaCost: 2
   projectilePrefab: {fileID: 8198838231160519049, guid: 56432def501a9824fb32b49f7652088c, type: 3}
   projectilePoint: {fileID: 5075914432501916458}
   projectileForce: 5
   damage:
-    physical: 65
+    physical: 150
     fire: 0
     ice: 0
     electric: 0
     poison: 0
     light: 0
-  statusChance: 0.2
+    statusChance: 0
   fireRate: 0.23
 --- !u!1 &5792778819585994758
 GameObject:

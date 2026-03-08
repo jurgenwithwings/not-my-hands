@@ -51,10 +51,11 @@ public class EntityEventManager : MonoBehaviour, IStatboard
     public Action<float, float> OnHealthChanged;
 
     /// <summary>
-    /// Called when mana is successfully changed. Providing the amount the mana was changed by.
-    /// <para><c>ManaSpent</c> - The amount of mana spent or gained. Negative if spent.</para>
+    /// Called when mana is successfully changed from any means.
+    /// <para><c>CurrentMana</c> - The new current amount of mana.</para>
+    /// <para><c>MaxMana</c> - The new maximum mana.</para>
     /// </summary>
-    public Action<float> OnManaChanged;
+    public Action<float, float> OnManaChanged;
 
     /// <summary>
     /// Called when a new Organ is picked up by this entity.

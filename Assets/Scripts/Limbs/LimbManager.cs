@@ -134,6 +134,8 @@ public abstract class Limb : MonoBehaviour {
 
     public bool IsBusy => !animator.GetBool(AnimIdle) || IsExtraBusy;
     protected bool IsExtraBusy;
+    
+    [SerializeField] protected float manaCost = 10;
 
     private void Awake() {
         animator = GetComponent<Animator>();
@@ -183,4 +185,6 @@ public abstract class Leg : Limb {
     public void ResetIdle() {
         IsExtraBusy = false;
     }
+
+    public virtual void ToggleHitbox() { }
 }

@@ -29,7 +29,13 @@ public static class PlayerHUDEvents {
     /// <para><c>Maximum Health</c> - Maximum health of the player</para>
     /// </summary>
     public static Action<float, float> OnHealthChanged;
-
+    
+    /// <summary>
+    /// Called when the player's mana changes.
+    /// <para><c>Current Mana</c> - Current mana of the player</para>
+    /// <para><c>Maximum Mana</c> - Maximum mana of the player</para>
+    /// </summary>
+    public static Action<float, float> OnManaChanged;
 
     public static Action<RelicData> OnAddedRelic;
     public static Action<LimbData, LimbSide> OnUpdateLimb;

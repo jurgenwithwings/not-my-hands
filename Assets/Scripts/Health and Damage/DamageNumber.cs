@@ -45,9 +45,10 @@ public class DamageNumber : MonoBehaviour, IPoolable<DamageNumber> {
     }
     
     public void SetDamage(float damage) {
+        Debug.Log(damage);
         text.text = PlayerSettings.AbbreviateDamageNumbers ? 
-            DamageExtensions.AbbreviateNumber(Mathf.Round(damage)) : 
-            damage.ToString("###,###,###,###");
+            DamageExtensions.AbbreviateNumber(damage) : 
+            damage.ToString(DamageExtensions.damageNumberFormat);
         
         float t = Mathf.InverseLerp(1, DamageScaleEnd, damage);
         damageScale = damageScaleCurve.Evaluate(t);

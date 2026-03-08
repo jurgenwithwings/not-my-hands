@@ -1530,6 +1530,7 @@ MonoBehaviour:
     statusChance: 0.1
   fireRate: 0.9
   range: 25
+  manaCost: 6
 --- !u!1 &5792778819585994758
 GameObject:
   m_ObjectHideFlags: 0

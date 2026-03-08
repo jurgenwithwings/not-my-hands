@@ -1,7 +1,16 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BasicLeg : Leg {
+    private static readonly int Sweep = Animator.StringToHash("Sweep");
+    
     [SerializeField] private Collider hitbox;
+    [Space]
+    [SerializeField] private Damage damage;
+    
+    
+    private List<GameObject> hitObjects = new();
 
     private void Update() {
         if (input.Triggered && !manager.IsLegBusy) {
@@ -10,7 +19,25 @@ public class BasicLeg : Leg {
     }
 
     private void Kick() {
-        IsExtraBusy = true;
-        animator.SetTrigger("Sweep");
+        if (!statboard.mana.RemoveMana(manaCost)) return;
+        animator.SetTrigger(Sweep);
+    }
+
+    public override void ToggleHitbox() {
+        base.ToggleHitbox();
+        
+        hitObjects.Clear();
+        hitbox.enabled = !hitbox.enabled;
+    }
+
+    public void OnTriggerEnter(Collider other) {
+        if (hitObjects.Contains(other.gameObject)) return;
+        if (other.gameObject == manager.gameObject) return;
+        
+        if (other.gameObject.TryGetComponent(out Statboard victim)) {
+            DamageInfo info = new(damage, statboard, other.gameObject.transform.position);
+            victim.health?.TakeDamage(info);
+            hitObjects.Add(other.gameObject);
+        }
     }
 }

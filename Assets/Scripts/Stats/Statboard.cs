@@ -15,6 +15,7 @@ public class Statboard : MonoBehaviour {
     public EntityEventManager eventManager;
     public EntityStatusEffectManager statusEffectManager;
     public Health health;
+    public Mana mana;
     public RelicManager relicManager;
     public OrganManager organManager;
     public HealthBar healthBar;
@@ -206,6 +207,7 @@ public class Statboard : MonoBehaviour {
         eventManager ??= GetComponent<EntityEventManager>();
         statusEffectManager ??= GetComponent<EntityStatusEffectManager>();
         health ??= GetComponent<Health>();
+        mana ??= GetComponent<Mana>();
         relicManager ??= GetComponent<RelicManager>();
         organManager ??= GetComponent<OrganManager>();
         healthBar ??= GetComponent<HealthBar>();
@@ -213,7 +215,7 @@ public class Statboard : MonoBehaviour {
     }
     
     private void TryAssignReferences() {
-        IStatboard[] statboardMembers = { eventManager, statusEffectManager, health, relicManager, organManager, healthBar };
+        IStatboard[] statboardMembers = { eventManager, statusEffectManager, health, mana, relicManager, organManager, healthBar };
         
         foreach (IStatboard member in statboardMembers) {
             member?.SetStatboard(this);

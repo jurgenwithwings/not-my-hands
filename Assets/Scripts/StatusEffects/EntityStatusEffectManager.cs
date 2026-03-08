@@ -18,7 +18,7 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard {
     private void HandleStatusEffectsFromDamage(DamageInfo damageInfo) {
         // Handle Additional Status Effects
         foreach (StatusEffectData effect in damageInfo.additionalStatusEffects) {
-            AddStacks(effect, new DamageInfo(new Damage(), damageInfo.source, transform.position));
+            AddStacks(effect, damageInfo);
         }
         
         // Handle Status Effects From Damage
@@ -37,7 +37,7 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard {
         
         float[] percentages = damageInfo.GetDamagePercentages();
         for (int i = 0; i < numOfEffects; i++) {
-            //Calculates not including Physical.
+            // Calculates not including Physical.
             random = Random.Range(0, 1 - percentages[DamageType.Physical.Index()]);
 
             float runningTotal = 0;

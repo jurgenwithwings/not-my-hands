@@ -1,5 +1,60 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &541159065966941849
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3225349939758734927}
+  - component: {fileID: 3591689831438836241}
+  m_Layer: 0
+  m_Name: Hitbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3225349939758734927
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 541159065966941849}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.01583252, y: -0.0009843626, z: -0.06205493, w: 0.9979466}
+  m_LocalPosition: {x: 0.033, y: 0.585, z: 0.012}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7697616298135681976}
+  m_LocalEulerAnglesHint: {x: 1.804, y: -0.225, z: -7.12}
+--- !u!136 &3591689831438836241
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 541159065966941849}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 1
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Radius: 0.2
+  m_Height: 1.6
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &394573479258162391
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -62,11 +117,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: cd315ec185a59644a9087b494815dc6e, type: 3}
       propertyPath: m_Name
-      value: BasicLeg
+      value: Leg_Basic
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 8046423181392314223, guid: cd315ec185a59644a9087b494815dc6e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3225349939758734927}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cd315ec185a59644a9087b494815dc6e, type: 3}
       insertIndex: -1
@@ -74,6 +132,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cd315ec185a59644a9087b494815dc6e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3246048423919104204}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cd315ec185a59644a9087b494815dc6e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5976697139723574573}
   m_SourcePrefab: {fileID: 100100000, guid: cd315ec185a59644a9087b494815dc6e, type: 3}
 --- !u!1 &700494102469556614 stripped
 GameObject:
@@ -115,4 +176,46 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: fd03ca5cc42747a42abf81e0e6ece9c4, type: 2}
-  hitBox: {fileID: 0}
+  manaCost: 12
+  moveSpeed: 2.5
+  hitbox: {fileID: 3591689831438836241}
+  damage:
+    physical: 120
+    fire: 0
+    ice: 0
+    electric: 0
+    poison: 0
+    light: 0
+    statusChance: 0
+--- !u!54 &5976697139723574573
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 700494102469556614}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 2
+--- !u!4 &7697616298135681976 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8046423181392314223, guid: cd315ec185a59644a9087b494815dc6e, type: 3}
+  m_PrefabInstance: {fileID: 394573479258162391}
+  m_PrefabAsset: {fileID: 0}

@@ -1,8 +1,13 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HUDHealthBar : MonoBehaviour{
+public class HUDHealthBar : MonoBehaviour {
+    public enum BarType { Health, Mana }
+
+    [SerializeField] private BarType barType;
+    
     [SerializeField] private Slider redHealthBar;
     [SerializeField] private Slider yellowHealthBar;
     [SerializeField] private TMP_Text valueText;
@@ -15,11 +20,26 @@ public class HUDHealthBar : MonoBehaviour{
     private void Awake() {
         redHealthBar.value = 1;
         yellowHealthBar.value = 1;
-        PlayerHUDEvents.OnHealthChanged += SetTargetHealth;
+
+        switch (barType) {
+            case BarType.Health:
+                PlayerHUDEvents.OnHealthChanged += SetTargetHealth;
+                break;
+            case BarType.Mana:
+                PlayerHUDEvents.OnManaChanged += SetTargetHealth;
+                break;
+        }
     }
 
     private void OnDestroy() {
-        PlayerHUDEvents.OnHealthChanged -= SetTargetHealth;
+        switch (barType) {
+            case BarType.Health:
+                PlayerHUDEvents.OnHealthChanged -= SetTargetHealth;
+                break;
+            case BarType.Mana:
+                PlayerHUDEvents.OnManaChanged -= SetTargetHealth;
+                break;
+        }
     }
 
     private void SetTargetHealth(float currentHealth, float maxHealth) {

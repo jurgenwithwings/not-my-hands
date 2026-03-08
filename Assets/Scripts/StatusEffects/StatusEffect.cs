@@ -105,7 +105,7 @@ public abstract class BuffEffect : StatusEffect {
 }
 
 [Serializable] public class Bleed : StatusEffect {
-    [SerializeField] private DoT dot = new DoT();
+    [SerializeField] private DoT dot;
     [SerializeField] private float healthPercentDamage = 5f;
 
     public override void Initialise(StatusEffectData data, EntityStatusEffectManager manager, DamageInfo damageInfo) {

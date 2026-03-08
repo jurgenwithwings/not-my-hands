@@ -61,6 +61,7 @@ public class PlayerController : MonoBehaviour
         statboard.eventManager.OnReceivedYourDamage += SpawnDamageNumber;
         statboard.eventManager.OnDamageTaken += PlayerTakenDamage;
         statboard.eventManager.OnHealthChanged += PlayerHealthChanged;
+        statboard.eventManager.OnManaChanged += PlayerManaChanged;
         statboard.eventManager.OnOrganChanged += PlayerOrganChanged;
         statboard.eventManager.OnRelicAdded += PlayerRelicAdded;
         statboard.eventManager.OnLimbChanged += PlayerLimbChanged;
@@ -81,12 +82,17 @@ public class PlayerController : MonoBehaviour
 
         PlayerHUDEvents.OnRegisterStatboard?.Invoke(statboard);
         PlayerHUDEvents.OnHealthChanged?.Invoke(statboard.health.CurrentHealth, statboard.maxHealth);
+        PlayerHUDEvents.OnManaChanged?.Invoke(statboard.mana.CurrentMana, statboard.maxMana);
         
         inputs.Inventory.Event += InventoryDebugEvent;
     }
 
-    private void PlayerHealthChanged(float arg1, float arg2) {
-        PlayerHUDEvents.OnHealthChanged?.Invoke(arg1, arg2);
+    private void PlayerManaChanged(float current, float max) {
+        PlayerHUDEvents.OnManaChanged?.Invoke(current, max);
+    }
+
+    private void PlayerHealthChanged(float current, float max) {
+        PlayerHUDEvents.OnHealthChanged?.Invoke(current, max);
     }
 
     private void InventoryDebugEvent(InputEvent<bool> inputEvent) {
@@ -174,10 +180,10 @@ public class PlayerController : MonoBehaviour
                 };
                 damageInfo.additionalStatusEffects.Add(effect);
                 
-                damageInfo.AddModifier(statboard.damageMultiplier);
+                damageInfo.AddModifier(statboard.damageMultiplier, ModifierType.Final);
                 damageInfo.debug = false;
                 
-                statboard.eventManager.OnPreSendDamage?.Invoke(ref damageInfo, stats, this.statboard);
+                statboard.eventManager.OnPreSendDamage?.Invoke(ref damageInfo, stats, statboard);
                 
                 stats.health.TakeDamage(damageInfo.Copy());
             }
