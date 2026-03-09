@@ -77,7 +77,7 @@ public class LimbManager : MonoBehaviour {
     }
 
     public void AddLimb(LimbData limbData, LimbSide limbSide) {
-        int index = limbData.limbType == LimbType.Arm ? 0 : 1;
+        int index = limbData.limbType == LimbType.Arm ? 0 : 2;
         if (limbSide == LimbSide.Right) {
             index++;
         }
@@ -132,7 +132,8 @@ public abstract class Limb : MonoBehaviour {
     protected static readonly int AnimIdle = Animator.StringToHash("Idle");
     protected static readonly int AnimCollect = Animator.StringToHash("Collect");
 
-    public bool IsBusy => !animator.GetBool(AnimIdle) || IsExtraBusy;
+    public bool IsBusy => IsAnimBusy || IsExtraBusy;
+    protected bool IsAnimBusy;
     protected bool IsExtraBusy;
     
     [SerializeField] protected float manaCost = 10;
@@ -178,13 +179,16 @@ public abstract class Arm : Limb {
 
 
 public abstract class Leg : Limb {
-    [SerializeField] private float moveSpeed = 2.5f;
-    public float MoveSpeed => moveSpeed;
+    public float MoveSpeed => data.moveSpeed;
 
     // Used by the Idle Anim on the Animator.
     public void ResetIdle() {
-        IsExtraBusy = false;
+        IsAnimBusy = false;
     }
 
+    public void AnimEvent() {
+        ToggleHitbox();
+    }
+    
     public virtual void ToggleHitbox() { }
 }

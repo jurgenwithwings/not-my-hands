@@ -88,13 +88,18 @@ public static class OrganHelper {
         StatusEffectHeart variables = organData.organClass as StatusEffectHeart;
         perStatusEffectBonus = variables.perStatusEffectBonus;
 
-        stats.eventManager.OnPreSendDamage += ModifyDamage;
+        stats.eventManager.OnPreDealDamage += ModifyDamage;
     }
 
-    private void ModifyDamage(ref DamageInfo damageInfo, Statboard victim, Statboard self) {
+    private void ModifyDamage(ref DamageInfo damageInfo, Statboard victim) {
         Debug.Log("Got Pre Send Damage");
         for (int i = 0; i < Enum.GetValues(typeof(DamageType)).Length; i++) {
             damageInfo.AddModifier(perStatusEffectBonus * victim.statusEffectManager.StatusEffects.Count);
         }
+    }
+
+    public override void Remove() {
+        base.Remove();
+        stats.eventManager.OnPreDealDamage -= ModifyDamage;
     }
 }

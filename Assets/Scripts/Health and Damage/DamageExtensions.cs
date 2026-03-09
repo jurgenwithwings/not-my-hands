@@ -98,6 +98,7 @@ public enum DamageType {
     public float poison;
     public float light;
     [Space] 
+    public float criticalChance;
     public float statusChance;
     
     public DamageInstance[] ToArray() {
@@ -138,6 +139,9 @@ public enum DamageType {
     public DamageInstance poisonDamage;
     public DamageInstance lightDamage;
     
+    // Critical
+    public float sourceCriticalChance;
+    
     // Status Effect
     public float sourceStatusChance;
     public List<StatusEffectData> additionalStatusEffects;
@@ -155,6 +159,11 @@ public enum DamageType {
     public float finalAll;           // final multiplier for whole hit
     public float finalFlatAll;       // final +X damage to the whole hit.
 
+    // Result Info
+    public int resultingCritLevel;
+    public List<StatusEffectData> resultingAppliedEffects;
+
+    public List<object> tags;
     
     public bool debug;
 
@@ -169,6 +178,9 @@ public enum DamageType {
         poisonDamage = dInst[DamageType.Poison.Index()];
         lightDamage = dInst[DamageType.Light.Index()];
     
+        // Critical
+        sourceCriticalChance = damage.criticalChance;
+        
         // Status Effect
         sourceStatusChance = damage.statusChance;
         additionalStatusEffects = new();
@@ -187,6 +199,11 @@ public enum DamageType {
         finalFlatAll = 0f;
         
         Initialised = true;
+        
+        resultingCritLevel = 0;
+        resultingAppliedEffects = new();
+
+        tags = new();
         
         debug = false;
     }
@@ -369,5 +386,20 @@ public static class DamageExtensions {
             damageInfo.lightDamage,
         };
         return result;
+    }
+
+    public static void RollCrit(ref DamageInfo info) {
+        float finalCrit = info.sourceCriticalChance * info.source.criticalChanceMultiplier;
+        info.resultingCritLevel = Mathf.FloorToInt(finalCrit);
+        float remainingCrit = finalCrit - info.resultingCritLevel;
+        
+        float random = UnityEngine.Random.value;
+        if (random <= remainingCrit) {
+            info.resultingCritLevel++;
+        }
+
+        if (info.resultingCritLevel > 0) {
+            info.AddModifier(info.source.criticalDamageMultiplier.Value * info.resultingCritLevel, ModifierType.Final);
+        }
     }
 }

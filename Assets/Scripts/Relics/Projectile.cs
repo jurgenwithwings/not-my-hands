@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -12,12 +14,17 @@ public class Projectile : MonoBehaviour {
     protected Statboard source;
     protected Damage damage;
 
+    public List<object> tags = new();
+
     protected float elapsedTime;
     protected float T => elapsedTime / lifetime;
     
-    public virtual void Initialise(Statboard source, Damage damage, Vector3 force) {
+    public virtual void Initialise(Statboard source, Damage damage, Vector3 force, List<object> tags = null) {
         this.source = source;
         this.damage = damage;
+        if (tags != null) {
+            this.tags.AddRange(tags);
+        }
         
         rigidbody.AddForce(force, ForceMode.Impulse);
         
@@ -40,6 +47,9 @@ public class Projectile : MonoBehaviour {
 
     protected virtual void HitTarget(Collider other, Statboard victim) {
         DamageInfo info = new(damage, source, transform.position);
+        if (tags.Count > 0) {
+            info.tags.AddRange(tags);
+        }
         victim.health?.TakeDamage(info);
     }
     

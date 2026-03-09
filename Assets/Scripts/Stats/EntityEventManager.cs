@@ -25,23 +25,19 @@ public class EntityEventManager : MonoBehaviour, IStatboard
     public Action<DamageInfo, Statboard> OnReceivedYourDamage;
     
     /// <summary>
-    /// Called before damage is sent from this entity to another.
+    /// Called before damage is applied to the victim.
     /// <para><c>DamageInfo</c> - DamageInfo to be modified</para>
     /// <para><c>Victim</c> - Victim's statboard</para>
-    /// <para><c>Attacker</c> - Attacker's statboard</para>
     /// </summary>
-    //public Action<DamageInfo, Statboard, Statboard> OnPreSendDamage;
-    public PreSendDamage OnPreSendDamage;
-    public delegate void PreSendDamage(ref DamageInfo damageInfo, Statboard victim, Statboard self);
+    public PreDealDamage OnPreDealDamage;
+    public delegate void PreDealDamage(ref DamageInfo damageInfo, Statboard victim);
     
     /// <summary>
     /// Called before damage is applied to this entity.
     /// <para><c>DamageInfo</c> - DamageInfo to be modified</para>
-    /// <para><c>Victim</c> - Victim's statboard</para>
     /// </summary>
-    //public Action<DamageInfo, Statboard, Statboard> OnPreSendDamage;
-    public PreApplyDamage OnPreApplyDamage;
-    public delegate void PreApplyDamage(ref DamageInfo damageInfo, Statboard victim);
+    public PreTakeDamage OnPreTakeDamage;
+    public delegate void PreTakeDamage(ref DamageInfo damageInfo);
     
     /// <summary>
     /// Called when health is changes but not through taking damage.

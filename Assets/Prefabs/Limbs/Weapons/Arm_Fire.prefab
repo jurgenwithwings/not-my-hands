@@ -1530,6 +1530,7 @@ MonoBehaviour:
     electric: 0
     poison: 0
     light: 0
+    criticalChance: 0.03
     statusChance: 0.2
   fireRate: 0.06
 --- !u!1 &5792778819585994758

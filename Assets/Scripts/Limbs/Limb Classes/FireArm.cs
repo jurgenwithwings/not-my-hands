@@ -26,11 +26,11 @@ public class FireArm : Arm {
         if (!statboard.mana.RemoveMana(manaCost)) return;
         fireCooldown = fireRate;
         animator.SetBool("Attack", true);
-        Vector3 force = transform.forward * projectileForce;
+        Vector3 force = manager.fpsCam.transform.forward * projectileForce;
         Vector3 spread = Random.insideUnitSphere * projectileSpread;
         spread.z = 0;
         force += spread;
-        Instantiate(projectilePrefab, projectilePoint.position, transform.rotation)
+        Instantiate(projectilePrefab, projectilePoint.position, manager.fpsCam.transform.rotation)
             .GetComponent<Projectile>().Initialise(statboard, damage, force);
     }
 }

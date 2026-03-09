@@ -44,13 +44,24 @@ public class DamageNumber : MonoBehaviour, IPoolable<DamageNumber> {
         text.transform.localScale = Vector3.zero;
     }
     
-    public void SetDamage(float damage) {
-        Debug.Log(damage);
-        text.text = PlayerSettings.AbbreviateDamageNumbers ? 
-            DamageExtensions.AbbreviateNumber(damage) : 
-            damage.ToString(DamageExtensions.damageNumberFormat);
+    public void SetDamage(DamageInfo info) {
+        float finalDamage = info.finalDamage;
         
-        float t = Mathf.InverseLerp(1, DamageScaleEnd, damage);
+        string result = PlayerSettings.AbbreviateDamageNumbers ? 
+            DamageExtensions.AbbreviateNumber(finalDamage) : 
+            finalDamage.ToString(DamageExtensions.damageNumberFormat);
+
+        //text.color = Color.white;
+        Debug.Log(info.resultingCritLevel);
+        for (int i = 0; i < info.resultingCritLevel; i++) {
+            result += "!";
+            Debug.Log("Added !");
+            //text.color = Color.red;
+        }
+        
+        text.text = result;
+        
+        float t = Mathf.InverseLerp(1, DamageScaleEnd, finalDamage);
         damageScale = damageScaleCurve.Evaluate(t);
     }
     

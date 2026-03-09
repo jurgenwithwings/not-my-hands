@@ -14,10 +14,10 @@ using UnityEngine;
         stackValue = config.stackValue;
         maxReductionPerHitPercent = config.maxReductionPerHitPercent;
 
-        stats.eventManager.OnPreApplyDamage += ReduceDamage;
+        stats.eventManager.OnPreTakeDamage += ReduceDamage;
     }
 
-    private void ReduceDamage(ref DamageInfo damageInfo, Statboard victim) {
+    private void ReduceDamage(ref DamageInfo damageInfo) {
         float originalDamage = damageInfo.finalDamage;
         float damageToReduce = GetStackValue(baseValue, stackValue, stacks);
         float damageCap = damageInfo.finalDamage * maxReductionPerHitPercent;
@@ -30,6 +30,6 @@ using UnityEngine;
     public override void Remove() {
         base.Remove();
         
-        stats.eventManager.OnPreApplyDamage -= ReduceDamage;
+        stats.eventManager.OnPreTakeDamage -= ReduceDamage;
     }
 }

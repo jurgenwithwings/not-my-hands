@@ -130,7 +130,7 @@ public class PlayerController : MonoBehaviour
     public void SpawnDamageNumber(DamageInfo damageInfo, Statboard victim) {
         if (victim == statboard) return;
         if (ObjectPool.TryPull(damageInfo.hitPoint, transform.rotation, out DamageNumber damageNumber)) {
-            damageNumber.SetDamage(damageInfo.finalDamage);
+            damageNumber.SetDamage(damageInfo);
             //PlayerHUDEvents.DebugText($"Damage Dealt: {damageInfo.finalDamage}");
         }
     }

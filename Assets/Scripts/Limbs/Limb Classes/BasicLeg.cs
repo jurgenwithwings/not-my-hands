@@ -9,7 +9,6 @@ public class BasicLeg : Leg {
     [Space]
     [SerializeField] private Damage damage;
     
-    
     private List<GameObject> hitObjects = new();
 
     private void Update() {

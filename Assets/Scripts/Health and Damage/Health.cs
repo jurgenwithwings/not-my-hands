@@ -1,5 +1,6 @@
 using System;
 using ObjectPooling;
+using Stats;
 using UnityEngine;
 
 public class Health : MonoBehaviour, IStatboard
@@ -30,8 +31,6 @@ public class Health : MonoBehaviour, IStatboard
     
     public event Action<Statboard> OnDeath;
     
-    
-    
     private void Awake() {
         if (maxHealth != 0) {
             useSB = false;
@@ -54,10 +53,13 @@ public class Health : MonoBehaviour, IStatboard
         }
         
         damageInfo.ApplyDamageMultipliersFromSource();
+        DamageExtensions.RollCrit(ref damageInfo);
         
-        statboard.eventManager.OnPreApplyDamage?.Invoke(ref damageInfo, statboard);
+        damageInfo.source.eventManager.OnPreDealDamage?.Invoke(ref damageInfo, statboard);
+        statboard.eventManager.OnPreTakeDamage?.Invoke(ref damageInfo);
         
         float totalDamageTaken = damageInfo.finalDamage;
+        
         CurrentHealth -= totalDamageTaken;
         lastTimeDamaged = Time.time;
         
