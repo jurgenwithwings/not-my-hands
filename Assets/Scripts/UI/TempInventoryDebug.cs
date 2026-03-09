@@ -1,7 +1,8 @@
 using UnityEngine;
 
 public class TempInventoryDebug : MonoBehaviour {
-    public RectTransform Background;
+    [SerializeField] private RectTransform Background;
+    [SerializeField] private UIEventHandler eventHandler;
 
     public void Start() {
         PlayerHUDEvents.OnDoTheInventory += ToggleInventory;
@@ -26,5 +27,7 @@ public class TempInventoryDebug : MonoBehaviour {
         InputManager.Instance.EnableActionMap(activeInput);
         Cursor.lockState = cursorMode;
         Cursor.visible = isOn;
+        
+        eventHandler.OnUIToggled?.Invoke(isOn);
     }
 }

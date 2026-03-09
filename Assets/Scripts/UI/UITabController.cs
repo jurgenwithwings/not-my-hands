@@ -23,6 +23,7 @@ public struct UITab {
 
 public class UITabController : MonoBehaviour {
     [Header("Tabs")] 
+    [SerializeField] private UIEventHandler eventHandler;
     [SerializeField] private RectTransform container;
 
     [SerializeField] private float tabSpacing = 20f;
@@ -37,6 +38,23 @@ public class UITabController : MonoBehaviour {
         for (int i = 0; i < tabs.Count; i++) {
             int index = i;
             tabs[i].button.onClick.AddListener(() => OnTabButtonClicked(index));
+        }
+
+        if (eventHandler != null) {
+            eventHandler.OnUIToggled += OnUIToggled;
+        }
+    }
+
+    private void OnDestroy() {
+        if (eventHandler != null) {
+            eventHandler.OnUIToggled -= OnUIToggled;
+        }
+    }
+
+    private void OnUIToggled(bool active) {
+        // Reset Tab to default
+        if (!active) {
+            OnTabButtonClicked(0);  
         }
     }
 

@@ -79,6 +79,12 @@ public class EntityEventManager : MonoBehaviour, IStatboard
     public Action<LimbData, LimbSide, LimbData> OnLimbChanged;
 
     /// <summary>
+    /// Called when this entity has used a leg ability / action.
+    /// <para><c>Mana Spent</c> - The amount of mana spent on the ability / action.</para>
+    /// </summary>
+    public Action<float> OnLegAbilityUsed;
+
+    /// <summary>
     /// Called when this entity kills another.
     /// <para><c>Victim</c> - The entity that was killed.</para>
     /// </summary>

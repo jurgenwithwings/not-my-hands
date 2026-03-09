@@ -21,6 +21,7 @@ public class BasicLeg : Leg {
     private void Kick() {
         if (!statboard.mana.RemoveMana(manaCost)) return;
         animator.SetTrigger(Sweep);
+        statboard.eventManager.OnLegAbilityUsed?.Invoke(manaCost);
     }
 
     public override void ToggleHitbox() {

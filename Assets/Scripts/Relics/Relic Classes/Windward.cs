@@ -18,10 +18,10 @@ using UnityEngine;
         durationEffect = config.durationEffect;
         buffData = config.buffData;
 
-        stats.eventManager.OnDamageTaken += ApplyBuff;
+        stats.eventManager.OnLegAbilityUsed += ApplyBuff;
     }
 
-    private void ApplyBuff(DamageInfo obj) {
+    private void ApplyBuff(float manaCost) {
         speedBuff = stats.statusEffectManager.AddStacks(buffData, DamageInfo.Empty(stats)) as WindwardBuff;
         speedBuff?.ApplyStats(speedEffect.effectValue(stacks), durationEffect.effectValue(stacks));
     }
@@ -29,7 +29,7 @@ using UnityEngine;
     public override void Remove() {
         base.Remove();
 
-        stats.eventManager.OnDamageTaken -= ApplyBuff;
+        stats.eventManager.OnLegAbilityUsed -= ApplyBuff;
     }
 }
 
@@ -61,12 +61,6 @@ using UnityEngine;
         base.AddStack(damageInfo);
 
         ReplaceModifier();
-    }
-
-    public override void Update() {
-        base.Update();
-        
-        PlayerHUDEvents.DebugText($"Value {value} | Max Duration {maxDuration} | Current Duration {currentDuration}", 0.1f, "Windward");
     }
 
     private void ReplaceModifier() {
