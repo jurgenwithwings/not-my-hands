@@ -22,7 +22,7 @@ public class Mana : MonoBehaviour, IStatboard {
         if (HasEnoughMana(baseAmount)) {
             CurrentMana -= baseAmount;
             statboard.eventManager.OnManaChanged?.Invoke(CurrentMana, statboard.maxMana);
-            regenTimer = regenDelay;
+            regenTimer = baseAmount <= 0 ? regenTimer : regenDelay;
             result = true;
         }
         return result;

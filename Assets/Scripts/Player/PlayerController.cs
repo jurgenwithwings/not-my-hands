@@ -169,8 +169,8 @@ public class PlayerController : MonoBehaviour
         else {
             PlayerHUDEvents.OnSetInteractionText?.Invoke("", false);
         }
-        
-        //Debug Fire Ray
+        /*
+        //Debug Fire Ray 
         if (inputs.PrimaryFire.Triggered) {
             Physics.Raycast(cameraHolder.position, cameraHolder.forward * 1000f, out RaycastHit hitInfo, 1000, enemyMask);
 
@@ -222,7 +222,7 @@ public class PlayerController : MonoBehaviour
                     effect = GameConfig.Instance.judged;
                     break;
             }
-        }
+        }*/
     }
 
     public void LateUpdate() {

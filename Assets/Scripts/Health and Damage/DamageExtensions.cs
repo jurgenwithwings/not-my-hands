@@ -309,6 +309,10 @@ public enum DamageType {
         lightDamage.AddModifier(stats.light, ModifierType.Final);
     }
 
+    public void ApplyDamageMultipliersFromSource() {
+        SetDamageMultipliers(source.damageMultipliers);
+    }
+
     public void SetResistanceMultipliers(DamageTypeStats stats) {
         physicalDamage.AddModifier(1- stats.physical, ModifierType.Final);
         fireDamage.AddModifier(1 - stats.fire, ModifierType.Final);

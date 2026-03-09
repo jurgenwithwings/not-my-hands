@@ -53,6 +53,8 @@ public class Health : MonoBehaviour, IStatboard
             damageInfo.SetResistanceMultipliers(statboard.damageResistances);
         }
         
+        damageInfo.ApplyDamageMultipliersFromSource();
+        
         statboard.eventManager.OnPreApplyDamage?.Invoke(ref damageInfo, statboard);
         
         float totalDamageTaken = damageInfo.finalDamage;

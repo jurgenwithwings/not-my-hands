@@ -176,11 +176,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: fd03ca5cc42747a42abf81e0e6ece9c4, type: 2}
-  manaCost: 12
+  manaCost: 0
   moveSpeed: 2.5
   hitbox: {fileID: 3591689831438836241}
   damage:
-    physical: 120
+    physical: 65
     fire: 0
     ice: 0
     electric: 0
