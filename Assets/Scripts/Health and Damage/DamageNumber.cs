@@ -13,9 +13,11 @@ public class DamageNumber : MonoBehaviour, IPoolable<DamageNumber> {
     [SerializeField] private AnimationCurve sizeCurve;
     [SerializeField] private AnimationCurve damageScaleCurve;
     [SerializeField] private float duration = 1.7f;
-    [SerializeField] private float screeSize = 0.1f;
+    [SerializeField] private float screeSize = 0.12f;
     [SerializeField] private float floatAmount = 2.2f;
-    [SerializeField] private float positionVarianceAmount = 1f;
+    [SerializeField] private float positionVarianceAmount = 0.5f;
+
+    private float scaledScreenSize => screeSize * PlayerSettings.DamageNumberScale;
     
     private const float DamageScaleEnd = 1000000;
     
@@ -94,7 +96,7 @@ public class DamageNumber : MonoBehaviour, IPoolable<DamageNumber> {
     }
 
     private float GetScreenScaleFactor() {
-        return Vector3.Distance(lookTarget.transform.position, transform.position) * screeSize;
+        return Vector3.Distance(lookTarget.transform.position, transform.position) * scaledScreenSize;
     }
     
     public Vector3 RandomFloatDirection(float coneAngle)

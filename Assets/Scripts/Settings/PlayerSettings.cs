@@ -15,29 +15,30 @@ public enum OnScreenControllerUI {
 
 public enum SettingName {
     // Gameplay
-    AbbreviateDamageNumbers,
-    ControllerUI,
+    AbbreviateDamageNumbers = 0,
+    DamageNumberScale = 17,
+    ControllerUI = 1,
     
     // Graphics
-    Resolution,
-    DisplayMode,
-    FramerateLimit,
-    VSync,
-    QualityPreset,
+    Resolution = 2,
+    DisplayMode = 3,
+    FramerateLimit = 4,
+    VSync = 5,
+    QualityPreset = 6,
     
     // Input
-    MouseSensitivity,
-    ControllerSensitivity,
-    IsInvertedMouseY,
-    InnerDeadzone,
-    OuterDeadzone,
-    AimAssistStrength,
+    MouseSensitivity = 7,
+    ControllerSensitivity = 8,
+    IsInvertedMouseY = 9,
+    InnerDeadzone = 10,
+    OuterDeadzone = 11,
+    AimAssistStrength = 12,
     
     //Audio
-    MasterVolume,
-    MusicVolume,
-    AmbientVolume,
-    EffectsVolume,
+    MasterVolume = 13,
+    MusicVolume = 14,
+    AmbientVolume = 15,
+    EffectsVolume = 16,
     
 }
 
@@ -49,6 +50,7 @@ public static class PlayerSettings
     // ~~ SETTINGS ~~
     // Gameplay
     public static bool AbbreviateDamageNumbers = false;
+    public static float DamageNumberScale = 1f;
     public static OnScreenControllerUI ControllerUI = OnScreenControllerUI.Xbox;
     
     // Graphics

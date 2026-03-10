@@ -1,5 +1,6 @@
 {
   "AbbreviateDamageNumbers": false,
+  "DamageNumberScale": 2.0,
   "ControllerUI": 1,
   "Resolution": 0,
   "DisplayMode": 0,
