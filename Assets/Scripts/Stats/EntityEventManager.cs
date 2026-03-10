@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EntityEventManager : MonoBehaviour, IStatboard
@@ -85,4 +86,17 @@ public class EntityEventManager : MonoBehaviour, IStatboard
     /// <para><c>Victim</c> - The entity that was killed.</para>
     /// </summary>
     public Action<Statboard> OnKilledTarget;
+    
+    /// <summary>
+    /// Called when status effects are applied to this entity.
+    /// <para><c>DamageInfo</c> - The DamageInfo that caused the status effects.</para>
+    /// </summary>
+    public Action<DamageInfo> OnReceivedStatusEffect;
+    
+    /// <summary>
+    /// Called when status effects are caused by this entity.
+    /// <para><c>DamageInfo</c> - The DamageInfo that caused the status effects.</para>
+    /// <para><c>Victim</c> - The entity that received the status effects.</para>
+    /// </summary>
+    public Action<DamageInfo, Statboard> OnCausedStatusEffect;
 }

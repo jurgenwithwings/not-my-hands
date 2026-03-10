@@ -161,7 +161,7 @@ public enum DamageType {
 
     // Result Info
     public int resultingCritLevel;
-    public List<StatusEffectData> resultingAppliedEffects;
+    public List<StatusEffect> resultingAppliedEffects;
 
     public List<object> tags;
     

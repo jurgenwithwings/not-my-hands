@@ -17,7 +17,7 @@ public class LeonidasLeg : Leg {
     
     private bool fired;
     private Modifier modifier;
-    private string source;
+    private string source = "Leonidas";
 
     public override void Initialise(LimbData data, LimbManager manager, Statboard statboard) {
         base.Initialise(data, manager, statboard);
@@ -40,7 +40,7 @@ public class LeonidasLeg : Leg {
         base.Remove();
         statboard.criticalDamageMultiplier.RemoveModifier(modifier);
         
-        statboard.eventManager.OnPreDealDamage += OnPreDealDamage;
+        statboard.eventManager.OnPreDealDamage -= OnPreDealDamage;
     }
 
     private void Update() {

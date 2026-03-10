@@ -17,15 +17,22 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard {
 
     private void HandleStatusEffectsFromDamage(DamageInfo damageInfo) {
         // Handle Additional Status Effects
-        foreach (StatusEffectData effect in damageInfo.additionalStatusEffects) {
-            AddStacks(effect, damageInfo);
+        foreach (StatusEffectData effectData in damageInfo.additionalStatusEffects) {
+            StatusEffect effect = AddStacks(effectData, damageInfo);
+            damageInfo.resultingAppliedEffects.Add(effect);
         }
         
         // Handle Status Effects From Damage
-        if (damageInfo.ignoreResistances) return;
+        if (damageInfo.ignoreResistances) {
+            if (damageInfo.resultingAppliedEffects.Count <= 0) return;
+            
+            damageInfo.source.eventManager.OnCausedStatusEffect?.Invoke(damageInfo, statboard);
+            statboard.eventManager.OnReceivedStatusEffect?.Invoke(damageInfo);
+            
+            return;
+        }
         
         float statusChance = damageInfo.source.statusChanceMultiplier * damageInfo.sourceStatusChance;
-        //print($"Status Chance: {statusChance}"); //Pass
         int numOfEffects = Mathf.FloorToInt(statusChance);
         statusChance -= numOfEffects;
 
@@ -33,7 +40,6 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard {
         if (random < statusChance) {
             numOfEffects++;
         }
-        //print($"Number of Effects: {numOfEffects}"); //Pass
         
         float[] percentages = damageInfo.GetDamagePercentages();
         for (int i = 0; i < numOfEffects; i++) {
@@ -44,27 +50,37 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard {
             for (int j = 1; j < percentages.Length; j++) {
                 runningTotal += percentages[j];
                 if (random < runningTotal) {
+                    StatusEffect effect = null;
                     switch (j) {
                         case 1:
-                            AddStacks(GameConfig.Instance.burn, damageInfo);
+                            effect = AddStacks(GameConfig.Instance.burn, damageInfo);
                             break;
                         case 2:
-                            AddStacks(GameConfig.Instance.freeze, damageInfo);
+                            effect = AddStacks(GameConfig.Instance.freeze, damageInfo);
                             break;
                         case 3:
-                            AddStacks(GameConfig.Instance.charged, damageInfo);
+                            effect = AddStacks(GameConfig.Instance.charged, damageInfo);
                             break;
                         case 4:
-                            AddStacks(GameConfig.Instance.poison, damageInfo);
+                            effect = AddStacks(GameConfig.Instance.poison, damageInfo);
                             break;
                         case 5:
-                            AddStacks(GameConfig.Instance.judged, damageInfo);
+                            effect = AddStacks(GameConfig.Instance.judged, damageInfo);
                             break;
+                    }
+
+                    if (effect != null) {
+                        damageInfo.resultingAppliedEffects.Add(effect);
                     }
                     break;
                 }
             }
         }
+
+        if (damageInfo.resultingAppliedEffects.Count <= 0) return;
+        
+        damageInfo.source.eventManager.OnCausedStatusEffect?.Invoke(damageInfo, statboard);
+        statboard.eventManager.OnReceivedStatusEffect?.Invoke(damageInfo);
     }
 
     private void OnDestroy() {
