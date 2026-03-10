@@ -9,7 +9,7 @@ public class LeonidasLeg : Leg {
 
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform projectilePoint;
-    [SerializeField] private float projectileForce = 10;
+    [SerializeField] private float projectileSpeed = 10;
     [SerializeField] private Damage damage;
     [SerializeField] private float animHoldDuration = 0.2f;
     [Space]
@@ -52,17 +52,16 @@ public class LeonidasLeg : Leg {
     private void Kick() {
         if (!statboard.mana.RemoveMana(manaCost)) return;
         animator.SetTrigger(Front);
-        animator.SetFloat(AnimSpeed, 0.4f);
+        animator.SetFloat(AnimSpeed, 0.2f);
         statboard.eventManager.OnLegAbilityUsed?.Invoke(manaCost);
     }
     
     public override void ToggleHitbox() {
         if (!fired) {
-            animator.SetFloat(AnimSpeed, 4);
+            animator.SetFloat(AnimSpeed, 50);
         
-            Vector3 force = manager.fpsCam.transform.forward * projectileForce;
             Projectile proj = Instantiate(projectilePrefab, projectilePoint.position, manager.fpsCam.transform.rotation).GetComponent<Projectile>();
-            proj.Initialise(statboard, damage, force, new List<object>{ source });
+            proj.Initialise(statboard, damage, projectileSpeed, new List<object>{ source });
             
             fired = true;
         }
@@ -74,7 +73,7 @@ public class LeonidasLeg : Leg {
     private IEnumerator Recovery() {
         animator.SetFloat(AnimSpeed, 0);
         
-        yield return new WaitForSeconds(animHoldDuration * 3);
+        yield return new WaitForSeconds(animHoldDuration);
         
         animator.SetFloat(AnimSpeed, 1);
         

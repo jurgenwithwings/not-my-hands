@@ -155,9 +155,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 271a4dabfdcd49e47915e14a24b4f7e0, type: 2}
   manaCost: 30
-  projectilePrefab: {fileID: 8198838231160519049, guid: 61ba6968bcacf01449c60e8a597029a4, type: 3}
+  projectilePrefab: {fileID: 8198838231160519049, guid: d4b3b5ad32f11c24f86e3fbb330537aa, type: 3}
   projectilePoint: {fileID: 3101820993788817990}
-  projectileForce: 10
+  projectileSpeed: 120
   damage:
     physical: 230
     fire: 0
@@ -167,6 +167,7 @@ MonoBehaviour:
     light: 0
     criticalChance: 0.5
     statusChance: 0.1
+  animHoldDuration: 0.9
   critDamageIncrease: 1.25
 --- !u!95 &5201854218443595209
 Animator:

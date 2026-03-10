@@ -10,6 +10,9 @@ public class Projectile : MonoBehaviour {
     [SerializeField] protected bool destroyOnContact = true;
     [SerializeField] protected float hideOnDestroyDelay;
     [SerializeField] protected VisualEffect[] visualEffects;
+    [SerializeField] protected float speed;
+
+    private float calculatedSpeed => speed * source.projectileSpeedMultiplier.Value;
     
     protected Statboard source;
     protected Damage damage;
@@ -19,20 +22,20 @@ public class Projectile : MonoBehaviour {
     protected float elapsedTime;
     protected float T => elapsedTime / lifetime;
     
-    public virtual void Initialise(Statboard source, Damage damage, Vector3 force, List<object> tags = null) {
+    public virtual void Initialise(Statboard source, Damage damage, float speed, List<object> tags = null) {
         this.source = source;
         this.damage = damage;
+        this.speed = speed;
         if (tags != null) {
             this.tags.AddRange(tags);
         }
-        
-        rigidbody.AddForce(force, ForceMode.Impulse);
         
         Invoke(nameof(Remove), lifetime);
     }
 
     protected virtual void Update() {
         elapsedTime += Time.deltaTime;
+        transform.position += transform.forward * calculatedSpeed * Time.deltaTime;
     }
     
     private void OnTriggerEnter(Collider other) {

@@ -3,7 +3,7 @@ using UnityEngine;
 public class BasicArm : Arm {
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform projectilePoint;
-    [SerializeField] private float projectileForce = 5;
+    [SerializeField] private float projectileSpeed = 5;
     [SerializeField] private Damage damage;
     [SerializeField] private float fireRate = 0.17f;
     
@@ -26,6 +26,6 @@ public class BasicArm : Arm {
         fireCooldown = fireRate;
         animator.SetBool("Attack", true);
         Instantiate(projectilePrefab, projectilePoint.position, transform.rotation)
-            .GetComponent<Projectile>().Initialise(statboard, damage, transform.forward * projectileForce);
+            .GetComponent<Projectile>().Initialise(statboard, damage, projectileSpeed);
     }
 }

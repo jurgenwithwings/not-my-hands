@@ -1521,8 +1521,8 @@ MonoBehaviour:
   manaCost: 1.5
   projectilePrefab: {fileID: 8198838231160519049, guid: 61ba6968bcacf01449c60e8a597029a4, type: 3}
   projectilePoint: {fileID: 5075914432501916458}
-  projectileForce: 7
-  projectileSpread: 0.25
+  projectileSpeed: 25
+  projectileSpread: 4
   damage:
     physical: 0
     fire: 22

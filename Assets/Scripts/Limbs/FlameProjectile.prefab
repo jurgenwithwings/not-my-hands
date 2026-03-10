@@ -51,10 +51,10 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 500
+      - m_Value: 256
         m_Name: SpawnRate
         m_Overridden: 1
-      - m_Value: 0
+      - m_Value: 0.05
         m_Name: SpawnRadius
         m_Overridden: 1
       - m_Value: 0.2
@@ -313,7 +313,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 1
@@ -329,10 +329,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bd032b0426942db89bee3776af48784, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifetime: 0.32
+  lifetime: 0.42
   rigidbody: {fileID: 3181199809619305873}
   collider: {fileID: 2744768711741614668}
   destroyOnContact: 0
   hideOnDestroyDelay: 1.5
   visualEffects:
   - {fileID: 1261393153891337957}
+  speed: 0
