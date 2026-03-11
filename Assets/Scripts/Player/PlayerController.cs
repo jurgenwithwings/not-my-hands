@@ -59,7 +59,6 @@ public class PlayerController : MonoBehaviour
 
     private void Start() {
         statboard.eventManager.OnReceivedYourDamage += SpawnDamageNumber;
-        statboard.eventManager.OnDamageTaken += PlayerTakenDamage;
         statboard.eventManager.OnHealthChanged += PlayerHealthChanged;
         statboard.eventManager.OnManaChanged += PlayerManaChanged;
         statboard.eventManager.OnOrganChanged += PlayerOrganChanged;
@@ -112,15 +111,9 @@ public class PlayerController : MonoBehaviour
     private void PlayerOrganChanged(OrganData newOrgan, OrganData oldOrgan) { 
         PlayerHUDEvents.OnUpdateOrgan?.Invoke(newOrgan);
     }
-
-    private void PlayerTakenDamage(DamageInfo obj) {
-        PlayerHUDEvents.OnHealthChanged?.Invoke(statboard.health.CurrentHealth, statboard.maxHealth);
-    }
     
-
     private void OnDestroy() {
         statboard.eventManager.OnReceivedYourDamage -= SpawnDamageNumber;
-        statboard.eventManager.OnDamageTaken -= PlayerTakenDamage;
         statboard.eventManager.OnHealthChanged -= PlayerHealthChanged;
         statboard.eventManager.OnOrganChanged -= PlayerOrganChanged;
         statboard.eventManager.OnRelicAdded -= PlayerRelicAdded;
@@ -129,7 +122,7 @@ public class PlayerController : MonoBehaviour
 
     public void SpawnDamageNumber(DamageInfo damageInfo, Statboard victim) {
         if (victim == statboard) return;
-        if (ObjectPool.TryPull(damageInfo.hitPoint, transform.rotation, out DamageNumber damageNumber)) {
+        if (ObjectPool.TryPull(out DamageNumber damageNumber, damageInfo.hitPoint, transform.rotation)) {
             damageNumber.SetDamage(damageInfo);
             //PlayerHUDEvents.DebugText($"Damage Dealt: {damageInfo.finalDamage}");
         }

@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: 88ac653739626a94b9af843868c85ab8
   m_SerializeEntries:
+  - m_GUID: 913cf6a2134938944a513da3ff934df6
+    m_Address: EffectBarIcon
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b1b9e26b262fff24f971bc83035d87a4
     m_Address: ImpactProxy
     m_ReadOnly: 0

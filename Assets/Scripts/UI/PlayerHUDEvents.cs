@@ -37,6 +37,12 @@ public static class PlayerHUDEvents {
     /// </summary>
     public static Action<float, float> OnManaChanged;
 
+    /// <summary>
+    /// Called when the player's status effects have changed.
+    /// <para><c>Status Effect Manager</c> - The players status effects manager.</para>
+    /// </summary>
+    public static Action<EntityStatusEffectManager> OnStatusEffectsChanged;
+
     public static Action<RelicData> OnAddedRelic;
     public static Action<LimbData, LimbSide> OnUpdateLimb;
     public static Action<OrganData> OnUpdateOrgan;

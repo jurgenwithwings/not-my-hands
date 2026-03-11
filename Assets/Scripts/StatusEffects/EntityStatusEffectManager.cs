@@ -143,12 +143,14 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard {
         if (typeof(BuffEffect).IsAssignableFrom(type.Type())) {
             if (GetBuffFromList(type, out BuffEffect effect)) {
                 effect.RemoveEffect();
+                statboard.eventManager.OnRemovedStatusEffect?.Invoke(effect);
                 BuffEffects.Remove(effect);
             }
         }
         else {
             if (GetEffectFromList(type, out StatusEffect effect)) {
                 effect.RemoveEffect();
+                statboard.eventManager.OnRemovedStatusEffect?.Invoke(effect);
                 StatusEffects.Remove(effect);
             }
         }

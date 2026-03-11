@@ -5,69 +5,78 @@ using Object = UnityEngine.Object;
 
 [Serializable]
 public abstract class StatusEffect {
-    public string key { get; private set; } = "";
-    protected EntityStatusEffectManager attachedManager;
-    protected Statboard stats => attachedManager.statboard;
+    protected EntityStatusEffectManager AttachedManager;
+    protected Statboard Stats => AttachedManager.statboard;
     public StatusEffectData Data { get; protected set; }
+    public string Key { get; private set; } = "";
+
+
+    public event Action<int> OnAddStack;
+    public event Action<int> OnRemoveStack;
+    public event Action OnRemoveEffect;
     
-    protected float currentDuration;
-    protected int stacks = 1;
     
-    protected DamageInfo highestDamageReceived;
+    public int Stacks { get; protected set; } = 1;
+    public float CurrentDuration { get; protected set; }
+    public float NormalizedDuration => CurrentDuration / Data.maxDuration;
+
+    protected DamageInfo HighestDamageReceived;
     
     public virtual void Initialise(StatusEffectData data, EntityStatusEffectManager manager, DamageInfo damageInfo) {
         Data = data;
-        attachedManager = manager;
-        highestDamageReceived = damageInfo;
-        currentDuration = Data.maxDuration;
+        AttachedManager = manager;
+        HighestDamageReceived = damageInfo;
+        CurrentDuration = Data.maxDuration;
     }
     
     public virtual void AddStack(DamageInfo damageInfo) {
-        stacks++;
-        if (stacks > Data.maxStacks) {
-            stacks = Data.maxStacks;
+        Stacks++;
+        if (Stacks > Data.maxStacks) {
+            Stacks = Data.maxStacks;
         }
         
-        if (damageInfo.finalDamage > highestDamageReceived.finalDamage) {
-            highestDamageReceived = damageInfo;
+        if (damageInfo.finalDamage > HighestDamageReceived.finalDamage) {
+            HighestDamageReceived = damageInfo;
         }
 
         if (Data.refillDurationWhenGainingStack) {
-            currentDuration = Data.maxDuration;
+            CurrentDuration = Data.maxDuration;
         }
+        OnAddStack?.Invoke(Stacks);
     }
     
     public virtual void Update() {
-        if (currentDuration <= 0) {
+        if (CurrentDuration <= 0) {
             RemoveStacks(Data.StacksLostOnDurationEnd);
-            currentDuration = Data.maxDuration;
+            CurrentDuration = Data.maxDuration;
         }
-        currentDuration -= Time.deltaTime;
+        CurrentDuration -= Time.deltaTime;
     }
     
     public virtual void RemoveStacks(int stacks) {
-        this.stacks -= stacks;
-        if (this.stacks <= 0) {
-            this.stacks = 0;
-            attachedManager.RemoveEffect(Data);
+        Stacks -= stacks;
+        if (Stacks <= 0) {
+            Stacks = 0;
+            AttachedManager.RemoveEffect(Data);
         }
+        OnRemoveStack?.Invoke(Stacks);
     }
     
     public virtual void RemoveEffect() {
-        
+        OnRemoveEffect?.Invoke();
     }
 }
 
 public abstract class BuffEffect : StatusEffect {
-    protected float durationMult => highestDamageReceived.source.buffDurationMultiplier;
-    protected float potencyMult => highestDamageReceived.source.buffPotencyMultiplier;
+    protected float durationMult => HighestDamageReceived.source.buffDurationMultiplier;
+    protected float potencyMult => HighestDamageReceived.source.buffPotencyMultiplier;
 
     public override void Update() {
-        if (currentDuration <= 0) {
+        if (CurrentDuration <= 0) {
             RemoveStacks(Data.StacksLostOnDurationEnd);
-            currentDuration = Data.maxDuration;
+            CurrentDuration = Data.maxDuration;
         }
-        currentDuration -= Time.deltaTime / durationMult;
+        CurrentDuration -= Time.deltaTime / durationMult;
     }
 }
 
@@ -118,15 +127,15 @@ public abstract class BuffEffect : StatusEffect {
 
     public override void AddStack(DamageInfo damageInfo) {
         base.AddStack(damageInfo);
-        if (stacks >= Data.maxStacks) {
+        if (Stacks >= Data.maxStacks) {
             Damage damage = new() {
-                physical = stats.maxHealth * healthPercentDamage
+                physical = Stats.maxHealth * healthPercentDamage
             };
-            DamageInfo info = new (damage, highestDamageReceived.source, stats.transform.position) {
+            DamageInfo info = new (damage, HighestDamageReceived.source, Stats.transform.position) {
                 ignoreResistances = true
             };
-            stats.health.TakeDamage(info);
-            attachedManager.RemoveEffect(Data);
+            Stats.health.TakeDamage(info);
+            AttachedManager.RemoveEffect(Data);
         }
     }
 
@@ -134,10 +143,10 @@ public abstract class BuffEffect : StatusEffect {
         base.Update();
         dot.Update();
         if (dot.CanTick()) {
-            DamageInfo info = new(dot.GetTickDamage(stacks, highestDamageReceived.finalDamage), highestDamageReceived.source, stats.transform.position) {
+            DamageInfo info = new(dot.GetTickDamage(Stacks, HighestDamageReceived.finalDamage), HighestDamageReceived.source, Stats.transform.position) {
                 ignoreResistances = true,
             };
-            stats?.health?.TakeDamage(info);
+            Stats?.health?.TakeDamage(info);
             dot.ResetTimer();
         }
     }
@@ -151,7 +160,6 @@ public abstract class BuffEffect : StatusEffect {
 
     public override void Initialise(StatusEffectData data, EntityStatusEffectManager manager, DamageInfo damageInfo) {
         base.Initialise(data, manager, damageInfo);
-        Debug.Log("Initialised Burn");
         
         Burn config = data.statusEffectClass as Burn;
         dot = config.dot;
@@ -161,15 +169,13 @@ public abstract class BuffEffect : StatusEffect {
     public override void Update() {
         dot.Update();
         if (dot.CanTick()) {
-            Debug.Log("Tick Burn");
             bonusMultiplier = 1 + (percentDamageIncreasePerSecond * totalDuration);
             
-            DamageInfo info = new(dot.GetTickDamage(stacks, bonusMultiplier * highestDamageReceived.finalDamage), highestDamageReceived.source, stats.transform.position) {
+            DamageInfo info = new(dot.GetTickDamage(Stacks, bonusMultiplier * HighestDamageReceived.finalDamage), HighestDamageReceived.source, Stats.transform.position) {
                 ignoreResistances = true,
             };
-            Debug.Log($"Tick Damage: {info.finalDamage}");
 
-            stats.health.TakeDamage(info);
+            Stats.health.TakeDamage(info);
             
             totalDuration += dot.tickInterval;
             
@@ -191,7 +197,7 @@ public abstract class BuffEffect : StatusEffect {
         Freeze config = data.statusEffectClass as Freeze;
         effect = config.effect;
         
-        mod = new Modifier(effect.effectValue(stacks), effect.modifierType, source);
+        mod = new Modifier(effect.effectValue(Stacks), effect.modifierType, source);
         ReplaceModifier();
     }
 
@@ -202,20 +208,21 @@ public abstract class BuffEffect : StatusEffect {
     }
 
     private void ReplaceModifier() {
-        stats.moveSpeed.RemoveModifier(mod);
-        mod = new Modifier(1 - effect.effectValue(stacks), effect.modifierType, source);
-        stats.moveSpeed.AddModifier(mod);
+        Stats.moveSpeed.RemoveModifier(mod);
+        mod = new Modifier(1 - effect.effectValue(Stacks), effect.modifierType, source);
+        Stats.moveSpeed.AddModifier(mod);
     }
 
     public override void RemoveStacks(int stacks) {
         base.RemoveStacks(stacks);
-        if (this.stacks > 0) {
+        if (this.Stacks > 0) {
             ReplaceModifier();
         }
     }
 
     public override void RemoveEffect() {
-        stats?.moveSpeed.RemoveModifier(mod);
+        base.RemoveEffect();
+        Stats?.moveSpeed.RemoveModifier(mod);
     }
 }
 
@@ -232,7 +239,7 @@ public abstract class BuffEffect : StatusEffect {
         dot = config.dot;
         effect = config.effect;
 
-        mod = new Modifier(effect.effectValue(stacks), effect.modifierType, source);
+        mod = new Modifier(effect.effectValue(Stacks), effect.modifierType, source);
         ReplaceModifier();
     }
 
@@ -242,31 +249,31 @@ public abstract class BuffEffect : StatusEffect {
     }
 
     private void ReplaceModifier() {
-        stats.damageMultiplier.RemoveModifier(mod);
-        mod = new Modifier(1 - effect.effectValue(stacks), effect.modifierType, source);
-        stats.damageMultiplier.AddModifier(mod);
+        Stats.damageMultiplier.RemoveModifier(mod);
+        mod = new Modifier(1 - effect.effectValue(Stacks), effect.modifierType, source);
+        Stats.damageMultiplier.AddModifier(mod);
     }
 
     public override void RemoveStacks(int stacks) {
         base.RemoveStacks(stacks);
-        if (this.stacks > 0) {
+        if (this.Stacks > 0) {
             ReplaceModifier();
         }
     }
 
     public override void RemoveEffect() {
         base.RemoveEffect();
-        stats?.moveSpeed.RemoveModifier(mod);
+        Stats?.moveSpeed.RemoveModifier(mod);
     }
 
     public override void Update() {
         base.Update();
         dot.Update();
         if (dot.CanTick()) {
-            DamageInfo info = new(dot.GetTickDamage(stacks, highestDamageReceived.finalDamage), highestDamageReceived.source, stats.transform.position) {
+            DamageInfo info = new(dot.GetTickDamage(Stacks, HighestDamageReceived.finalDamage), HighestDamageReceived.source, Stats.transform.position) {
                 ignoreResistances = true,
             };
-            stats?.health?.TakeDamage(info);
+            Stats?.health?.TakeDamage(info);
             dot.ResetTimer();
         }
     }
@@ -293,16 +300,16 @@ public abstract class BuffEffect : StatusEffect {
     public override void Update() {
         base.Update();
         arcTimer += Time.deltaTime;
-        if (arcTimer >= 1 && highestDamageReceived.finalDamage > damageArcThreshold) {
-            Collider[] collisions = Physics.OverlapSphere(stats.transform.position, arcRadius);
+        if (arcTimer >= 1 && HighestDamageReceived.finalDamage > damageArcThreshold) {
+            Collider[] collisions = Physics.OverlapSphere(Stats.transform.position, arcRadius);
             if (collisions.Length > 0) {
                 foreach (Collider collider in collisions) {
-                    if (collider.TryGetComponent(out Statboard statboard) && statboard != stats) {
+                    if (collider.TryGetComponent(out Statboard statboard) && statboard != Stats) {
                         if (!statboard.statusEffectManager.GetEffectFromList(Data)) {
                             Damage damage = new() {
-                                electric = highestDamageReceived.finalDamage
+                                electric = HighestDamageReceived.finalDamage
                             };
-                            DamageInfo info = new(damage, highestDamageReceived.source, statboard.transform.position);
+                            DamageInfo info = new(damage, HighestDamageReceived.source, statboard.transform.position);
                             
                             info.additionalStatusEffects.Add(Data);
                             info.AddModifier(damageTransferPercent, ModifierType.Final);
@@ -315,10 +322,10 @@ public abstract class BuffEffect : StatusEffect {
         }
         dot.Update();
         if (dot.CanTick()) {
-            DamageInfo info = new(dot.GetTickDamage(stacks, highestDamageReceived.finalDamage), highestDamageReceived.source, stats.transform.position) {
+            DamageInfo info = new(dot.GetTickDamage(Stacks, HighestDamageReceived.finalDamage), HighestDamageReceived.source, Stats.transform.position) {
                 ignoreResistances = true,
             };
-            stats?.health?.TakeDamage(info);
+            Stats?.health?.TakeDamage(info);
             dot.ResetTimer();
         }
     }
@@ -344,12 +351,12 @@ public abstract class BuffEffect : StatusEffect {
         perStackPercentDamage = config.perStackPercentDamage;
         
         OnTakeDamage(damageInfo);
-        stats.eventManager.OnDamageTaken += OnTakeDamage;
+        Stats.eventManager.OnDamageTaken += OnTakeDamage;
 
-        spriteRenderer = GameObject.Instantiate(GameConfig.Instance.emptyGameObject, stats.healthBar.transform).AddComponent<SpriteRenderer>();
+        spriteRenderer = GameObject.Instantiate(GameConfig.Instance.emptyGameObject, Stats.gameObject.transform).AddComponent<SpriteRenderer>();
         spriteRenderer.sprite = eyeSprite;
         spriteRenderer.color = eyeColor;
-        spriteRenderer.transform.position = stats.healthBar.transform.position + (Vector3.up * offset);
+        spriteRenderer.transform.position = Stats.healthBar.transform.position + (Vector3.up * offset);
         Debug.Log(eyeSprite.name);
     }
     
@@ -358,30 +365,31 @@ public abstract class BuffEffect : StatusEffect {
     }
     
     public override void Update() {
-        if (currentDuration <= 0 || damageAbsorbed * (basePercentDamage.baseAmount + (perStackPercentDamage.baseAmount * (stacks - 1))) >= stats?.health?.CurrentHealth) {
+        if (CurrentDuration <= 0 || damageAbsorbed * (basePercentDamage.baseAmount + (perStackPercentDamage.baseAmount * (Stacks - 1))) >= Stats?.health?.CurrentHealth) {
             Detonate();
         }
-        if (spriteRenderer == null || stats.healthBar == null) return;
-        spriteRenderer.transform.position = stats.healthBar.transform.position + (Vector3.up * offset);
-        spriteRenderer.transform.LookAt(highestDamageReceived.source.transform.position + Vector3.up * 0.7f);
+        if (spriteRenderer == null || Stats.healthBar == null) return;
+        spriteRenderer.transform.position = Stats.healthBar.transform.position + (Vector3.up * offset);
+        spriteRenderer.transform.LookAt(HighestDamageReceived.source.transform.position + Vector3.up * 0.7f);
         base.Update();
     }
 
     private void Detonate() {
-        float damageAmount = damageAbsorbed * (basePercentDamage.baseAmount + (perStackPercentDamage.baseAmount * (stacks - 1)));
+        float damageAmount = damageAbsorbed * (basePercentDamage.baseAmount + (perStackPercentDamage.baseAmount * (Stacks - 1)));
         Damage damage = new() {
             light = damageAmount
         };
-        DamageInfo damageInfo = new(damage, highestDamageReceived.source, stats.transform.position) {
+        DamageInfo damageInfo = new(damage, HighestDamageReceived.source, Stats.transform.position) {
             ignoreResistances = true,
         };
-        stats?.health?.TakeDamage(damageInfo);
+        Stats?.health?.TakeDamage(damageInfo);
     }
     
     public override void RemoveEffect() {
-        stats.eventManager.OnDamageTaken -= OnTakeDamage;
+        base.RemoveEffect();
+        Stats.eventManager.OnDamageTaken -= OnTakeDamage;
         
-        if (stats.healthBar != null || spriteRenderer != null) {
+        if (Stats.healthBar != null || spriteRenderer != null) {
             Object.Destroy(spriteRenderer.gameObject);
         }
     }
@@ -400,7 +408,7 @@ public class SpeedBoost : BuffEffect {
         
         mod = new Modifier(baseSpeedBoost, ModifierType.Multiply, source);
         
-        stats.moveSpeed.AddModifier(mod);
+        Stats.moveSpeed.AddModifier(mod);
     }
 
     public override void AddStack(DamageInfo damageInfo) {
@@ -410,19 +418,20 @@ public class SpeedBoost : BuffEffect {
     }
 
     private void ReplaceModifier() {
-        mod = new Modifier(baseSpeedBoost + (perStackSpeedBoost * stacks), mod.Type, mod.Source);
-        stats.moveSpeed.RemoveAllModifiersFromSource(source);
-        stats.moveSpeed.AddModifier(mod);
+        mod = new Modifier(baseSpeedBoost + (perStackSpeedBoost * Stacks), mod.Type, mod.Source);
+        Stats.moveSpeed.RemoveAllModifiersFromSource(source);
+        Stats.moveSpeed.AddModifier(mod);
     }
 
     public override void RemoveStacks(int stacks) {
         base.RemoveStacks(stacks);
-        if (this.stacks > 0) {
+        if (this.Stacks > 0) {
             ReplaceModifier();
         }
     }
 
     public override void RemoveEffect() {
-        stats.moveSpeed.RemoveAllModifiersFromSource(source);
+        base.RemoveEffect();
+        Stats.moveSpeed.RemoveAllModifiersFromSource(source);
     }
 }

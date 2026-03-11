@@ -126,7 +126,7 @@ public class DaggerRelicProjectile : MonoBehaviour {
     }
 
     private void SetImpactProxy(GameObject impactedObject) {
-        if (ObjectPool.TryPull(transform.position, transform.rotation, out impactProxy)) {
+        if (ObjectPool.TryPull(out impactProxy, transform.position, transform.rotation)) {
             impactProxy.Setup(impactedObject.transform);
             impactProxy.OnDestroyed += ReturnFromProxy;
 

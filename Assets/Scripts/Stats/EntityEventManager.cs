@@ -99,4 +99,10 @@ public class EntityEventManager : MonoBehaviour, IStatboard
     /// <para><c>Victim</c> - The entity that received the status effects.</para>
     /// </summary>
     public Action<DamageInfo, Statboard> OnCausedStatusEffect;
+    
+    /// <summary>
+    /// Called when a status effect is removed from this entity.
+    /// <para><c>Status Effect</c> - The status effect that was removed.</para>
+    /// </summary>
+    public Action<StatusEffect> OnRemovedStatusEffect;
 }

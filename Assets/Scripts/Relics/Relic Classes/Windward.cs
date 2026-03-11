@@ -54,7 +54,7 @@ using UnityEngine;
         maxDuration = duration;
         
         ReplaceModifier();
-        currentDuration = maxDuration;
+        CurrentDuration = maxDuration;
     }
 
     public override void AddStack(DamageInfo damageInfo) {
@@ -64,18 +64,18 @@ using UnityEngine;
     }
 
     private void ReplaceModifier() {
-        Stat stat = stats.GetStatByEnum(targetStat);
+        Stat stat = Stats.GetStatByEnum(targetStat);
 
         stat.RemoveModifier(mod);
         mod = new Modifier(value, buffModifierType, "Windward");
         stat.AddModifier(mod);
         
-        currentDuration = maxDuration;
+        CurrentDuration = maxDuration;
     }
 
     public override void RemoveStacks(int stacks) {
         base.RemoveStacks(stacks);
-        if (this.stacks > 0) {
+        if (this.Stacks > 0) {
             ReplaceModifier();
         }
     }
@@ -83,6 +83,6 @@ using UnityEngine;
     public override void RemoveEffect() {
         base.RemoveEffect();
         
-        stats.moveSpeed.RemoveModifier(mod);
+        Stats.moveSpeed.RemoveModifier(mod);
     }
 }

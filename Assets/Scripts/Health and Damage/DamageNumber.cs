@@ -53,12 +53,8 @@ public class DamageNumber : MonoBehaviour, IPoolable<DamageNumber> {
             DamageExtensions.AbbreviateNumber(finalDamage) : 
             finalDamage.ToString(DamageExtensions.damageNumberFormat);
 
-        //text.color = Color.white;
-        Debug.Log(info.resultingCritLevel);
         for (int i = 0; i < info.resultingCritLevel; i++) {
             result += "!";
-            Debug.Log("Added !");
-            //text.color = Color.red;
         }
         
         text.text = result;

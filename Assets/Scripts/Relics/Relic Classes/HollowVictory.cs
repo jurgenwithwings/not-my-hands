@@ -72,25 +72,25 @@ using UnityEngine;
     }
 
     private void ReplaceModifier() {
-        Stat stat = stats.GetStatByEnum(damageEffect.statType);
+        Stat stat = Stats.GetStatByEnum(damageEffect.statType);
 
         stat.RemoveModifier(damageEffect.currentModifier);
-        damageEffect.currentModifier = new Modifier(damageEffect.effectValue(stacks), damageEffect.modifierType, "HollowVictory");
+        damageEffect.currentModifier = new Modifier(damageEffect.effectValue(Stacks), damageEffect.modifierType, "HollowVictory");
         stat.AddModifier(damageEffect.currentModifier);
     }
 
     public override void AddStack(DamageInfo damageInfo) {
-        stacks += stacks;
-        if (stacks > maxStacks) {
-            stacks = maxStacks;
+        Stacks += Stacks;
+        if (Stacks > maxStacks) {
+            Stacks = maxStacks;
         }
         
-        if (damageInfo.finalDamage > highestDamageReceived.finalDamage) {
-            highestDamageReceived = damageInfo;
+        if (damageInfo.finalDamage > HighestDamageReceived.finalDamage) {
+            HighestDamageReceived = damageInfo;
         }
 
         if (Data.refillDurationWhenGainingStack) {
-            currentDuration = Data.maxDuration;
+            CurrentDuration = Data.maxDuration;
         }
         
         ReplaceModifier();
@@ -107,6 +107,6 @@ using UnityEngine;
     public override void RemoveEffect() {
         base.RemoveEffect();
         
-        stats.GetStatByEnum(damageEffect.statType).RemoveModifier(damageEffect.currentModifier);
+        Stats.GetStatByEnum(damageEffect.statType).RemoveModifier(damageEffect.currentModifier);
     }
 }

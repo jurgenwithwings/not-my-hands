@@ -19,8 +19,7 @@ namespace ObjectPooling {
         
         public static int Count => pool.Count;
 
-        static ObjectPool()
-        {
+        static ObjectPool() {
             //Get the IPoolable to set the key - Holy ass code
             parent = new GameObject($"{typeof(T).Name} Pool").transform;
             T t = parent.gameObject.AddComponent<T>();
@@ -105,13 +104,13 @@ namespace ObjectPooling {
         /// <summary>
         /// Safe way to pull an Object from a ObjectPool. Returns false if the pool is not initialised.
         /// </summary>
-        /// <param name="pos">Position to place the object.</param>
-        /// <param name="rot">Rotation to orient the object.</param>
         /// <param name="result">The object that was pulled from the pool.</param>
+        /// <param name="position">Position to place the object.</param>
+        /// <param name="rotation">Rotation to orient the object.</param>
         /// <returns></returns>
-        public static bool TryPull<T>(Vector3 pos, Quaternion rot, out T result) where T : MonoBehaviour, IPoolable<T> {
+        public static bool TryPull<T>(out T result, Vector3? position = null, Quaternion? rotation = null) where T : MonoBehaviour, IPoolable<T> {
             if (ObjectPool<T>.isInitialised) {
-                result = ObjectPool<T>.Pull(pos, rot);
+                result = ObjectPool<T>.Pull(position, rotation);
                 return true;
             }
             result = null;
