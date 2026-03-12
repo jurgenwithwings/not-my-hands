@@ -25,7 +25,7 @@ public class LightBeamArm : Arm {
     public override void Initialise(LimbData data, LimbManager manager, Statboard statboard) {
         base.Initialise(data, manager, statboard);
 
-        modifier = new Modifier(lightDamageIncrease, ModifierType.Final, "LightBeamArm");
+        modifier = new Modifier(lightDamageIncrease, ModifierType.FinalMultiply, "LightBeamArm");
         this.statboard.damageMultipliers.light.AddModifier(modifier);
     }
 

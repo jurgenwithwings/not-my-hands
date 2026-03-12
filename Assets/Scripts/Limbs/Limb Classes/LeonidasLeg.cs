@@ -13,7 +13,7 @@ public class LeonidasLeg : Leg {
     [SerializeField] private Damage damage;
     [SerializeField] private float animHoldDuration = 0.2f;
     [Space]
-    [SerializeField] private float critDamageIncrease = 1.25f;
+    [SerializeField] private float critDamageIncrease = 0.25f;
     
     private bool fired;
     private Modifier modifier;
@@ -22,7 +22,7 @@ public class LeonidasLeg : Leg {
     public override void Initialise(LimbData data, LimbManager manager, Statboard statboard) {
         base.Initialise(data, manager, statboard);
         
-        modifier = new Modifier(critDamageIncrease, ModifierType.Final, source);
+        modifier = new Modifier(critDamageIncrease, ModifierType.FinalAdd, source);
         this.statboard.criticalDamageMultiplier.AddModifier(modifier);
         
         this.statboard.eventManager.OnPreDealDamage += OnPreDealDamage;

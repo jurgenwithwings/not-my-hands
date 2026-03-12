@@ -13,9 +13,9 @@ namespace Stats {
         BaseAdd = 100,
 
         /// <summary>
-        /// Most common/general modifier. This is Pools up one pig percentage that is multiplied to the base.
+        /// Most common/general modifier. This pools up one big percentage that is multiplied to the base.
         /// </summary>
-        [Tooltip("Most common/general modifier. This is Pools up one pig percentage that is multiplied to the base.")]
+        [Tooltip("Most common/general modifier. This pools up one big percentage that is multiplied to the base.")]
         Additive = 200,
         
         /// <summary>
@@ -25,10 +25,16 @@ namespace Stats {
         Multiply = 300,
         
         /// <summary>
+        /// This pools up one big percentage that is multiplied to the modified value.
+        /// </summary>
+        [Tooltip("This pools up one big percentage that is multiplied to the modified value.")]
+        FinalAdd = 400,
+        
+        /// <summary>
         /// This is a compounding multiplier applied to the result of all other modifiers. This is extremely potent and should be used sparingly.
         /// </summary>
         [Tooltip("This is a compounding multiplier applied to the result of all other modifiers. This is extremely potent and should be used sparingly.")]
-        Final = 400,
+        FinalMultiply = 500,
     }
 
     public class Modifier {
@@ -235,6 +241,7 @@ namespace Stats {
             float baseAdd = 0;
             float additiveTotal = 0;
             float multiplicativeMult = 1;
+            float finalAdd = 0;
             float finalMult = 1;
 
             for (int i = 0; i < modifiers.Count; i++) {
@@ -253,7 +260,11 @@ namespace Stats {
                         multiplicativeMult *= (1 + mod.Value);
                         break;
                     
-                    case ModifierType.Final:
+                    case ModifierType.FinalAdd:
+                        finalAdd += mod.Value;
+                        break;
+                    
+                    case ModifierType.FinalMultiply:
                         finalMult *= mod.Value;
                         break;
                     
@@ -263,7 +274,8 @@ namespace Stats {
                 }
             }
 
-            return (float)Math.Round(BaseValue.GetModifiedValue(baseAdd, additiveTotal, multiplicativeMult, finalMult), 4);
+            return (float)Math.Round(BaseValue.GetModifiedValue(
+                baseAdd, additiveTotal, multiplicativeMult, finalAdd, finalMult), 4);
         }
         
         protected int CompareModifierOrder(Modifier a, Modifier b) {
@@ -277,7 +289,7 @@ namespace Stats {
 
     public static class StatExtensions {
         public static float GetModifiedValue(this float baseValue, float flat, float additive, float multiplicative,
-            float final, bool debug = false) {
+            float finalAdd, float finalMult, bool debug = false) {
             float newBase = baseValue + flat;
             if (debug) {
                 PlayerHUDEvents.DebugText($"Base: {baseValue} + Flat: {flat} = {newBase}");
@@ -287,15 +299,19 @@ namespace Stats {
             if (debug) {
                 PlayerHUDEvents.DebugText($"NewBase: {newBase} x (1 + Additive: {additive}) = {scaled}");
             }
+            
             scaled += ((newBase * multiplicative) - newBase);
             if (debug) {
                 PlayerHUDEvents.DebugText($"(NewBase: {newBase} x Multiplicative: {multiplicative}) - NewBase: {newBase} = {scaled}");
             }
 
-            float result = scaled * final;
+            scaled *= 1 + finalAdd;
+
+            float result = scaled * finalMult;
             if (debug) {
-                PlayerHUDEvents.DebugText($"Scaled: {scaled} x Final: {final} = {result}");
+                PlayerHUDEvents.DebugText($"Scaled: {scaled} x Final: {finalMult} = {result}");
             }
+            
             return result;
         }
     }

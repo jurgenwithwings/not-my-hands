@@ -168,7 +168,7 @@ MonoBehaviour:
     criticalChance: 0.5
     statusChance: 0.1
   animHoldDuration: 0.9
-  critDamageIncrease: 1.25
+  critDamageIncrease: 0.25
 --- !u!95 &5201854218443595209
 Animator:
   serializedVersion: 7

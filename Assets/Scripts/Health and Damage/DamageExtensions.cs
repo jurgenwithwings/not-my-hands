@@ -72,7 +72,7 @@ public enum DamageType {
                 if (amount <= 0.01f) break;
                 multiplicative *= (1 + amount);
                 break;
-            case ModifierType.Final:
+            case ModifierType.FinalMultiply:
                 if (amount <= 0.01f) break;
                 final *= amount;
                 break;
@@ -247,7 +247,7 @@ public enum DamageType {
                 inst.SetDefault();
             }
             individualDamage[i] = inst.baseAmount.GetModifiedValue(inst.flat + flatAll, inst.additive + additiveAll, 
-                inst.multiplicative * multiplicativeAll, inst.final * finalAll, debug) + finalFlatAll;
+                inst.multiplicative * multiplicativeAll, 0, inst.final * finalAll, debug) + finalFlatAll;
             finalDamage += individualDamage[i];
         }
 
@@ -292,7 +292,7 @@ public enum DamageType {
                 if (amount <= 0.01f) break;
                 multiplicativeAll *= (1 +amount);
                 break;
-            case ModifierType.Final:
+            case ModifierType.FinalMultiply:
                 if (amount <= 0.01f) break;
                 finalAll *= amount;
                 break;
@@ -318,12 +318,12 @@ public enum DamageType {
     }
 
     public void SetDamageMultipliers(DamageTypeStats stats) {
-        physicalDamage.AddModifier(stats.physical, ModifierType.Final);
-        fireDamage.AddModifier(stats.fire, ModifierType.Final);
-        iceDamage.AddModifier(stats.ice, ModifierType.Final);
-        electricDamage.AddModifier(stats.electric, ModifierType.Final);
-        poisonDamage.AddModifier(stats.poison, ModifierType.Final);
-        lightDamage.AddModifier(stats.light, ModifierType.Final);
+        physicalDamage.AddModifier(stats.physical, ModifierType.FinalMultiply);
+        fireDamage.AddModifier(stats.fire, ModifierType.FinalMultiply);
+        iceDamage.AddModifier(stats.ice, ModifierType.FinalMultiply);
+        electricDamage.AddModifier(stats.electric, ModifierType.FinalMultiply);
+        poisonDamage.AddModifier(stats.poison, ModifierType.FinalMultiply);
+        lightDamage.AddModifier(stats.light, ModifierType.FinalMultiply);
     }
 
     public void ApplyDamageMultipliersFromSource() {
@@ -331,12 +331,12 @@ public enum DamageType {
     }
 
     public void SetResistanceMultipliers(DamageTypeStats stats) {
-        physicalDamage.AddModifier(1- stats.physical, ModifierType.Final);
-        fireDamage.AddModifier(1 - stats.fire, ModifierType.Final);
-        iceDamage.AddModifier(1 - stats.ice, ModifierType.Final);
-        electricDamage.AddModifier(1 - stats.electric, ModifierType.Final);
-        poisonDamage.AddModifier(1 - stats.poison, ModifierType.Final);
-        lightDamage.AddModifier(1 - stats.light, ModifierType.Final);
+        physicalDamage.AddModifier(1- stats.physical, ModifierType.FinalMultiply);
+        fireDamage.AddModifier(1 - stats.fire, ModifierType.FinalMultiply);
+        iceDamage.AddModifier(1 - stats.ice, ModifierType.FinalMultiply);
+        electricDamage.AddModifier(1 - stats.electric, ModifierType.FinalMultiply);
+        poisonDamage.AddModifier(1 - stats.poison, ModifierType.FinalMultiply);
+        lightDamage.AddModifier(1 - stats.light, ModifierType.FinalMultiply);
     }
 }
 
@@ -399,7 +399,7 @@ public static class DamageExtensions {
         }
 
         if (info.resultingCritLevel > 0) {
-            info.AddModifier(info.source.criticalDamageMultiplier.Value * info.resultingCritLevel, ModifierType.Final);
+            info.AddModifier(info.source.criticalDamageMultiplier.Value * info.resultingCritLevel, ModifierType.FinalMultiply);
         }
     }
 }

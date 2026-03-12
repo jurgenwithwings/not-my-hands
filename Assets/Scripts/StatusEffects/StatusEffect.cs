@@ -312,7 +312,7 @@ public abstract class BuffEffect : StatusEffect {
                             DamageInfo info = new(damage, HighestDamageReceived.source, statboard.transform.position);
                             
                             info.additionalStatusEffects.Add(Data);
-                            info.AddModifier(damageTransferPercent, ModifierType.Final);
+                            info.AddModifier(damageTransferPercent, ModifierType.FinalMultiply);
                             statboard.health.TakeDamage(info);
                         }
                     }
