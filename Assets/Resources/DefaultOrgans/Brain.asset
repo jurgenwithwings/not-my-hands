@@ -23,7 +23,7 @@ MonoBehaviour:
   - statType: 4
     value: 1
   - statType: 5
-    value: 1
+    value: 2
   - statType: 6
     value: 1
   organClass:

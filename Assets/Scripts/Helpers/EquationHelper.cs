@@ -1,3 +1,4 @@
+using Stats;
 using UnityEngine;
 
 public static class Luck {
@@ -42,28 +43,30 @@ public static class Luck {
 
 public static class EquationHelper {
 
-    public static float RollCritMult(float critChance, float critMultiplier, float luck) {
-        float luckMultiplier = Luck.GetLuckCurve(luck);
+    public static float RollCritMult(ref DamageInfo info) {
+        float luckMultiplier = Luck.GetLuckCurve(info.source.luck.Value);
         
-        float adjustedCritChance = critChance * luckMultiplier;
-        
-        float roll = Random.Range(0f, 100f);
+        float adjustedCritChance = info.sourceCriticalChance * info.source.criticalChanceMultiplier.Value * luckMultiplier;
+        Debug.Log(adjustedCritChance);
 
-        float finalMultiplier = 0f;
+        info.resultingCritLevel = Mathf.FloorToInt(adjustedCritChance);
         
-        for (int i = 0; i < Mathf.Floor(adjustedCritChance); i++) {
-            finalMultiplier += critMultiplier;
+        float roll = Random.value;
+        if (roll < adjustedCritChance % 1) {
+            info.resultingCritLevel++;
         }
-        if (roll < (adjustedCritChance % 1) * 100f) {
-            finalMultiplier += critMultiplier;
-        }
-        return finalMultiplier > 0 ? finalMultiplier : 1f;
+
+        float finalMultiplier = Mathf.Pow(info.source.criticalDamageMultiplier.Value, info.resultingCritLevel);
+        info.AddModifier(finalMultiplier, ModifierType.FinalMultiplicative, "RollCrit");
+        
+        return finalMultiplier;
     }
     
-    public static int RollStatus(float statusChance, float luck, float procCoefficient = 1f) {
+    //TODO: Implement into status manager
+    public static int RollStatus(float entityStatusChance, float luck, float procCoefficient = 1f) {
         float luckMultiplier = Luck.GetLuckCurve(luck);
         
-        float adjustedStatusChance = statusChance * procCoefficient;
+        float adjustedStatusChance = entityStatusChance * procCoefficient;
         adjustedStatusChance *= luckMultiplier;
         
         int stacks = (int)Mathf.Floor(adjustedStatusChance);

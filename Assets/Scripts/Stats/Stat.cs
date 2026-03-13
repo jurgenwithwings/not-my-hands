@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Stats;
 using UnityEngine;
 
 namespace Stats {
@@ -9,95 +8,72 @@ namespace Stats {
         /// <summary>
         /// This is a flat amount that is added to the base value. This is very powerful.
         /// </summary>
-        [Tooltip("This is a flat amount that is added to the base value. This is very powerful.")]
+        [Tooltip("This is a flat amount that is added to the base value. This is very powerful. (eg. +10)")]
         BaseAdd = 100,
 
         /// <summary>
         /// Most common/general modifier. This pools up one big percentage that is multiplied to the base.
         /// </summary>
-        [Tooltip("Most common/general modifier. This pools up one big percentage that is multiplied to the base.")]
+        [Tooltip("Most common/general modifier. This pools up one big percentage that is multiplied to the base. (eg +30% = 0.3, -50% = -0.5)")]
         Additive = 200,
         
         /// <summary>
         /// This is a compounding percentage that exponentially increases the base value. Strong effect usually combined with small numbers.
         /// </summary>
-        [Tooltip("This is a compounding percentage that exponentially increases the base value. Strong effect usually combined with small numbers.")]
-        Multiply = 300,
+        [Tooltip("This is a compounding percentage that exponentially increases the base value. Strong effect usually combined with small numbers. (eg +30% = x1.3, -50% = x0.5)")]
+        Multiplicative = 300,
         
         /// <summary>
         /// This pools up one big percentage that is multiplied to the modified value.
         /// </summary>
-        [Tooltip("This pools up one big percentage that is multiplied to the modified value.")]
-        FinalAdd = 400,
+        [Tooltip("This pools up one big percentage that is multiplied to the modified value. (eg +30% = 0.3, -50% = -0.5)")]
+        FinalAdditive = 400,
         
         /// <summary>
         /// This is a compounding multiplier applied to the result of all other modifiers. This is extremely potent and should be used sparingly.
         /// </summary>
-        [Tooltip("This is a compounding multiplier applied to the result of all other modifiers. This is extremely potent and should be used sparingly.")]
-        FinalMultiply = 500,
+        [Tooltip("This is a compounding multiplier applied to the result of all other modifiers. This is extremely potent and should be used sparingly. (eg +30% = x1.3, -50% = x0.5)")]
+        FinalMultiplicative = 500,
+        
+        /// <summary>
+        /// This is a final flat value added at the very end after all other types.
+        /// </summary>
+        [Tooltip("This is a final flat value added at the very end after all other types. (eg. +10)")]
+        FinalFlat = 600,
     }
 
-    public class Modifier {
+    public struct Modifier : IEquatable<Modifier> {
         public readonly float Value;
         public readonly ModifierType Type;
         public readonly int Order;
         public readonly object Source;
-        public readonly bool IsTimed;
-        public float Duration { get; private set; }
-        public readonly float MaxDuration;
 
         /// <summary>
         /// A modification to the value of a CharacterStat.
         /// </summary>
         /// <param name="value">Amount the stat is changed</param>
         /// <param name="type">How the value is applied to the base</param>
-        /// <param name="order">Its priority in the stat calculation</param>
         /// <param name="source">The thing that applied the stat change</param>
-        /// <param name="duration">How long the buff will last (in seconds)</param>
-        /// <param name="maxDuration">Maximum amount of time the duration cam be</param>
-        public Modifier(float value, ModifierType type, object source, float duration = -1f, float maxDuration = -1f) {
+        public Modifier(float value, ModifierType type, object source) {
             Value = value;
             Type = type;
             Order = (int)type;
             Source = source;
-            if (duration > 0) {
-                IsTimed = true;
-                Duration = duration;
-                if (maxDuration > 0) {
-                    MaxDuration = maxDuration;
-                }
-                else {
-                    MaxDuration = duration;
-                }
-            }
         }
 
-        public bool UpdateDuration(float deltaTime) {
-            if (Duration > 0) {
-                Duration -= deltaTime;
-                return Duration <= 0;
-            }
-
-            return false;
+        #region IEquality
+        public bool Equals(Modifier other) {
+            return Value.Equals(other.Value) && Type == other.Type && Order == other.Order && Equals(Source, other.Source);
         }
 
-        public float AddDuration(float duration) {
-            Duration += duration;
-            if (Duration > MaxDuration) {
-                Duration = MaxDuration;
-            }
-
-            return Duration;
+        public override bool Equals(object obj) {
+            return obj is Modifier other && Equals(other);
         }
 
-        public float SetDuration(float duration) {
-            Duration = duration;
-            if (Duration > MaxDuration) {
-                Duration = MaxDuration;
-            }
-
-            return Duration;
+        public override int GetHashCode() {
+            return HashCode.Combine(Value, (int)Type, Order, Source);
         }
+        #endregion
     }
 
     [Serializable] public class Stat {
@@ -107,7 +83,7 @@ namespace Stats {
             get {
                 if (isDirty || BaseValue != lastBaseValue) {
                     lastBaseValue = BaseValue;
-                    value = CalculateFinalValue();
+                    value = CalculateFinalValue(BaseValue, modifiers.ToArray());
                     isDirty = false;
                 }
 
@@ -137,6 +113,7 @@ namespace Stats {
             BaseValue = baseValue;
         }
         
+        #region Operators
         //Create a stat from a float implicitly
         public static implicit operator Stat(float value) {
             return new Stat(value);
@@ -151,6 +128,7 @@ namespace Stats {
         public static implicit operator int(Stat stat) {
             return stat.IntValue;
         }
+        #endregion
 
         public void SetBaseValue(float baseValue) {
             BaseValue = baseValue;
@@ -158,25 +136,12 @@ namespace Stats {
             OnValueChanged?.Invoke(this);
         }
         
-        /// <summary>
-        /// If the Stat has any timed modifiers, this will update their duration.
-        /// </summary>
-        public void UpdateTimers() {
-            for (int i = modifiers.Count - 1; i >= 0; i--) {
-                if (modifiers[i].IsTimed && modifiers[i].UpdateDuration(Time.deltaTime)) {
-                    RemoveModifier(Modifiers[i]);
-                }
-            }
-        }
-
-        
         public void AddModifier(Modifier mod) {
             modifiers.Add(mod);
             modifiers.Sort(CompareModifierOrder);
             isDirty = true;
             OnValueChanged?.Invoke(this);
         }
-
         
         public bool RemoveModifier(Modifier mod) {
             if (modifiers.Remove(mod)) {
@@ -204,80 +169,6 @@ namespace Stats {
             return didRemove;
         }
         
-        public void AddDuration(Modifier mod, float duration) {
-            int index = modifiers.IndexOf(mod);
-            if (index != -1) {
-                modifiers[index].AddDuration(duration);
-            }
-        }
-        
-        public void AddDuration(object source, float duration) {
-            for (int i = 0; i < modifiers.Count; i++) {
-                if (modifiers[i].Source == source) {
-                    modifiers[i].AddDuration(duration);
-                }
-            }
-        }
-        
-        
-        public void SetDuration(Modifier mod, float duration) {
-            int index = modifiers.IndexOf(mod);
-            if (index != -1) {
-                modifiers[index].SetDuration(duration);
-            }
-        }
-        
-        public void SetDuration(object source, float duration) {
-            for (int i = 0; i < modifiers.Count; i++) {
-                if (modifiers[i].Source == source) {
-                    modifiers[i].SetDuration(duration);
-                }
-            }
-        }
-
-        
-        
-        protected float CalculateFinalValue() {
-            float baseAdd = 0;
-            float additiveTotal = 0;
-            float multiplicativeMult = 1;
-            float finalAdd = 0;
-            float finalMult = 1;
-
-            for (int i = 0; i < modifiers.Count; i++) {
-                Modifier mod = modifiers[i];
-
-                switch (mod.Type) {
-                    case ModifierType.BaseAdd:
-                        baseAdd += mod.Value;
-                        break;
-                    
-                    case ModifierType.Additive:
-                        additiveTotal += mod.Value;
-                        break;
-                    
-                    case ModifierType.Multiply:
-                        multiplicativeMult *= (1 + mod.Value);
-                        break;
-                    
-                    case ModifierType.FinalAdd:
-                        finalAdd += mod.Value;
-                        break;
-                    
-                    case ModifierType.FinalMultiply:
-                        finalMult *= mod.Value;
-                        break;
-                    
-                    default:
-                        Debug.LogWarning("Modifier Type Is Not Handled");
-                        break;
-                }
-            }
-
-            return (float)Math.Round(BaseValue.GetModifiedValue(
-                baseAdd, additiveTotal, multiplicativeMult, finalAdd, finalMult), 4);
-        }
-        
         protected int CompareModifierOrder(Modifier a, Modifier b) {
             if (a.Order < b.Order)
                 return -1;
@@ -285,34 +176,66 @@ namespace Stats {
                 return 1;
             return 0;
         }
+        
+        public static float CalculateFinalValue(float baseValue, Modifier[] modifiers) {
+            float baseAdd = 0;
+            float additive = 0;
+            float multiplicative = 1;
+            float finalAdditive = 0;
+            float finalMultiplicative = 1;
+            float finalFlat = 0;
+
+            foreach (Modifier mod in modifiers) {
+                switch (mod.Type) {
+                    case ModifierType.BaseAdd:
+                        baseAdd += mod.Value;
+                        break;
+                    
+                    case ModifierType.Additive:
+                        additive += mod.Value;
+                        break;
+                    
+                    case ModifierType.Multiplicative:
+                        multiplicative *= mod.Value;
+                        break;
+                    
+                    case ModifierType.FinalAdditive:
+                        finalAdditive += mod.Value;
+                        break;
+                    
+                    case ModifierType.FinalMultiplicative:
+                        finalMultiplicative *= mod.Value;
+                        break;
+
+                    case ModifierType.FinalFlat:
+                        finalFlat += mod.Value;
+                        break;
+                        
+                    default:
+                        Debug.LogWarning("Modifier Type Is Not Handled");
+                        break;
+                }
+            }
+            
+            // Base Value
+            float newBase = baseValue + baseAdd;
+            
+            // Modify Base Value
+            float modified = newBase * (1 + additive);
+            modified += ((newBase * multiplicative) - newBase);
+            
+            // Apply Final Modifiers to Modified Value
+            float final = modified * (1 + finalAdditive);
+            final +=  ((modified * finalMultiplicative) - modified);
+            
+            // Add Final Flat Amount
+            final += finalFlat;
+            
+            return (float)Math.Round(final, 4);
+        }
     }
 
     public static class StatExtensions {
-        public static float GetModifiedValue(this float baseValue, float flat, float additive, float multiplicative,
-            float finalAdd, float finalMult, bool debug = false) {
-            float newBase = baseValue + flat;
-            if (debug) {
-                PlayerHUDEvents.DebugText($"Base: {baseValue} + Flat: {flat} = {newBase}");
-            }
-
-            float scaled = newBase * (1 + additive);
-            if (debug) {
-                PlayerHUDEvents.DebugText($"NewBase: {newBase} x (1 + Additive: {additive}) = {scaled}");
-            }
-            
-            scaled += ((newBase * multiplicative) - newBase);
-            if (debug) {
-                PlayerHUDEvents.DebugText($"(NewBase: {newBase} x Multiplicative: {multiplicative}) - NewBase: {newBase} = {scaled}");
-            }
-
-            scaled *= 1 + finalAdd;
-
-            float result = scaled * finalMult;
-            if (debug) {
-                PlayerHUDEvents.DebugText($"Scaled: {scaled} x Final: {finalMult} = {result}");
-            }
-            
-            return result;
-        }
+        
     }
 }

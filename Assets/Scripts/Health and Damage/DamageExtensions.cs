@@ -16,28 +16,19 @@ public enum DamageType {
 [Serializable] public struct DamageInstance {
     public float baseAmount;
     
-    // Modifier buckets
-    [HideInInspector] public float flat;            // +X damage
-    [HideInInspector] public float additive;        // +X% damage (as decimal, 0.25 = +25%)
-    [HideInInspector] public float multiplicative;  // x multiplier
-    [HideInInspector] public float final;           // applied at the end
+    public List<Modifier> modifiers;
 
     public DamageInstance(float baseAmount) {
         this.baseAmount = baseAmount;
-        flat = 0f;
-        additive = 0f;
-        multiplicative = 1f;
-        final = 1f;
+        modifiers = new List<Modifier>();
+        
         Initialised = true;
     }
 
     public bool Initialised { get; private set; }
     public void SetDefault() {
         if (!Initialised) {
-            flat = 0f;
-            additive = 0f;
-            multiplicative = 1f;
-            final = 1f;
+            modifiers = new List<Modifier>();
             
             Initialised = true;
         }
@@ -45,38 +36,19 @@ public enum DamageType {
     
     // Resolve instance damage (no global modifiers applied yet)
     public float Resolve() {
-        float value = baseAmount + flat;
-        value *= (1f + additive);
-        value *= multiplicative;
-        value *= final;
-        return value;
+        return Stat.CalculateFinalValue(baseAmount, modifiers.ToArray());
     }
 
     public void SetBaseAmount(float amount) {
         baseAmount = amount;
     }
 
-    public void AddModifier(float amount, ModifierType modifierType = ModifierType.Additive) {
+    public void AddModifier(float amount, ModifierType modifierType = ModifierType.Additive, object source = null) {
         if (!Initialised) {
             SetDefault();
         }
-
-        switch (modifierType) {
-            case ModifierType.BaseAdd:
-                flat += amount;
-                break;
-            case ModifierType.Additive:
-                additive += amount;
-                break;
-            case ModifierType.Multiply:
-                if (amount <= 0.01f) break;
-                multiplicative *= (1 + amount);
-                break;
-            case ModifierType.FinalMultiply:
-                if (amount <= 0.01f) break;
-                final *= amount;
-                break;
-        }
+        
+        modifiers.Add(new Modifier(amount, modifierType, source));
     }
     
     // --- Operators ---
@@ -110,23 +82,13 @@ public enum DamageType {
     }
 
     // Create Damage from DamageInstance Array.
-    public Damage(DamageInstance[] damage) : this() {
-        for (int i = 0; i < damage.Length; i++) {
-            switch (i) {
-                case 0:
-                    physical = damage[i].baseAmount; break;
-                case 1:
-                    fire = damage[i].baseAmount; break;
-                case 2:
-                    ice = damage[i].baseAmount; break;
-                case 3:
-                    electric = damage[i].baseAmount; break;
-                case 4:
-                    poison = damage[i].baseAmount; break;
-                case 5:
-                    light = damage[i].baseAmount; break;
-            }
-        }
+    public Damage(DamageInstance[] damage) : this() { 
+        physical = damage[DamageType.Physical.Index()].baseAmount;
+        fire = damage[DamageType.Fire.Index()].baseAmount;
+        ice = damage[DamageType.Ice.Index()].baseAmount;
+        electric = damage[DamageType.Electric.Index()].baseAmount;
+        poison = damage[DamageType.Poison.Index()].baseAmount;
+        light = damage[DamageType.Light.Index()].baseAmount;
     }
 }
 
@@ -151,13 +113,6 @@ public enum DamageType {
     public Vector3 hitPoint;
     public bool selfDamage;
     public bool ignoreResistances;
-
-    // Hit-level Universal Modifiers
-    public float flatAll;            // +X to all types
-    public float additiveAll;        // +X% to all types (0.20 = +20%)
-    public float multiplicativeAll;  // x multiplier to all damage
-    public float finalAll;           // final multiplier for whole hit
-    public float finalFlatAll;       // final +X damage to the whole hit.
 
     // Result Info
     public int resultingCritLevel;
@@ -191,13 +146,6 @@ public enum DamageType {
         selfDamage = false;
         ignoreResistances = false;
         
-        // Hit-level Universal Modifiers
-        flatAll = 0f;
-        additiveAll = 0f;
-        multiplicativeAll = 1f;
-        finalAll = 1f;
-        finalFlatAll = 0f;
-        
         Initialised = true;
         
         resultingCritLevel = 0;
@@ -211,10 +159,6 @@ public enum DamageType {
     public bool Initialised { get; private set; }
     public void SetDefault() {
         if (!Initialised) {
-            flatAll = 0f;
-            additiveAll = 0f;
-            multiplicativeAll = 1f;
-            finalAll = 1f;
             
             Initialised = true;
         }
@@ -246,8 +190,7 @@ public enum DamageType {
             if (!inst.Initialised) {
                 inst.SetDefault();
             }
-            individualDamage[i] = inst.baseAmount.GetModifiedValue(inst.flat + flatAll, inst.additive + additiveAll, 
-                inst.multiplicative * multiplicativeAll, 0, inst.final * finalAll, debug) + finalFlatAll;
+            individualDamage[i] = inst.Resolve();
             finalDamage += individualDamage[i];
         }
 
@@ -276,38 +219,21 @@ public enum DamageType {
         return result;
     }
     
-    public void AddModifier(float amount, ModifierType modifierType = ModifierType.Additive) {
+    public void AddModifier(float amount, ModifierType modifierType = ModifierType.Additive, object source = null) {
         if (!Initialised) {
             SetDefault();
         }
 
-        switch (modifierType) {
-            case ModifierType.BaseAdd:
-                flatAll += amount;
-                break;
-            case ModifierType.Additive:
-                additiveAll += amount;
-                break;
-            case ModifierType.Multiply:
-                if (amount <= 0.01f) break;
-                multiplicativeAll *= (1 +amount);
-                break;
-            case ModifierType.FinalMultiply:
-                if (amount <= 0.01f) break;
-                finalAll *= amount;
-                break;
-        }
-    }
-
-    public void AddFinalFlatModifier(float amount) {
-        finalFlatAll += amount;
+        physicalDamage.AddModifier(amount, modifierType, source);
+        fireDamage.AddModifier(amount, modifierType, source);
+        iceDamage.AddModifier(amount, modifierType, source);
+        electricDamage.AddModifier(amount, modifierType, source);
+        poisonDamage.AddModifier(amount, modifierType, source);
+        lightDamage.AddModifier(amount, modifierType, source);
+        
     }
 
     // --- Helpers ---
-
-    /*public static DamageInstance[] EmptyDamageArray() {
-        return new DamageInstance[Enum.GetValues(typeof(DamageType)).Length];
-    }*/
 
     public static DamageInfo Empty(Statboard source, Vector3 hitPoint = default) {
         if (hitPoint == default) {
@@ -318,12 +244,12 @@ public enum DamageType {
     }
 
     public void SetDamageMultipliers(DamageTypeStats stats) {
-        physicalDamage.AddModifier(stats.physical, ModifierType.FinalMultiply);
-        fireDamage.AddModifier(stats.fire, ModifierType.FinalMultiply);
-        iceDamage.AddModifier(stats.ice, ModifierType.FinalMultiply);
-        electricDamage.AddModifier(stats.electric, ModifierType.FinalMultiply);
-        poisonDamage.AddModifier(stats.poison, ModifierType.FinalMultiply);
-        lightDamage.AddModifier(stats.light, ModifierType.FinalMultiply);
+        physicalDamage.AddModifier(stats.physical, ModifierType.FinalMultiplicative);
+        fireDamage.AddModifier(stats.fire, ModifierType.FinalMultiplicative);
+        iceDamage.AddModifier(stats.ice, ModifierType.FinalMultiplicative);
+        electricDamage.AddModifier(stats.electric, ModifierType.FinalMultiplicative);
+        poisonDamage.AddModifier(stats.poison, ModifierType.FinalMultiplicative);
+        lightDamage.AddModifier(stats.light, ModifierType.FinalMultiplicative);
     }
 
     public void ApplyDamageMultipliersFromSource() {
@@ -331,12 +257,12 @@ public enum DamageType {
     }
 
     public void SetResistanceMultipliers(DamageTypeStats stats) {
-        physicalDamage.AddModifier(1- stats.physical, ModifierType.FinalMultiply);
-        fireDamage.AddModifier(1 - stats.fire, ModifierType.FinalMultiply);
-        iceDamage.AddModifier(1 - stats.ice, ModifierType.FinalMultiply);
-        electricDamage.AddModifier(1 - stats.electric, ModifierType.FinalMultiply);
-        poisonDamage.AddModifier(1 - stats.poison, ModifierType.FinalMultiply);
-        lightDamage.AddModifier(1 - stats.light, ModifierType.FinalMultiply);
+        physicalDamage.AddModifier(1- stats.physical, ModifierType.FinalMultiplicative);
+        fireDamage.AddModifier(1 - stats.fire, ModifierType.FinalMultiplicative);
+        iceDamage.AddModifier(1 - stats.ice, ModifierType.FinalMultiplicative);
+        electricDamage.AddModifier(1 - stats.electric, ModifierType.FinalMultiplicative);
+        poisonDamage.AddModifier(1 - stats.poison, ModifierType.FinalMultiplicative);
+        lightDamage.AddModifier(1 - stats.light, ModifierType.FinalMultiplicative);
     }
 }
 
@@ -386,20 +312,5 @@ public static class DamageExtensions {
             damageInfo.lightDamage,
         };
         return result;
-    }
-
-    public static void RollCrit(ref DamageInfo info) {
-        float finalCrit = info.sourceCriticalChance * info.source.criticalChanceMultiplier;
-        info.resultingCritLevel = Mathf.FloorToInt(finalCrit);
-        float remainingCrit = finalCrit - info.resultingCritLevel;
-        
-        float random = UnityEngine.Random.value;
-        if (random <= remainingCrit) {
-            info.resultingCritLevel++;
-        }
-
-        if (info.resultingCritLevel > 0) {
-            info.AddModifier(info.source.criticalDamageMultiplier.Value * info.resultingCritLevel, ModifierType.FinalMultiply);
-        }
     }
 }

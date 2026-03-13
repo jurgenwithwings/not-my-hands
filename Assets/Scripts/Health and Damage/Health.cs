@@ -53,7 +53,7 @@ public class Health : MonoBehaviour, IStatboard
         }
         
         damageInfo.ApplyDamageMultipliersFromSource();
-        DamageExtensions.RollCrit(ref damageInfo);
+        EquationHelper.RollCritMult(ref damageInfo);
         
         damageInfo.source.eventManager.OnPreDealDamage?.Invoke(ref damageInfo, statboard);
         statboard.eventManager.OnPreTakeDamage?.Invoke(ref damageInfo);
@@ -72,11 +72,6 @@ public class Health : MonoBehaviour, IStatboard
         if (CurrentHealth < 0) {
             Die(damageInfo.source);
         }
-        
-        //Debug.Log(damageInfo.damageInstances[0].additiveMultiplier);
-        
-        //TEMP TEMP TEMP TEMP
-        //OnDeath?.Invoke(damageInfo.source);
         
         return totalDamageTaken;
     }

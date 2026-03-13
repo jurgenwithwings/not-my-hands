@@ -312,7 +312,7 @@ public abstract class BuffEffect : StatusEffect {
                             DamageInfo info = new(damage, HighestDamageReceived.source, statboard.transform.position);
                             
                             info.additionalStatusEffects.Add(Data);
-                            info.AddModifier(damageTransferPercent, ModifierType.FinalMultiply);
+                            info.AddModifier(damageTransferPercent, ModifierType.FinalMultiplicative);
                             statboard.health.TakeDamage(info);
                         }
                     }
@@ -406,7 +406,7 @@ public class SpeedBoost : BuffEffect {
     public override void Initialise(StatusEffectData data, EntityStatusEffectManager manager, DamageInfo damageInfo) {
         base.Initialise(data, manager, damageInfo);
         
-        mod = new Modifier(baseSpeedBoost, ModifierType.Multiply, source);
+        mod = new Modifier(baseSpeedBoost, ModifierType.Multiplicative, source);
         
         Stats.moveSpeed.AddModifier(mod);
     }

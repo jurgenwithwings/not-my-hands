@@ -22,7 +22,7 @@ public class LeonidasLeg : Leg {
     public override void Initialise(LimbData data, LimbManager manager, Statboard statboard) {
         base.Initialise(data, manager, statboard);
         
-        modifier = new Modifier(critDamageIncrease, ModifierType.FinalAdd, source);
+        modifier = new Modifier(critDamageIncrease, ModifierType.FinalAdditive, source);
         this.statboard.criticalDamageMultiplier.AddModifier(modifier);
         
         this.statboard.eventManager.OnPreDealDamage += OnPreDealDamage;
@@ -30,8 +30,8 @@ public class LeonidasLeg : Leg {
 
     // Guarantees Critical hits
     private void OnPreDealDamage(ref DamageInfo damageInfo, Statboard victim) {
-        if (damageInfo.tags.Contains(source) && damageInfo.resultingCritLevel <= 0) {
-            damageInfo.AddModifier(damageInfo.source.criticalDamageMultiplier.Value);
+        if (damageInfo.resultingCritLevel == 0 && damageInfo.tags.Contains(source)) {
+            damageInfo.AddModifier(damageInfo.source.criticalDamageMultiplier.Value, ModifierType.FinalMultiplicative);
             damageInfo.resultingCritLevel++;
         }
     }

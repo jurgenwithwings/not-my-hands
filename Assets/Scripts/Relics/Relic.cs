@@ -38,7 +38,7 @@ public abstract class Relic {
     // -- Helpers --
     protected void ReplaceModifier(Statboard.VariableType statType, ModifierType modifierType, float baseValue, float stackValue, object source, ref Modifier currentModifier) {
         Stat stat = stats.GetStatByEnum(statType);
-        if (currentModifier == null) {
+        if (currentModifier.Equals(null)) {
             stat.RemoveAllModifiersFromSource($"{GetType()}");
         }
         else {

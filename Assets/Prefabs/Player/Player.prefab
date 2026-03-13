@@ -576,6 +576,7 @@ MonoBehaviour:
     electric: 0
     poison: 0
     light: 0
+    criticalChance: 0
     statusChance: 0
   effect: {fileID: 11400000, guid: 6a8abcd812891224a9b1e89fa30e0d43, type: 2}
   enemyMask:
@@ -615,7 +616,7 @@ MonoBehaviour:
   criticalChanceMultiplier:
     BaseValue: 1
   criticalDamageMultiplier:
-    BaseValue: 1
+    BaseValue: 2
   luck:
     BaseValue: 1
   statusChanceMultiplier:

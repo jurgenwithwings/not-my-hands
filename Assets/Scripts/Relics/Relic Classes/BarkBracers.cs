@@ -1,4 +1,5 @@
 using System;
+using Stats;
 using UnityEngine;
 
 [Serializable] public class BarkBracers : Relic  {
@@ -24,7 +25,8 @@ using UnityEngine;
         if (damageToReduce > damageCap) {
             damageToReduce = damageCap;
         }
-        damageInfo.AddFinalFlatModifier(-damageToReduce);
+        
+        damageInfo.AddModifier(-damageToReduce, ModifierType.FinalFlat);
     }
 
     public override void Remove() {

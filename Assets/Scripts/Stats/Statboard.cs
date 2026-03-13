@@ -79,12 +79,6 @@ public class Statboard : MonoBehaviour {
         }
     }
 
-    private void Update() {
-        foreach (Stat stat in allStats) {
-            stat.UpdateTimers();
-        }
-    }
-
     public Stat GetStatByName(string statName)
     {
         var field = typeof(Statboard).GetField(statName);
