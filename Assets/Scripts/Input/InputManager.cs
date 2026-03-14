@@ -414,9 +414,6 @@ public class InputManager : MonoBehaviour, IPlayerActions, IUIActions {
         DefaultHandle(context);
         if (context.performed || context.canceled) {
             UIExit.SetAndInvoke(context.performed, context.performed, context);
-            EnableActionMap(InputMap.Player);
-            
-            PlayerHUDEvents.OnDoTheInventory.Invoke(false);
         }
     }
     

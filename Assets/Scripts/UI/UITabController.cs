@@ -22,8 +22,7 @@ public struct UITab {
 }
 
 public class UITabController : MonoBehaviour {
-    [Header("Tabs")] 
-    [SerializeField] private UIEventHandler eventHandler;
+    [Header("Tabs")]
     [SerializeField] private RectTransform container;
 
     [SerializeField] private float tabSpacing = 20f;
@@ -39,23 +38,17 @@ public class UITabController : MonoBehaviour {
             int index = i;
             tabs[i].button.onClick.AddListener(() => OnTabButtonClicked(index));
         }
-
-        if (eventHandler != null) {
-            eventHandler.OnUIToggled += OnUIToggled;
-        }
+        
+        CanvasManager.OnMenuClosed += OnUIToggled;
     }
 
     private void OnDestroy() {
-        if (eventHandler != null) {
-            eventHandler.OnUIToggled -= OnUIToggled;
-        }
+        CanvasManager.OnMenuClosed -= OnUIToggled;
     }
 
-    private void OnUIToggled(bool active) {
+    private void OnUIToggled(MenuType menuType) {
         // Reset Tab to default
-        if (!active) {
-            OnTabButtonClicked(0);  
-        }
+        OnTabButtonClicked(0);
     }
 
     private void OnEnable() {

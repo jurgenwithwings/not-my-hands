@@ -47,8 +47,6 @@ public static class PlayerHUDEvents {
     public static Action<LimbData, LimbSide> OnUpdateLimb;
     public static Action<OrganData> OnUpdateOrgan;
 
-    public static Action<bool> OnDoTheInventory;
-
     public static Action<Statboard> OnRegisterStatboard;
     
     public static Action OnUnstuckPlayer;

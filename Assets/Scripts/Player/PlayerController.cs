@@ -96,7 +96,7 @@ public class PlayerController : MonoBehaviour
 
     private void InventoryDebugEvent(InputEvent<bool> inputEvent) {
         if (inputEvent.Triggered) {
-            PlayerHUDEvents.OnDoTheInventory.Invoke(true);
+            CanvasManager.Instance.OpenMenu(MenuType.Inventory);
         }
     }
 

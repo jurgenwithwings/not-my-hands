@@ -27,7 +27,7 @@ public class MenuController : MonoBehaviour {
     }
 
     private void Resume() {
-        PlayerHUDEvents.OnDoTheInventory.Invoke(false);
+        CanvasManager.Instance.CanCloseMenu(MenuType.Inventory);
     }
 
     private void Stuck() {

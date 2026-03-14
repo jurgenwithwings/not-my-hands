@@ -37,15 +37,13 @@ public class GamepadCursor : MonoBehaviour {
             InputState.Change(virtualMouse.position, position);
         }
         
-        OnDoTheInventory(false);
+        ToggleCursor(false);
     }
 
     private void OnEnable() {
         InputSystem.onAfterUpdate += UpdateMotion; // Pointer becomes stuck at bottom left of screen if using normal Update().
         
         InputManager.OnControlTypeChanged += InputManagerOnOnControlTypeChanged;
-        
-        PlayerHUDEvents.OnDoTheInventory += OnDoTheInventory;
     }
 
     private void OnDisable() {
@@ -53,7 +51,6 @@ public class GamepadCursor : MonoBehaviour {
         
         InputSystem.onAfterUpdate -= UpdateMotion;
         InputManager.OnControlTypeChanged -= InputManagerOnOnControlTypeChanged;
-        PlayerHUDEvents.OnDoTheInventory -= OnDoTheInventory;
     }
 
     private void InputManagerOnOnControlTypeChanged(ControlType type) {
@@ -69,7 +66,7 @@ public class GamepadCursor : MonoBehaviour {
         }
     }
 
-    private void OnDoTheInventory(bool active) {
+    public void ToggleCursor(bool active) {
         menuOpen = active;
         if (active && InputManager.CurrentControlDevice == ControlType.Controller) {
             ToggleGamepadCursor(true);
