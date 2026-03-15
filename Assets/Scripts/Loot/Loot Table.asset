@@ -29,3 +29,13 @@ MonoBehaviour:
     dropWeight: 15
   - data: {fileID: 11400000, guid: 2b14d61a11f60554a9f3b82680ccf62e, type: 2}
     dropWeight: 15
+  - data: {fileID: 11400000, guid: 0887349604fbb42418918ee940ab8c3d, type: 2}
+    dropWeight: 50
+  - data: {fileID: 11400000, guid: 88eb5fb118829bc47b64df98574ba7d2, type: 2}
+    dropWeight: 66
+  - data: {fileID: 11400000, guid: 59ff62d7768891a43974885284086a87, type: 2}
+    dropWeight: 33
+  - data: {fileID: 11400000, guid: 1b4e9b87e139564458dc2cd7449c188e, type: 2}
+    dropWeight: 33
+  - data: {fileID: 11400000, guid: 271a4dabfdcd49e47915e14a24b4f7e0, type: 2}
+    dropWeight: 10

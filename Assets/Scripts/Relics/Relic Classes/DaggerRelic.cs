@@ -63,7 +63,7 @@ using Random = UnityEngine.Random;
                 SphereCollider coll = orbitPoints[i].AddComponent<SphereCollider>();
                 coll.isTrigger = true;
                 coll.radius = 0.7f;
-                coll.gameObject.layer = GameConfig.Instance.ignoreRaycastLayer;
+                coll.gameObject.layer = 2;
             }
             
             orbitPoints[i].transform.SetParent(orbitCenter.transform, worldPositionStays: false);

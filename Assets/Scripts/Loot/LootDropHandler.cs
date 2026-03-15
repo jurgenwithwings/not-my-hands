@@ -37,6 +37,10 @@ public class LootDropHandler : MonoBehaviour
         GetComponent<Health>().OnDeath += HandleLootDrop;
     }
 
+    private void OnDestroy() {
+        GetComponent<Health>().OnDeath -= HandleLootDrop;
+    }
+
     private void HandleLootDrop(Statboard killer) {
         float luckMult = Luck.GetLuckCurve(killer.luck);
         
@@ -72,12 +76,15 @@ public class LootDropHandler : MonoBehaviour
         
         for (int i = 0; i < dropsToSpawn; i++) {
             var droppedItem = SpawnLoot(itemPool, totalWeight, killer.luck, enemyInfluence);
+            Vector2 randomDirection = UnityEngine.Random.insideUnitCircle;
+            Vector3 randomDirectionVector = new(randomDirection.x, 0, randomDirection.y);
+            Instantiate(droppedItem.item.data.prefab, transform.position, Quaternion.identity).GetComponent<Rigidbody>().AddForce((Vector3.up + randomDirectionVector) * 5, ForceMode.Impulse);
             totalWeight -= droppedItem.adjustedWeight;
             itemPool.Remove(droppedItem.item);
         }
     }
     
-    private (LootTable.LootItem item, float adjustedWeight) SpawnLoot(List<LootTable.LootItem> itemPool, float totalWeight, float luck, float enemyInfluence) {
+    public static (LootTable.LootItem item, float adjustedWeight) SpawnLoot(List<LootTable.LootItem> itemPool, float totalWeight, float luck, float enemyInfluence) {
         float roll = UnityEngine.Random.Range(0f, totalWeight);
         
         float cumulativeWeight = 0f;
@@ -95,9 +102,6 @@ public class LootDropHandler : MonoBehaviour
             cumulativeWeight += adjustedWeight;
             
             if (roll <= cumulativeWeight) {
-                Vector2 randomDirection = UnityEngine.Random.insideUnitCircle;
-                Vector3 randomDirectionVector = new(randomDirection.x, 0, randomDirection.y);
-                Instantiate(item.data.prefab, transform.position, Quaternion.identity).GetComponent<Rigidbody>().AddForce((Vector3.up + randomDirectionVector) * 5, ForceMode.Impulse);
                 break;
             }
         }

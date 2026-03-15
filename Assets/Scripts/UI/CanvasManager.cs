@@ -57,8 +57,8 @@ public class CanvasManager : MonoBehaviour {
         return currentMenu == MenuType.None;
     }
 
-    public void OpenMenu(MenuType menu) {
-        if (!CanOpenMenu(menu)) return;
+    public Menu OpenMenu(MenuType menu) {
+        if (!CanOpenMenu(menu)) return null;
         InputManager.Instance.EnableActionMap(InputMap.UI);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -67,6 +67,7 @@ public class CanvasManager : MonoBehaviour {
         Menus[menu].OpenMenu();
         currentMenu = menu;
         OnMenuOpened?.Invoke(menu);
+        return Menus[menu];
     }
 
     public bool CanCloseMenu(MenuType menu) {
