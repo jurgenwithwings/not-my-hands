@@ -53,7 +53,8 @@ public class LootDropHandler : MonoBehaviour
             int additionalDropsToSpawn = GetDropAmount(additionalInitialDropChance, additionalExtraDropChance, additionalMaxDrops, luckMult);
 
             for (int i = 0; i < additionalDropsToSpawn; i++) {
-                var droppedItem = SpawnLoot(additionalItemPool, additionalTotalWeight, killer.luck, enemyInfluence);
+                var droppedItem = GetItemFromRoll(additionalItemPool, additionalTotalWeight, killer.luck, enemyInfluence);
+                SpawnLoot(droppedItem.item);
                 additionalTotalWeight -= droppedItem.adjustedWeight;
                 additionalItemPool.Remove(droppedItem.item);
             }
@@ -75,16 +76,20 @@ public class LootDropHandler : MonoBehaviour
         int dropsToSpawn = GetDropAmount(initialDropChance, extraDropChance, maxDrops, luckMult);
         
         for (int i = 0; i < dropsToSpawn; i++) {
-            var droppedItem = SpawnLoot(itemPool, totalWeight, killer.luck, enemyInfluence);
-            Vector2 randomDirection = UnityEngine.Random.insideUnitCircle;
-            Vector3 randomDirectionVector = new(randomDirection.x, 0, randomDirection.y);
-            Instantiate(droppedItem.item.data.prefab, transform.position, Quaternion.identity).GetComponent<Rigidbody>().AddForce((Vector3.up + randomDirectionVector) * 5, ForceMode.Impulse);
+            var droppedItem = GetItemFromRoll(itemPool, totalWeight, killer.luck, enemyInfluence);
+            SpawnLoot(droppedItem.item);
             totalWeight -= droppedItem.adjustedWeight;
             itemPool.Remove(droppedItem.item);
         }
     }
-    
-    public static (LootTable.LootItem item, float adjustedWeight) SpawnLoot(List<LootTable.LootItem> itemPool, float totalWeight, float luck, float enemyInfluence) {
+
+    private void SpawnLoot(LootTable.LootItem item) {
+        Vector2 randomDirection = UnityEngine.Random.insideUnitCircle;
+        Vector3 randomDirectionVector = new(randomDirection.x, 0, randomDirection.y);
+        Instantiate(item.data.prefab, transform.position, Quaternion.identity).GetComponent<Rigidbody>().AddForce((Vector3.up + randomDirectionVector) * 5, ForceMode.Impulse);
+    }
+
+    public static (LootTable.LootItem item, float adjustedWeight) GetItemFromRoll(List<LootTable.LootItem> itemPool, float totalWeight, float luck, float enemyInfluence) {
         float roll = UnityEngine.Random.Range(0f, totalWeight);
         
         float cumulativeWeight = 0f;
@@ -139,4 +144,6 @@ public class LootDropHandler : MonoBehaviour
 
         return dropCount;
     }
+    
+    
 }

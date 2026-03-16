@@ -6,8 +6,10 @@ public class Shop : MonoBehaviour, IInteractable {
     public string InteractionName() => "Trade with The Rat";
 
     [SerializeField] private LootTable lootTable;
+    [SerializeField] private Transform spawnPoint;
     
     private ItemData[] items = new ItemData[3];
+    private bool[] itemSoldStates = new bool[3];
 
     private float luck = 3;
 
@@ -21,7 +23,7 @@ public class Shop : MonoBehaviour, IInteractable {
         itemPool.AddRange(lootTable.items);
         
         for (int i = 0; i < 3; i++) {
-            var pickedItem = LootDropHandler.SpawnLoot(itemPool, totalWeight, luck, 1);
+            var pickedItem = LootDropHandler.GetItemFromRoll(itemPool, totalWeight, luck, 1);
             totalWeight -= pickedItem.adjustedWeight;
             itemPool.Remove(pickedItem.item);
             items[i] = pickedItem.item.data;
@@ -35,6 +37,22 @@ public class Shop : MonoBehaviour, IInteractable {
             return;
         }
         
-        shopController.RegisterItems(items, interactor);
+        shopController.RegisterItems(items, itemSoldStates, this, interactor);
+    }
+
+    public bool SpawnItem(ItemData item) {
+        for (int i = 0; i < items.Length; i++) {
+            if (item == items[i]) {
+                itemSoldStates[i] = true;
+                
+                Vector2 randomDirection = Random.insideUnitCircle;
+                Vector3 randomDirectionVector = new(randomDirection.x, 0, randomDirection.y);
+                Instantiate(item.prefab, spawnPoint.position, Quaternion.identity).GetComponent<Rigidbody>().AddForce((Vector3.up + randomDirectionVector) * 2, ForceMode.Impulse);
+                
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

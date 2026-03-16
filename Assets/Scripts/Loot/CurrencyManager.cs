@@ -3,9 +3,11 @@ using UnityEngine;
 public class CurrencyManager : MonoBehaviour {
     private Statboard statboard;
     
+    [SerializeField] private int startingCurrency = 100;
     public int CurrencyAmount { get; set; }
 
     private void Awake() {
+        CurrencyAmount = startingCurrency;
         statboard = GetComponent<Statboard>();
     }
 
