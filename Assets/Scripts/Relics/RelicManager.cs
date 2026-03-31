@@ -24,11 +24,14 @@ public class RelicManager : MonoBehaviour, IStatboard
         }
     }
 
-    public void RemoveRelic(RelicData data) {
+    public bool RemoveRelic(RelicData data) {
         if (GetRelicFromList(data, out Relic relic)) {
             relic.Remove();
             relics.Remove(relic);
+            statboard.eventManager?.OnRelicRemoved?.Invoke(relic.data);
+            return true;
         }
+        return false;
     }
 
     private void Update() {

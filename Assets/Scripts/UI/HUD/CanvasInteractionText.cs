@@ -27,10 +27,10 @@ public class CanvasInteractionText : MonoBehaviour {
         transform.localScale = Vector3.one;
 
         if (isDualAction) {
-            text.text = $"Press {primaryInteract.Glyph()} or {secondaryInteract.Glyph(false)} {promptText}";
+            text.text = $"{primaryInteract.Glyph()} or {secondaryInteract.Glyph(false)} {promptText}";
         }
         else {
-            text.text = $"Press {interact.Glyph()} {promptText}";
+            text.text = $"{interact.Glyph()} {promptText}";
         }
     }
     

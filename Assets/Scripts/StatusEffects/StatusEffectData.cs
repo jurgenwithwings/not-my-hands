@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using UnityEditor.Rendering.Universal;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "StatusEffect", menuName = "ScriptableObjects/StatusEffect", order = 1)]

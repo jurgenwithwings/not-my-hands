@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PhysicalLoot : MonoBehaviour {
@@ -15,6 +16,8 @@ public class PhysicalLoot : MonoBehaviour {
     private Vector2 tiltTimer;
     private Vector3 eulerAngles;
     private float oscillationTimer;
+
+    public Action OnPickUp;
 
     void Spin() {
         // Spin steadily around the up axis

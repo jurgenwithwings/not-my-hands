@@ -9,4 +9,6 @@ public class ItemData : ScriptableObject
     public int value = 10;
     public Sprite itemIcon;
     public GameObject prefab;
+
+    public float RecycleValue => value * 0.5f;
 }

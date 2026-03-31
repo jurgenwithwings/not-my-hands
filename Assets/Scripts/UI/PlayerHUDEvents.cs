@@ -44,8 +44,12 @@ public static class PlayerHUDEvents {
     public static Action<EntityStatusEffectManager> OnStatusEffectsChanged;
 
     public static Action<RelicData> OnAddedRelic;
+    public static Action<RelicData> OnRemovedRelic;
     public static Action<LimbData, LimbSide> OnUpdateLimb;
     public static Action<OrganData> OnUpdateOrgan;
+
+    public static Action<ItemData> OnRecycleRequest;
+    public static Action<LimbData, LimbSide> OnLimbRecycleRequest;
 
     public static Action<Statboard> OnRegisterStatboard;
     

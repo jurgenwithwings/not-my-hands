@@ -28,8 +28,11 @@ public class OrganManager : MonoBehaviour, IStatboard {
         }
     }
 
-    public void RemoveOrgan(OrganType organType) {
+    public bool RemoveOrgan(OrganType organType) {
+        OrganData old = organs[(int)organType].data;
         organs[(int)organType].Remove();
         organs[(int)organType] = OrganHelper.GetDefaultOrgan(organType, statboard);
+        statboard.eventManager?.OnOrganChanged?.Invoke(organs[(int)organType].data, old);
+        return true;
     }
 }

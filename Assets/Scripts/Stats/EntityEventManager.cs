@@ -68,6 +68,12 @@ public class EntityEventManager : MonoBehaviour, IStatboard
     public Action<RelicData> OnRelicAdded;
     
     /// <summary>
+    /// Called when a Relic is removed from this entity.
+    /// <para><c>New Relic</c> - The Relic that was removed from the entity.</para>
+    /// </summary>
+    public Action<RelicData> OnRelicRemoved;
+    
+    /// <summary>
     /// Called when a new Limb is picked up by this entity.
     /// <para><c>New Limb</c> - The Limb that the entity has picked up.</para>
     /// <para><c>LimbSide</c> - The side that the new Limb occupies.</para>

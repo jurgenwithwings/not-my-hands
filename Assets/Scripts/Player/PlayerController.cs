@@ -63,6 +63,7 @@ public class PlayerController : MonoBehaviour
         statboard.eventManager.OnManaChanged += PlayerManaChanged;
         statboard.eventManager.OnOrganChanged += PlayerOrganChanged;
         statboard.eventManager.OnRelicAdded += PlayerRelicAdded;
+        statboard.eventManager.OnRelicRemoved += PlayerRelicRemoved;
         statboard.eventManager.OnLimbChanged += PlayerLimbChanged;
 
         foreach (Organ organ in statboard.organManager.organs) {
@@ -83,7 +84,31 @@ public class PlayerController : MonoBehaviour
         PlayerHUDEvents.OnHealthChanged?.Invoke(statboard.health.CurrentHealth, statboard.maxHealth);
         PlayerHUDEvents.OnManaChanged?.Invoke(statboard.mana.CurrentMana, statboard.maxMana);
         
+        PlayerHUDEvents.OnRecycleRequest += OnRecycleRequest;
+        PlayerHUDEvents.OnLimbRecycleRequest += OnLimbRecycleRequest;
+        
         inputs.Inventory.Event += InventoryDebugEvent;
+    }
+
+    private void OnLimbRecycleRequest(LimbData limb, LimbSide side) {
+        if (limbManager.RemoveLimb(limb, side)) {
+            GetComponent<CurrencyManager>().AddCurrency(Mathf.FloorToInt(limb.RecycleValue));
+        }
+    }
+
+    private void OnRecycleRequest(ItemData item) {
+        bool result = false;
+        Type dataType = item.GetType();
+        if (dataType == typeof(OrganData)) {
+            result = GetComponent<OrganManager>().RemoveOrgan(((OrganData)item).type);
+        }
+        else if (dataType == typeof(RelicData)) {
+            result = GetComponent<RelicManager>().RemoveRelic((RelicData)item);
+        }
+
+        if (result) {
+            GetComponent<CurrencyManager>().AddCurrency(Mathf.FloorToInt(item.RecycleValue));
+        }
     }
 
     private void PlayerManaChanged(float current, float max) {
@@ -107,6 +132,10 @@ public class PlayerController : MonoBehaviour
     private void PlayerRelicAdded(RelicData relic) {
         PlayerHUDEvents.OnAddedRelic?.Invoke(relic);
     }
+    
+    private void PlayerRelicRemoved(RelicData relic) {
+        PlayerHUDEvents.OnRemovedRelic?.Invoke(relic);
+    }
 
     private void PlayerOrganChanged(OrganData newOrgan, OrganData oldOrgan) { 
         PlayerHUDEvents.OnUpdateOrgan?.Invoke(newOrgan);
@@ -124,7 +153,6 @@ public class PlayerController : MonoBehaviour
         if (victim == statboard) return;
         if (ObjectPool.TryPull(out DamageNumber damageNumber, damageInfo.hitPoint, transform.rotation)) {
             damageNumber.SetDamage(damageInfo);
-            //PlayerHUDEvents.DebugText($"Damage Dealt: {damageInfo.finalDamage}");
         }
     }
 
@@ -134,7 +162,7 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
         HandleJump();
         
-        //Debug Interaction
+        //Interaction
         Physics.Raycast(cameraHolder.position, cameraHolder.forward * 5f, out RaycastHit hit, 5f, interactionMask);
         if (hit.collider && hit.collider.TryGetComponent(out IInteractable interactable)) {
             if (interactable != null) {
@@ -156,66 +184,12 @@ public class PlayerController : MonoBehaviour
                         limbManager.HandleInteractAnim();
                     }
                 }
-                PlayerHUDEvents.OnSetInteractionText?.Invoke($"to pick up {interactable.InteractionName()}", interactable.HasAltInteraction);
+                PlayerHUDEvents.OnSetInteractionText?.Invoke($"{interactable.InteractionName()}", interactable.HasAltInteraction);
             }
         }
         else {
             PlayerHUDEvents.OnSetInteractionText?.Invoke("", false);
         }
-        /*
-        //Debug Fire Ray 
-        if (inputs.PrimaryFire.Triggered) {
-            Physics.Raycast(cameraHolder.position, cameraHolder.forward * 1000f, out RaycastHit hitInfo, 1000, enemyMask);
-
-            if (hitInfo.collider && hitInfo.collider.TryGetComponent(out Statboard stats)) {
-                DamageInfo damageInfo = new(damage, statboard, hitInfo.point) {
-                    debug = true,
-                };
-                damageInfo.additionalStatusEffects.Add(effect);
-                
-                damageInfo.AddModifier(statboard.damageMultiplier, ModifierType.Final);
-                damageInfo.debug = false;
-                
-                statboard.eventManager.OnPreSendDamage?.Invoke(ref damageInfo, stats, statboard);
-                
-                stats.health.TakeDamage(damageInfo.Copy());
-            }
-        }
-
-        // Debug Take Damage
-        if (Input.GetKeyDown(KeyCode.T)) {
-            PlayerHUDEvents.DebugText("Trying to take damage");
-            
-            DamageInfo damageInfo = new(damage, statboard, transform.position) {
-                selfDamage = true
-            };
-            statboard.health.TakeDamage(damageInfo.Copy());
-        }
-
-        //Debug Swap Status Effect Type
-        if (Input.GetKeyDown(KeyCode.Z)) {
-            int index = Random.Range(1, 7);
-            switch (index) {
-                case 1:
-                    effect = GameConfig.Instance.bleed;
-                    break;
-                case 2:
-                    effect = GameConfig.Instance.burn;
-                    break;
-                case 3:
-                    effect = GameConfig.Instance.freeze;
-                    break;
-                case 4:
-                    effect = GameConfig.Instance.charged;
-                    break;
-                case 5:
-                    effect = GameConfig.Instance.poison;
-                    break;
-                case 6:
-                    effect = GameConfig.Instance.judged;
-                    break;
-            }
-        }*/
     }
 
     public void LateUpdate() {

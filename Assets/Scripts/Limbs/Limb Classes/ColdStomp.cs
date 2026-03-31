@@ -56,6 +56,7 @@ public class ColdStomp : Leg {
     private void Kick() {
         if (!statboard.mana.RemoveMana(manaCost)) return;
         animator.SetTrigger(Sweep);
+        IsAnimBusy = true;
         statboard.eventManager.OnLegAbilityUsed?.Invoke(manaCost);
     }
     

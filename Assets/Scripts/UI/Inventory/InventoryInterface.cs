@@ -20,9 +20,10 @@ public class InventoryInterface : MonoBehaviour
     
     [Header("Organs")]
     [SerializeField] private List<InventoryItem> organs = new();
-
+    
     private void Awake() {
         PlayerHUDEvents.OnAddedRelic += AddRelic;
+        PlayerHUDEvents.OnRemovedRelic += RemoveRelic;
         PlayerHUDEvents.OnUpdateLimb += UpdateLimb;
         PlayerHUDEvents.OnUpdateOrgan += UpdateOrgan;
     }
@@ -39,6 +40,18 @@ public class InventoryInterface : MonoBehaviour
             iItem.Add();
         }
     }
+    
+    private void RemoveRelic(RelicData relicData) {
+        InventoryItem iItem = relics.Find(i => i.itemData == relicData);
+
+        if (iItem == null) {
+            Debug.LogWarning("Couldn't find removed relic in inventory.");
+        }
+        else {
+            relics.Remove(iItem);
+            Destroy(iItem.gameObject);
+        }
+    }
 
     private void UpdateLimb(LimbData limbData, LimbSide limbSide) {
         int limbSideCount = Enum.GetNames(typeof(LimbSide)).Length;
@@ -47,7 +60,10 @@ public class InventoryInterface : MonoBehaviour
         Button button = limbs[index].Set(limbData, InventoryItem.ItemType.Limb);
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() => infoPanel.UpdateInfo(limbData));
+        button.onClick.AddListener(() => infoPanel.SetLastLimbPressed(limbSide));
     }
+
+    
 
     private void UpdateOrgan(OrganData organData) {
         int type = (int)organData.type;

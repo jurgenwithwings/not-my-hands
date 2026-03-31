@@ -53,6 +53,7 @@ public class LeonidasLeg : Leg {
         if (!statboard.mana.RemoveMana(manaCost)) return;
         animator.SetTrigger(Front);
         animator.SetFloat(AnimSpeed, 0.2f);
+        IsAnimBusy = true;
         statboard.eventManager.OnLegAbilityUsed?.Invoke(manaCost);
     }
     

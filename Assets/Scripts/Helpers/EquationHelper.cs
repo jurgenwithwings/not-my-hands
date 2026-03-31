@@ -47,7 +47,6 @@ public static class EquationHelper {
         float luckMultiplier = Luck.GetLuckCurve(info.source.luck.Value);
         
         float adjustedCritChance = info.sourceCriticalChance * info.source.criticalChanceMultiplier.Value * luckMultiplier;
-        Debug.Log(adjustedCritChance);
 
         info.resultingCritLevel = Mathf.FloorToInt(adjustedCritChance);
         

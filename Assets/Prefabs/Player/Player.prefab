@@ -198,7 +198,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1119271
+    m_Bits: 68228135
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -476,6 +476,7 @@ GameObject:
   - component: {fileID: 1348787492010925958}
   - component: {fileID: 1923147746586303779}
   - component: {fileID: 988387848396973914}
+  - component: {fileID: 2094771960372146878}
   m_Layer: 10
   m_Name: Player
   m_TagString: Untagged
@@ -630,9 +631,9 @@ MonoBehaviour:
   jumpCount:
     BaseValue: 1
   maxMana:
-    BaseValue: 30
+    BaseValue: 50
   manaRegenRate:
-    BaseValue: 12
+    BaseValue: 22
   damageMultiplier:
     BaseValue: 1
   meleeDamageMultiplier:
@@ -697,7 +698,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cf1107fc34391d46ac9b782bf43d3bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  regenDelay: 2
+  regenDelay: 1.2
 --- !u!114 &5610967228089939522
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -781,6 +782,19 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+--- !u!114 &2094771960372146878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8542186682067204331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 004ff314268775244b743e9b8800bf0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startingCurrency: 25
 --- !u!1 &8582221234687208834
 GameObject:
   m_ObjectHideFlags: 0
