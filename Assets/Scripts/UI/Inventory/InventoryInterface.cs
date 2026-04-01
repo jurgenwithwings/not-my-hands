@@ -33,7 +33,7 @@ public class InventoryInterface : MonoBehaviour
 
         if (iItem == null) {
             iItem = Instantiate(itemPanelPrefab, relicsPanel.transform).GetComponent<InventoryItem>();
-            iItem.Set(relicData, InventoryItem.ItemType.Relic).onClick.AddListener(() => infoPanel.UpdateInfo(relicData));
+            iItem.Set(relicData).onClick.AddListener(() => infoPanel.UpdateInfo(relicData));
             relics.Add(iItem);
         }
         else {
@@ -57,7 +57,7 @@ public class InventoryInterface : MonoBehaviour
         int limbSideCount = Enum.GetNames(typeof(LimbSide)).Length;
         int index = (((int)limbData.limbType * limbSideCount) + (int)limbSide) - (limbSideCount + 1); // Converts the Enum indexes to a unique number from 0-n grouped by type.
 
-        Button button = limbs[index].Set(limbData, InventoryItem.ItemType.Limb);
+        Button button = limbs[index].Set(limbData);
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() => infoPanel.UpdateInfo(limbData));
         button.onClick.AddListener(() => infoPanel.SetLastLimbPressed(limbSide));
@@ -68,7 +68,7 @@ public class InventoryInterface : MonoBehaviour
     private void UpdateOrgan(OrganData organData) {
         int type = (int)organData.type;
 
-        Button button = organs[type].Set(organData, InventoryItem.ItemType.Organ);
+        Button button = organs[type].Set(organData);
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() => infoPanel.UpdateInfo(organData));
     }

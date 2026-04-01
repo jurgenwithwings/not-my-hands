@@ -12549,6 +12549,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3066239889353666069, guid: 0564e36a777cd374baf6ef98eb31e42e, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
     - target: {fileID: 3828125246322274773, guid: 0564e36a777cd374baf6ef98eb31e42e, type: 3}
       propertyPath: m_Name
       value: RightArmSlot
@@ -12666,6 +12670,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: -1
       objectReference: {fileID: 0}
+    - target: {fileID: 3066239889353666069, guid: 0564e36a777cd374baf6ef98eb31e42e, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
     - target: {fileID: 3197656871731926454, guid: 0564e36a777cd374baf6ef98eb31e42e, type: 3}
       propertyPath: m_LocalScale.x
       value: -1
@@ -13177,6 +13185,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3066239889353666069, guid: 0564e36a777cd374baf6ef98eb31e42e, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
     - target: {fileID: 3828125246322274773, guid: 0564e36a777cd374baf6ef98eb31e42e, type: 3}
       propertyPath: m_Name
       value: BrainSlot
@@ -14658,6 +14670,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3066239889353666069, guid: 0564e36a777cd374baf6ef98eb31e42e, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
     - target: {fileID: 3828125246322274773, guid: 0564e36a777cd374baf6ef98eb31e42e, type: 3}
       propertyPath: m_Name
       value: RightLegSlot
@@ -15085,6 +15101,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3066239889353666069, guid: 0564e36a777cd374baf6ef98eb31e42e, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
     - target: {fileID: 3828125246322274773, guid: 0564e36a777cd374baf6ef98eb31e42e, type: 3}
       propertyPath: m_Name
       value: LiverSlot
@@ -15797,6 +15817,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3066239889353666069, guid: 0564e36a777cd374baf6ef98eb31e42e, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
     - target: {fileID: 3828125246322274773, guid: 0564e36a777cd374baf6ef98eb31e42e, type: 3}
       propertyPath: m_Name
       value: HeartSlot
@@ -16308,6 +16332,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: -1
       objectReference: {fileID: 0}
+    - target: {fileID: 3066239889353666069, guid: 0564e36a777cd374baf6ef98eb31e42e, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
     - target: {fileID: 3197656871731926454, guid: 0564e36a777cd374baf6ef98eb31e42e, type: 3}
       propertyPath: m_LocalScale.x
       value: -1
