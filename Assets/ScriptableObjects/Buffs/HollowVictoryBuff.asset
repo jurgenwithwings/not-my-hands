@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: HollowVictoryBuff
   m_EditorClassIdentifier: 
   displayName: Hollow Victory
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 68fdede3637dd624290a80568b7254df, type: 3}
   maxDuration: 10
-  StacksLostOnDurationEnd: 3
+  StacksLostOnDurationEnd: 999999
   maxStacks: 10
   refillDurationWhenGainingStack: 1
   statusEffectClass:
@@ -28,6 +28,6 @@ MonoBehaviour:
       data:
         damageEffect:
           statType: 14
-          baseValue: 0.01
-          stackValue: 0.0025
+          baseValue: 0.05
+          stackValue: 0.025
           modifierType: 200

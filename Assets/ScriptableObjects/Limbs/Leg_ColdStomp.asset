@@ -17,7 +17,7 @@ MonoBehaviour:
     radius. '
   itemFlavourText: 'Cold purpose. '
   rarity: 2
-  value: 70
+  value: 140
   itemIcon: {fileID: 21300000, guid: eae725e002ad4d342967bbc4c11d4ea4, type: 3}
   prefab: {fileID: 4635067233800297436, guid: 9b71cb45022e7e843a3fe09cee353020, type: 3}
   limbType: 2

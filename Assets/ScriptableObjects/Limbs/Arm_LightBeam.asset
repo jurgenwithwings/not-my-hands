@@ -16,7 +16,7 @@ MonoBehaviour:
   itemDescription: Fires a piercing beam of light.
   itemFlavourText: 
   rarity: 2
-  value: 44
+  value: 88
   itemIcon: {fileID: 21300000, guid: e706674962bac174f931c4c145213013, type: 3}
   prefab: {fileID: 1840716901701088243, guid: 98831af1d3086f24cbec7427e8b8c1cb, type: 3}
   limbType: 1

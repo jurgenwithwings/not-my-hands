@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: Dagger
   itemDescription: "<style=Me>6</style> Daggers orbit the player and seek out enemies.
     When a dagger hits and enemy Heal for <style=Me>1%</style> Max Health. \n\n<style=Fine><style=FMe>+1</style>
-    Dagger per subsequent stack.\n<style=FMe>+0.5%</style> Health per subsequent
+    Dagger per subsequent stack.\n<style=FMe>+0.25%</style> Health per subsequent
     stack.</style>"
   itemFlavourText: New Flavour Text
   rarity: 3

@@ -11,9 +11,9 @@ public abstract class StatusEffect {
     public string Key { get; private set; } = "";
 
 
-    public event Action<int> OnAddStack;
-    public event Action<int> OnRemoveStack;
-    public event Action OnRemoveEffect;
+    public Action<int> OnAddStack;
+    public Action<int> OnRemoveStack;
+    public Action OnRemoveEffect;
     
     
     public int Stacks { get; protected set; } = 1;

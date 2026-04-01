@@ -94,6 +94,7 @@ using UnityEngine;
         }
         
         ReplaceModifier();
+        OnAddStack?.Invoke(Stacks);
     }
 
     public override void RemoveStacks(int stacks) {

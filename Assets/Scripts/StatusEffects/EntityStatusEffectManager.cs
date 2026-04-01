@@ -15,24 +15,27 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard {
     
     public int TotalEffects => BuffEffects.Count + StatusEffects.Count;
 
+    private DamageInfo? handleDamageBuffer;
+
     private void HandleStatusEffectsFromDamage(DamageInfo damageInfo) {
+        handleDamageBuffer = damageInfo;
         // Handle Additional Status Effects
-        foreach (StatusEffectData effectData in damageInfo.additionalStatusEffects) {
-            StatusEffect effect = AddStacks(effectData, damageInfo);
-            damageInfo.resultingAppliedEffects.Add(effect);
+        foreach (StatusEffectData effectData in handleDamageBuffer.Value.additionalStatusEffects) {
+            StatusEffect effect = AddStacks(effectData, handleDamageBuffer.Value);
+            handleDamageBuffer.Value.resultingAppliedEffects.Add(effect);
         }
         
         // Handle Status Effects From Damage
-        if (damageInfo.ignoreResistances) {
-            if (damageInfo.resultingAppliedEffects.Count <= 0) return;
-            
-            damageInfo.source.eventManager.OnCausedStatusEffect?.Invoke(damageInfo, statboard);
-            statboard.eventManager.OnReceivedStatusEffect?.Invoke(damageInfo);
-            
+        if (handleDamageBuffer.Value.ignoreResistances) {
+            if (handleDamageBuffer.Value.resultingAppliedEffects.Count != 0) {
+                damageInfo.source.eventManager.OnCausedStatusEffect?.Invoke(damageInfo, statboard);
+                statboard.eventManager.OnReceivedStatusEffect?.Invoke(damageInfo);
+            }
+            handleDamageBuffer = null;
             return;
         }
         
-        float statusChance = damageInfo.source.statusChanceMultiplier * damageInfo.sourceStatusChance;
+        float statusChance = handleDamageBuffer.Value.source.statusChanceMultiplier * handleDamageBuffer.Value.sourceStatusChance;
         int numOfEffects = Mathf.FloorToInt(statusChance);
         statusChance -= numOfEffects;
 
@@ -41,7 +44,7 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard {
             numOfEffects++;
         }
         
-        float[] percentages = damageInfo.GetDamagePercentages();
+        float[] percentages = handleDamageBuffer.Value.GetDamagePercentages();
         for (int i = 0; i < numOfEffects; i++) {
             // Calculates not including Physical.
             random = Random.Range(0, 1 - percentages[DamageType.Physical.Index()]);
@@ -50,37 +53,31 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard {
             for (int j = 1; j < percentages.Length; j++) {
                 runningTotal += percentages[j];
                 if (random < runningTotal) {
-                    StatusEffect effect = null;
                     switch (j) {
                         case 1:
-                            effect = AddStacks(GameConfig.Instance.burn, damageInfo);
+                            AddStacks(GameConfig.Instance.burn, handleDamageBuffer.Value);
                             break;
                         case 2:
-                            effect = AddStacks(GameConfig.Instance.freeze, damageInfo);
+                            AddStacks(GameConfig.Instance.freeze, handleDamageBuffer.Value);
                             break;
                         case 3:
-                            effect = AddStacks(GameConfig.Instance.charged, damageInfo);
+                            AddStacks(GameConfig.Instance.charged, handleDamageBuffer.Value);
                             break;
                         case 4:
-                            effect = AddStacks(GameConfig.Instance.poison, damageInfo);
+                            AddStacks(GameConfig.Instance.poison, handleDamageBuffer.Value);
                             break;
                         case 5:
-                            effect = AddStacks(GameConfig.Instance.judged, damageInfo);
+                            AddStacks(GameConfig.Instance.judged, handleDamageBuffer.Value);
                             break;
-                    }
-
-                    if (effect != null) {
-                        damageInfo.resultingAppliedEffects.Add(effect);
                     }
                     break;
                 }
             }
         }
-
-        if (damageInfo.resultingAppliedEffects.Count <= 0) return;
-        
         damageInfo.source.eventManager.OnCausedStatusEffect?.Invoke(damageInfo, statboard);
         statboard.eventManager.OnReceivedStatusEffect?.Invoke(damageInfo);
+        
+        handleDamageBuffer = null;
     }
 
     private void OnDestroy() {
@@ -95,35 +92,47 @@ public class EntityStatusEffectManager : MonoBehaviour, IStatboard {
     }
     
     public StatusEffect AddStacks(StatusEffectData effectData, DamageInfo damageInfo) {
+        StatusEffect result = null;
         if (typeof(BuffEffect).IsAssignableFrom(effectData.Type())) {
             if (GetBuffFromList(effectData, out BuffEffect effect)) {
                 effect.AddStack(damageInfo);
-                return effect;
+                result = effect;
             }
             else {
                 BuffEffect newEffect = Activator.CreateInstance(effectData.Type()) as BuffEffect;
                 if (newEffect != null) {
                     newEffect.Initialise(effectData, this, damageInfo);
                     BuffEffects.Add(newEffect);
-                    return newEffect;
+                    result = newEffect;
                 }
             }
         }
         else {
             if (GetEffectFromList(effectData, out StatusEffect effect)) {
                 effect.AddStack(damageInfo);
-                return effect;
+                result = effect;
             }
             else {
                 StatusEffect newEffect = Activator.CreateInstance(effectData.Type()) as StatusEffect;
                 if (newEffect != null) {
                     newEffect.Initialise(effectData, this, damageInfo);
                     StatusEffects.Add(newEffect);
-                    return newEffect;
+                    result = newEffect;
                 }
             }
         }
-        return null;
+
+        if (result != null) {
+            if (handleDamageBuffer != null) {
+                handleDamageBuffer.Value.resultingAppliedEffects.Add(result);
+            }
+            else {
+                damageInfo.resultingAppliedEffects.Add(result);
+                damageInfo.source.eventManager.OnCausedStatusEffect?.Invoke(damageInfo, statboard);
+                statboard.eventManager.OnReceivedStatusEffect?.Invoke(damageInfo);
+            }
+        }
+        return result;
     }
 
     public void RemoveStacks(StatusEffectData type, int stacks = 1) {

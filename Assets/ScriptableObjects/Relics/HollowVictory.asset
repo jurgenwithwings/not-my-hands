@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: HollowVictory
   m_EditorClassIdentifier: 
   itemName: Effigy of Hollow Victory
-  itemDescription: 'On kill, gain <style=Me>+1%</style> Damage for 10 seconds (stacks
+  itemDescription: 'On kill, gain <style=Me>+5%</style> Damage for 10 seconds (stacks
     up to <style=Me>10x</style>).
 
 
-    <style=Fine><style=FMe>+0.25%</style> Damage
+    <style=Fine><style=FMe>+2.5%</style> Damage
     per subsequent stack.
 
     <style=FMe>+1</style> Max Stacks per subsequent stack.</style>'
@@ -35,7 +35,7 @@ MonoBehaviour:
       type: {class: HollowVictory, ns: , asm: Assembly-CSharp}
       data:
         damageBuff: {fileID: 11400000, guid: 63e7d8e46b41dce40af726fa1d3960d3, type: 2}
-        damageBuffBaseValue: 0.01
-        damageBuffStackValue: 0.0025
+        damageBuffBaseValue: 0.05
+        damageBuffStackValue: 0.025
         damageBuffBaseMaxStacks: 10
         damageBuffStackMaxStacks: 1
