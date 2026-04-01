@@ -68,6 +68,8 @@ public class LightBeamArm : Arm {
             
             if (hit.collider.gameObject.TryGetComponent(out Statboard victim)) {
                 DamageInfo info = new(damage, statboard, hit.point);
+                info.AddModifier(statboard.damageMultiplier.Value - 1, ModifierType.FinalAdditive);
+                info.AddModifier(statboard.meleeDamageMultiplier.Value - 1, ModifierType.FinalAdditive);
                 victim.health?.TakeDamage(info);
             }
         }

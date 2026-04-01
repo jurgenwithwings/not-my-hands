@@ -18,6 +18,7 @@ MonoBehaviour:
     stack.</style>"
   itemFlavourText: 'Stillness is the skin of the forest. '
   rarity: 1
+  value: 10
   itemIcon: {fileID: 21300000, guid: 7ab8de8fbc6387d49b9d7e7313c312bb, type: 3}
   prefab: {fileID: 7591192179580152472, guid: aeafd1c5d2205944e99749648ac39105, type: 3}
   relicClass:

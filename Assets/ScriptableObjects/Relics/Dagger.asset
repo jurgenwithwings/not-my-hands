@@ -19,6 +19,7 @@ MonoBehaviour:
     stack.</style>"
   itemFlavourText: New Flavour Text
   rarity: 3
+  value: 112
   itemIcon: {fileID: 21300000, guid: 865fca21390e7cb41b3e219bd127451d, type: 3}
   prefab: {fileID: 2882600643640320409, guid: 34381412989b6bb4abb4b9388bf06649, type: 3}
   relicClass:
@@ -33,19 +34,23 @@ MonoBehaviour:
         seekRange: 15
         seekTimer:
           damage:
-            physical: 13
-            fire: 42
+            physical: 3
+            fire: 5
             ice: 0
             electric: 0
             poison: 0
             light: 0
+            criticalChance: 0
+            statusChance: 0
           damagePerStack:
-            physical: 6
-            fire: 20
+            physical: 0.05
+            fire: 0.2
             ice: 0
             electric: 0
             poison: 0
             light: 0
+            criticalChance: 0
+            statusChance: 0
           tickInterval: 0.1
           timer: 0
         targetLayer:
@@ -54,8 +59,8 @@ MonoBehaviour:
         groundLayer:
           serializedVersion: 2
           m_Bits: 4101
-        baseHealPercent: 0.01
-        stackHealPercent: 0.005
+        baseHealPercent: 0.005
+        stackHealPercent: 0.0025
         baseDaggers: 6
         stackDaggers: 1
         daggerOrbitRange: 0.8

@@ -17,6 +17,7 @@ MonoBehaviour:
     per subsequent stack.</style>"
   itemFlavourText: "A watcher\u2019s gaze seeps though. "
   rarity: 1
+  value: 10
   itemIcon: {fileID: 21300000, guid: 0df3d24e352d43b4bbe826e6c286b85f, type: 3}
   prefab: {fileID: 3387581230344646663, guid: 31be3142fdb4a4d45864f7cd3ece0d67, type: 3}
   relicClass:

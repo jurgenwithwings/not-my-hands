@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Stats;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -25,7 +26,7 @@ public class Projectile : MonoBehaviour {
     public virtual void Initialise(Statboard source, Damage damage, float speed, List<object> tags = null) {
         this.source = source;
         this.damage = damage;
-        this.speed = speed;
+        this.speed = speed * source.projectileSpeedMultiplier.Value;
         if (tags != null) {
             this.tags.AddRange(tags);
         }
@@ -50,6 +51,8 @@ public class Projectile : MonoBehaviour {
 
     protected virtual void HitTarget(Collider other, Statboard victim) {
         DamageInfo info = new(damage, source, transform.position);
+        info.AddModifier(source.damageMultiplier.Value - 1, ModifierType.FinalAdditive);
+        info.AddModifier(source.rangedDamageMultiplier.Value - 1, ModifierType.FinalAdditive);
         if (tags.Count > 0) {
             info.tags.AddRange(tags);
         }

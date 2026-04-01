@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Stats;
 using UnityEngine;
 using UnityEngine.Animations;
 using Object = UnityEngine.Object;
@@ -113,7 +114,8 @@ using Random = UnityEngine.Random;
 
     public void DaggerHit(Statboard victim, DaggerRelicProjectile dagger) {
         DamageInfo damage = new(seekTimer.GetTickDamage(stacks), stats, dagger.transform.position);
-        
+        damage.AddModifier(stats.damageMultiplier.Value - 1, ModifierType.FinalAdditive);
+        damage.AddModifier(stats.rangedDamageMultiplier.Value - 1, ModifierType.FinalAdditive);
         victim?.health?.TakeDamage(damage);
         stats?.health?.Heal(stats.maxHealth * GetStackValue(baseHealPercent, stackHealPercent, stacks));
     }

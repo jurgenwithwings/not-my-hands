@@ -18,6 +18,7 @@ MonoBehaviour:
     stack.\n<style=FMe>+0.5s</style> Duration per subsequent stack.</style>"
   itemFlavourText: '...just as I drift away. '
   rarity: 2
+  value: 46
   itemIcon: {fileID: 21300000, guid: 44dd63a40e3974e4fa2b2ce75f4d8828, type: 3}
   prefab: {fileID: 8888213157780935681, guid: ffdc156e9d6dd724081cffd5d169a028, type: 3}
   relicClass:

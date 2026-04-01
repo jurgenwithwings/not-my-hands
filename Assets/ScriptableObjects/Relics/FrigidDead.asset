@@ -22,6 +22,7 @@ MonoBehaviour:
     Damage per subsequent stack.</style>"
   itemFlavourText: 
   rarity: 2
+  value: 46
   itemIcon: {fileID: 21300000, guid: 579755c0daadd6b4ebc06b308bfd5a33, type: 3}
   prefab: {fileID: 2436704099190823724, guid: 8bda2b13016c69e4b9612ba5ecb6d76a, type: 3}
   relicClass:

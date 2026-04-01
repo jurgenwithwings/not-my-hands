@@ -72,6 +72,8 @@ public class ColdStomp : Leg {
                     if (hit.gameObject == manager.gameObject) continue;
                     if (hit.gameObject.TryGetComponent(out Statboard victim)) {
                         DamageInfo info = new(damage, statboard, hit.transform.position);
+                        info.AddModifier(statboard.damageMultiplier.Value - 1, ModifierType.FinalAdditive);
+                        info.AddModifier(statboard.meleeDamageMultiplier.Value - 1, ModifierType.FinalAdditive);
                         info.additionalStatusEffects.Add(GameConfig.Instance.freeze);
                         victim.health.TakeDamage(info);
                     }

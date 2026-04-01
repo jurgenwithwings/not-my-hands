@@ -48,10 +48,12 @@ public static class PlayerHUDEvents {
     public static Action<LimbData, LimbSide> OnUpdateLimb;
     public static Action<OrganData> OnUpdateOrgan;
 
-    public static Action<ItemData> OnRecycleRequest;
+    public static Action<ItemData, int> OnRecycleRequest;
     public static Action<LimbData, LimbSide> OnLimbRecycleRequest;
 
     public static Action<Statboard> OnRegisterStatboard;
+
+    public static Action<int> OnMoneyChanged;
     
     public static Action OnUnstuckPlayer;
 }

@@ -17,6 +17,7 @@ MonoBehaviour:
     per subsequent stack.</style>"
   itemFlavourText: 'Into the jaws of fate. '
   rarity: 1
+  value: 10
   itemIcon: {fileID: 21300000, guid: a32aba0529346734a9798defa00e78bc, type: 3}
   prefab: {fileID: 455453745420754807, guid: a6361ced25716764aa46ce16ab8c81c6, type: 3}
   relicClass:

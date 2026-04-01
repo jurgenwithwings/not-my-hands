@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Stats;
 using UnityEngine;
 
 public class BasicLeg : Leg {
@@ -37,6 +38,8 @@ public class BasicLeg : Leg {
         
         if (other.gameObject.TryGetComponent(out Statboard victim)) {
             DamageInfo info = new(damage, statboard, other.gameObject.transform.position);
+            info.AddModifier(statboard.damageMultiplier.Value - 1, ModifierType.FinalAdditive);
+            info.AddModifier(statboard.meleeDamageMultiplier.Value - 1, ModifierType.FinalAdditive);
             victim.health?.TakeDamage(info);
             hitObjects.Add(other.gameObject);
         }

@@ -12,11 +12,24 @@ public class InventoryInfoPanel : MonoBehaviour {
     [SerializeField] private TMP_Text recycleText;
 
     private ItemData itemData;
+    private int count;
     
     public LimbSide LastLimbSideClicked { get; private set; } = LimbSide.Left;
     
     private void Start() {
         Clear();
+        
+        CanvasManager.OnMenuClosed += OnMenuClosed;
+    }
+
+    private void OnMenuClosed(MenuType menu) {
+        if (menu == MenuType.Inventory) {
+            Clear();
+        }
+    }
+
+    private void OnDestroy() {
+        CanvasManager.OnMenuClosed -= OnMenuClosed;
     }
 
     private void OnDisable() {
@@ -31,10 +44,14 @@ public class InventoryInfoPanel : MonoBehaviour {
         recycleText.text = "Recycle";
         recycleButton.onClick.RemoveAllListeners();
         recycleButton.interactable = false;
+        
+        itemData = null;
+        count = 0;
     }
     
-    public void UpdateInfo(ItemData itemData) {
+    public void UpdateInfo(ItemData itemData, int count) {
         this.itemData = itemData;
+        this.count = count;
         
         iconImage.sprite = itemData.itemIcon;
         iconImage.color = Color.white;
@@ -43,7 +60,7 @@ public class InventoryInfoPanel : MonoBehaviour {
                         $"<size=80%><style={itemData.rarity.ToString()}>{itemData.rarity.ToString()}</size></style><size=40%>\n\n</size>" +
                         $"<style=Flavour>{itemData.itemFlavourText}</style>";
         descriptionText.text = itemData.itemDescription;
-        recycleText.text = $"${itemData.RecycleValue:0} Recycle";
+        recycleText.text = $"${count * itemData.RecycleValue:0} Recycle";
         recycleButton.interactable = true;
         recycleButton.onClick.RemoveAllListeners();
         recycleButton.onClick.AddListener(RecycleButtonClicked);
@@ -58,7 +75,7 @@ public class InventoryInfoPanel : MonoBehaviour {
             PlayerHUDEvents.OnLimbRecycleRequest?.Invoke((LimbData)itemData, LastLimbSideClicked);
         }
         else {
-            PlayerHUDEvents.OnRecycleRequest?.Invoke(itemData);
+            PlayerHUDEvents.OnRecycleRequest?.Invoke(itemData, count);
         }
         Clear();
     }

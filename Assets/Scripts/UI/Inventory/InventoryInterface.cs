@@ -33,11 +33,13 @@ public class InventoryInterface : MonoBehaviour
 
         if (iItem == null) {
             iItem = Instantiate(itemPanelPrefab, relicsPanel.transform).GetComponent<InventoryItem>();
-            iItem.Set(relicData).onClick.AddListener(() => infoPanel.UpdateInfo(relicData));
+            iItem.Set(relicData).onClick.AddListener(() => infoPanel.UpdateInfo(relicData, iItem.Count));
             relics.Add(iItem);
         }
         else {
             iItem.Add();
+            iItem.Button.onClick.RemoveAllListeners();
+            iItem.Button.onClick.AddListener(() => infoPanel.UpdateInfo(relicData, iItem.Count));
         }
     }
     
@@ -59,7 +61,7 @@ public class InventoryInterface : MonoBehaviour
 
         Button button = limbs[index].Set(limbData);
         button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(() => infoPanel.UpdateInfo(limbData));
+        button.onClick.AddListener(() => infoPanel.UpdateInfo(limbData, 1));
         button.onClick.AddListener(() => infoPanel.SetLastLimbPressed(limbSide));
     }
 
@@ -70,6 +72,6 @@ public class InventoryInterface : MonoBehaviour
 
         Button button = organs[type].Set(organData);
         button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(() => infoPanel.UpdateInfo(organData));
+        button.onClick.AddListener(() => infoPanel.UpdateInfo(organData, 1));
     }
 }

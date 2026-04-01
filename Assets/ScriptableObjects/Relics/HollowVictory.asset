@@ -23,6 +23,7 @@ MonoBehaviour:
     <style=FMe>+1</style> Max Stacks per subsequent stack.</style>'
   itemFlavourText: New Flavour Text
   rarity: 3
+  value: 112
   itemIcon: {fileID: 21300000, guid: 68fdede3637dd624290a80568b7254df, type: 3}
   prefab: {fileID: 4173820664922131674, guid: d28fa7020f8b8c749b563b3da7938cfe, type: 3}
   relicClass:

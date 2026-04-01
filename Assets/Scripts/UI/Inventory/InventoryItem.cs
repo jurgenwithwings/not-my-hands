@@ -10,6 +10,7 @@ public class InventoryItem : MonoBehaviour {
     
     public ItemData itemData { get; private set; }
     public int Count { get; private set; } = 1;
+    public Button Button => button;
 
     public Button Set(ItemData itemData) {
         this.itemData = itemData;

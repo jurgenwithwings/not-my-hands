@@ -96,7 +96,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnRecycleRequest(ItemData item) {
+    private void OnRecycleRequest(ItemData item, int itemCount) {
         bool result = false;
         Type dataType = item.GetType();
         if (dataType == typeof(OrganData)) {
@@ -107,7 +107,7 @@ public class PlayerController : MonoBehaviour
         }
 
         if (result) {
-            GetComponent<CurrencyManager>().AddCurrency(Mathf.FloorToInt(item.RecycleValue));
+            GetComponent<CurrencyManager>().AddCurrency(itemCount * Mathf.FloorToInt(item.RecycleValue));
         }
     }
 

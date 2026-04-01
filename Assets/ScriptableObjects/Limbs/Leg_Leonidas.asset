@@ -20,6 +20,7 @@ MonoBehaviour:
     final Crit Damage by 12%.'
   itemFlavourText: Choose your next words carefully...
   rarity: 3
+  value: 91
   itemIcon: {fileID: -481472213, guid: 0c83ad10a99d48a40b583d0b915552f7, type: 3}
   prefab: {fileID: 4635067233800297436, guid: 5774e4f3f7289ee4ebade601be7d0978, type: 3}
   limbType: 2

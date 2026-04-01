@@ -15,12 +15,14 @@ public class CurrencyManager : MonoBehaviour {
         int scaledAmount = Mathf.RoundToInt(amount * statboard.currencyMultiplier.Value);
         
         CurrencyAmount += scaledAmount;
+        PlayerHUDEvents.OnMoneyChanged?.Invoke(CurrencyAmount);
         return scaledAmount;
     }
 
     public bool RemoveCurrency(int amount) {
         if (amount < CurrencyAmount) {
             CurrencyAmount -= amount;
+            PlayerHUDEvents.OnMoneyChanged?.Invoke(CurrencyAmount);
             return true;
         }
         return false;
