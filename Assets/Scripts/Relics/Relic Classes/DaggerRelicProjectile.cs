@@ -24,8 +24,11 @@ public class DaggerRelicProjectile : MonoBehaviour {
 
     private ImpactProxy impactProxy;
     private float stuckDuration;
+    private float seekTimer;
+    private float defSeekRotSpeed;
 
     private void Start() {
+        defSeekRotSpeed = seekRotationSpeed;
         EnterState(State.Idle);
         ObjectPool.InitialisePool<ImpactProxy>(50);
     }
@@ -48,6 +51,8 @@ public class DaggerRelicProjectile : MonoBehaviour {
                 transform.localPosition = Vector3.zero;
                 break;
             case State.Seeking:
+                seekTimer += Time.deltaTime * 0.15f;
+                seekRotationSpeed = defSeekRotSpeed * seekTimer;
                 MoveToTarget(1);
                 break;
             case State.Returning:
@@ -91,6 +96,7 @@ public class DaggerRelicProjectile : MonoBehaviour {
             case State.Seeking:
                 vfx.Play();
                 transform.parent = null;
+                seekTimer = 1;
                 break;
             case State.Returning:
                 target = orbitPoint;
@@ -103,6 +109,8 @@ public class DaggerRelicProjectile : MonoBehaviour {
                 stuckDuration = stuckTime;
                 break;
         }
+
+        seekRotationSpeed = defSeekRotSpeed;
     }
 
     private void OnTriggerEnter(Collider other) {
