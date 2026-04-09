@@ -16,8 +16,11 @@ MonoBehaviour:
   itemDescription: 'Thrust forward a devastating front kick. Attack always crits.
 
 
-    Increases
-    final Crit Damage by 12%.'
+    <style=Fine>Increases
+    final Crit Damage by <style=FMe>25%</style>.
+
+    <style=FMe>2.1m/s</style> Base
+    Move Speed.'
   itemFlavourText: Choose your next words carefully...
   rarity: 3
   value: 182

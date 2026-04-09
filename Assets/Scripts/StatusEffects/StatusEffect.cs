@@ -357,7 +357,6 @@ public abstract class BuffEffect : StatusEffect {
         spriteRenderer.sprite = eyeSprite;
         spriteRenderer.color = eyeColor;
         spriteRenderer.transform.position = Stats.healthBar.transform.position + (Vector3.up * offset);
-        Debug.Log(eyeSprite.name);
     }
     
     private void OnTakeDamage(DamageInfo damageInfo) {

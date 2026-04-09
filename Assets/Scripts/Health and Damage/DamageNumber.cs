@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using ObjectPooling;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class DamageNumber : MonoBehaviour, IPoolable<DamageNumber> {
@@ -27,6 +29,8 @@ public class DamageNumber : MonoBehaviour, IPoolable<DamageNumber> {
     private Vector3 startPosition;
     private float damageScale;
     private Vector3 floatDirection;
+
+    private List<Image> effects;
 
     private void Awake() {
         lookTarget = Camera.main.transform;
@@ -55,6 +59,14 @@ public class DamageNumber : MonoBehaviour, IPoolable<DamageNumber> {
 
         for (int i = 0; i < info.resultingCritLevel; i++) {
             result += "!";
+        }
+        
+        // Status Effects
+        if (info.resultingAppliedEffects.Count > 0) result += " ";
+        foreach (StatusEffect effect in info.resultingAppliedEffects) {
+            if (effect.Data.icon != null) {
+                result += $"<sprite name=\"{effect.Data.displayName}\">";
+            }
         }
         
         text.text = result;

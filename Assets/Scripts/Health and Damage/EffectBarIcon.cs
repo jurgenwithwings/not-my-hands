@@ -61,6 +61,7 @@ public class EffectBarIcon : MonoBehaviour, IPoolable<EffectBarIcon> {
 
     Color clearColor = new(0.9f, 0.15f, 0.15f, 0.7f);
     private void Update() {
+        if (effect == null) return;
         Color color = Color.Lerp(clearColor, Color.white, effect.NormalizedDuration);
         image.color = color;
         text.color = color;

@@ -13,10 +13,7 @@ MonoBehaviour:
   m_Name: Arm_Fire
   m_EditorClassIdentifier: 
   itemName: Flame Arm
-  itemDescription: 'Test Arm
-
-
-    Its like a flamethrower.'
+  itemDescription: FLAMETHROWER
   itemFlavourText: 
   rarity: 1
   value: 21

@@ -71,9 +71,11 @@ public class DaggerRelicProjectile : MonoBehaviour {
                 
         Quaternion targetRotation = Quaternion.LookRotation(direction);
 
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, seekRotationSpeed * scale * Time.deltaTime);
+        float calculatedRotSpeed = seekRotationSpeed * owningEntity.projectileSpeedMultiplier;
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, calculatedRotSpeed * scale * Time.deltaTime);
         
-        transform.position += transform.forward * seekMoveSpeed * scale * Time.deltaTime;
+        float calculatedMoveSpeed = seekMoveSpeed * owningEntity.projectileSpeedMultiplier;
+        transform.position += transform.forward * calculatedMoveSpeed * scale * Time.deltaTime;
     }
 
     private void EnterState(State state) {

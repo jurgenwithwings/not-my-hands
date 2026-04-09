@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Leg_ColdStomp
   m_EditorClassIdentifier: 
   itemName: Cryo Vaults
-  itemDescription: 'Stomp to emit a freezing shockwave, slowing enemies in a small
-    radius. '
+  itemDescription: "Stomp to emit a freezing shockwave, slowing enemies in a small
+    radius. \n\n<style=Fine><style=FMe>2.9m/s</style> Base Move Speed."
   itemFlavourText: 'Cold purpose. '
   rarity: 2
   value: 140
@@ -22,4 +22,4 @@ MonoBehaviour:
   prefab: {fileID: 4635067233800297436, guid: 9b71cb45022e7e843a3fe09cee353020, type: 3}
   limbType: 2
   limbPrefab: {fileID: 700494102469556614, guid: b1c26e14ff323bd41ac07f4b5bcc12f7, type: 3}
-  moveSpeed: 2.6
+  moveSpeed: 2.9

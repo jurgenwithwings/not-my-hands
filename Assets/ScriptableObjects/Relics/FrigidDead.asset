@@ -26,16 +26,31 @@ MonoBehaviour:
   itemIcon: {fileID: 21300000, guid: 579755c0daadd6b4ebc06b308bfd5a33, type: 3}
   prefab: {fileID: 2436704099190823724, guid: 8bda2b13016c69e4b9612ba5ecb6d76a, type: 3}
   relicClass:
-    rid: 5074967864372363378
+    rid: 6286340259854417995
   references:
     version: 2
     RefIds:
-    - rid: 5074967864372363378
-      type: {class: BasicModifierRelic, ns: , asm: Assembly-CSharp}
+    - rid: 6286340259854417995
+      type: {class: FrigidDead, ns: , asm: Assembly-CSharp}
       data:
-        source: FrigidDead
-        stackableEffects:
-        - statType: 12
-          baseValue: 0.1
-          stackValue: 0.04
-          modifierType: 200
+        damage:
+          damage:
+            physical: 0
+            fire: 0
+            ice: 100
+            electric: 0
+            poison: 0
+            light: 0
+            criticalChance: 0.05
+            statusChance: 0.5
+          damagePerStack:
+            physical: 0
+            fire: 0
+            ice: 10
+            electric: 0
+            poison: 0
+            light: 0
+            criticalChance: 0
+            statusChance: 0
+          tickInterval: 0
+          timer: 0
