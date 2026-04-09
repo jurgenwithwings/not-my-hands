@@ -24,7 +24,7 @@ MonoBehaviour:
   itemFlavourText: Choose your next words carefully...
   rarity: 3
   value: 182
-  itemIcon: {fileID: -481472213, guid: 0c83ad10a99d48a40b583d0b915552f7, type: 3}
+  itemIcon: {fileID: 21300000, guid: 5e3f99658ab6d7c4db0dd28af879a721, type: 3}
   prefab: {fileID: 4635067233800297436, guid: 5774e4f3f7289ee4ebade601be7d0978, type: 3}
   limbType: 2
   limbPrefab: {fileID: 700494102469556614, guid: 7a24e80cfccfae34b9f193817a4f7884, type: 3}

@@ -91,7 +91,7 @@ public class PlayerController : MonoBehaviour
     }
 
     private void OnLimbRecycleRequest(LimbData limb, LimbSide side) {
-        if (limbManager.RemoveLimb(limb, side)) {
+        if (limbManager.RemoveLimb(limb, side, false)) {
             GetComponent<CurrencyManager>().AddCurrency(Mathf.FloorToInt(limb.RecycleValue));
         }
     }

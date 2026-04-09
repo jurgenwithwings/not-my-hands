@@ -40,8 +40,8 @@ MonoBehaviour:
             electric: 0
             poison: 0
             light: 0
-            criticalChance: 0
-            statusChance: 0
+            criticalChance: 0.12
+            statusChance: 0.15
           damagePerStack:
             physical: 0.05
             fire: 0.2
@@ -60,7 +60,7 @@ MonoBehaviour:
           serializedVersion: 2
           m_Bits: 4101
         baseHealPercent: 0.005
-        stackHealPercent: 0.0025
+        stackHealPercent: 0.0005
         baseDaggers: 6
         stackDaggers: 1
         daggerOrbitRange: 0.8

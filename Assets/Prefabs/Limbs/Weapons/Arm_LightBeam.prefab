@@ -1519,7 +1519,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 59ff62d7768891a43974885284086a87, type: 2}
-  manaCost: 6
+  manaCost: 26
   beamEffect: {fileID: 7930328580615977290}
   damage:
     physical: 0

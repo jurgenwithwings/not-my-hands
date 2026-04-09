@@ -114,6 +114,8 @@ using Random = UnityEngine.Random;
 
     public void DaggerHit(Statboard victim, DaggerRelicProjectile dagger) {
         DamageInfo damage = new(seekTimer.GetTickDamage(stacks), stats, dagger.transform.position);
+        damage.sourceCriticalChance = seekTimer.damage.criticalChance;
+        damage.sourceStatusChance = seekTimer.damage.statusChance;
         damage.AddModifier(stats.damageMultiplier.Value - 1, ModifierType.FinalAdditive);
         damage.AddModifier(stats.rangedDamageMultiplier.Value - 1, ModifierType.FinalAdditive);
         victim?.health?.TakeDamage(damage);

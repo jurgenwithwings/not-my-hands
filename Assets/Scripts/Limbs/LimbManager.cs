@@ -104,14 +104,16 @@ public class LimbManager : MonoBehaviour {
         statboard.eventManager.OnLimbChanged?.Invoke(limbs[index].data, limbSide, old.data);
     }
 
-    public bool RemoveLimb(LimbData limbData, LimbSide limbSide) {
+    public bool RemoveLimb(LimbData limbData, LimbSide limbSide, bool dropOld = true) {
         int index = limbData.limbType == LimbType.Arm ? 0 : 2;
         index += limbSide == LimbSide.Left ? 0 : 1;
 
         if (limbData == limbs[index].data) {
             Limb old = limbs[index];
-            
-            Instantiate(old.data.prefab, transform.position, Quaternion.identity).GetComponent<Rigidbody>().AddForce(transform.forward + (transform.up * 0.4f) * 2f);
+
+            if (dropOld) {
+                Instantiate(old.data.prefab, transform.position, Quaternion.identity).GetComponent<Rigidbody>().AddForce(transform.forward + (transform.up * 0.4f) * 2f);
+            }
             
             //Destroy the physical limb from the player
             limbs[index].Remove();

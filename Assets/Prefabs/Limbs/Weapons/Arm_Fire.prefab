@@ -1518,7 +1518,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 88eb5fb118829bc47b64df98574ba7d2, type: 2}
-  manaCost: 1.5
+  manaCost: 1.2
   projectilePrefab: {fileID: 8198838231160519049, guid: 61ba6968bcacf01449c60e8a597029a4, type: 3}
   projectilePoint: {fileID: 5075914432501916458}
   projectileSpeed: 25

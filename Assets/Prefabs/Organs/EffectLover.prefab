@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 3525710421561008449}
   - component: {fileID: 1700159075651449776}
   m_Layer: 16
-  m_Name: StatusEffectHeart
+  m_Name: EffectLover
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

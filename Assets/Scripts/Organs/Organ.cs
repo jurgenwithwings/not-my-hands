@@ -76,30 +76,3 @@ public static class OrganHelper {
 [Serializable] public class Heart : Organ { }
 [Serializable] public class Brain : Organ { }
 [Serializable] public class Liver : Organ { }
-
-
-// TEMP TEMP TEMP TEMP
-[Serializable] public class StatusEffectHeart : Organ {
-    public float perStatusEffectBonus = 0.3f;
-    
-    public override void Initialise(Statboard statboard, OrganData organData) {
-        base.Initialise(statboard, organData);
-        
-        StatusEffectHeart variables = organData.organClass as StatusEffectHeart;
-        perStatusEffectBonus = variables.perStatusEffectBonus;
-
-        stats.eventManager.OnPreDealDamage += ModifyDamage;
-    }
-
-    private void ModifyDamage(ref DamageInfo damageInfo, Statboard victim) {
-        Debug.Log("Got Pre Send Damage");
-        for (int i = 0; i < Enum.GetValues(typeof(DamageType)).Length; i++) {
-            damageInfo.AddModifier(perStatusEffectBonus * victim.statusEffectManager.StatusEffects.Count);
-        }
-    }
-
-    public override void Remove() {
-        base.Remove();
-        stats.eventManager.OnPreDealDamage -= ModifyDamage;
-    }
-}
