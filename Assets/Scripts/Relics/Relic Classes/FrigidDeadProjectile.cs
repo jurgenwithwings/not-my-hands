@@ -97,6 +97,7 @@ public class FrigidDeadProjectile : MonoBehaviour, IPoolable<FrigidDeadProjectil
                         Physics.Raycast(transform.position, direction, out RaycastHit hitInfo, scanRadius * 1.1f, GameConfig.Instance.pawnLayer);
                         
                         // Has hit a Pawn / Entity
+                        if (hitInfo.collider == null) return;
                         if (!hitInfo.collider.gameObject.IsInLayerMask(GameConfig.Instance.pawnLayer)) continue;
                         if (hitInfo.collider.TryGetComponent(out Statboard hitEntity) && hitEntity != owningEntity) {
                             target = hitEntity.transform;

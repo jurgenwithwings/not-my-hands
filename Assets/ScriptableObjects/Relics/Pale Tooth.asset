@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: Pale Tooth
   itemDescription: "<style=Me>+5%</style> Crit Chance. \n\n<style=Fine><style=FMe>+5%</style>
     per subsequent stack.</style>"
-  itemFlavourText: 'Into the jaws of fate. '
+  itemFlavourText: 'Into the Jaws of Fate. '
   rarity: 1
   value: 10
   itemIcon: {fileID: 21300000, guid: a32aba0529346734a9798defa00e78bc, type: 3}

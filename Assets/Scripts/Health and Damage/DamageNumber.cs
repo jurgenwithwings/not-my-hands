@@ -15,13 +15,13 @@ public class DamageNumber : MonoBehaviour, IPoolable<DamageNumber> {
     [SerializeField] private AnimationCurve sizeCurve;
     [SerializeField] private AnimationCurve damageScaleCurve;
     [SerializeField] private float duration = 1.7f;
-    [SerializeField] private float screeSize = 0.12f;
+    [SerializeField] private float screeSize = 0.1f;
     [SerializeField] private float floatAmount = 2.2f;
     [SerializeField] private float positionVarianceAmount = 0.5f;
 
     private float scaledScreenSize => screeSize * PlayerSettings.DamageNumberScale;
     
-    private const float DamageScaleEnd = 1000000;
+    private const float DamageScaleEnd = 10000;
     
     private Transform lookTarget;
     private Canvas canvas;
@@ -57,8 +57,18 @@ public class DamageNumber : MonoBehaviour, IPoolable<DamageNumber> {
             DamageExtensions.AbbreviateNumber(finalDamage) : 
             finalDamage.ToString(DamageExtensions.damageNumberFormat);
 
-        for (int i = 0; i < info.resultingCritLevel; i++) {
+        text.color = Color.white;
+        int i;
+        for (i = 0; i < info.resultingCritLevel; i++) {
             result += "!";
+        }
+        switch (i) {
+            case 1:
+                text.color = new (1, 0.65f, 0); break;
+            case 2:
+                text.color = new(0.85f, 0.15f, 0.1f); break;
+            case >2:
+                text.color = new (0.65f, 0, 0.95f); break;
         }
         
         // Status Effects
@@ -71,8 +81,7 @@ public class DamageNumber : MonoBehaviour, IPoolable<DamageNumber> {
         
         text.text = result;
         
-        float t = Mathf.InverseLerp(1, DamageScaleEnd, finalDamage);
-        damageScale = damageScaleCurve.Evaluate(t);
+        damageScale = damageScaleCurve.Evaluate(finalDamage / DamageScaleEnd);
     }
     
     private void Update() {

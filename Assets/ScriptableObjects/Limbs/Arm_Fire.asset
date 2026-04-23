@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be49a1c370051624db5dce3dcc82ea63, type: 3}
   m_Name: Arm_Fire
   m_EditorClassIdentifier: 
-  itemName: Flame Arm
-  itemDescription: FLAMETHROWER
-  itemFlavourText: 
+  itemName: FLAMETHROWER!!!
+  itemDescription: FLAMETHROWER!!!
+  itemFlavourText: 'FLAMETHROWER!!! '
   rarity: 1
   value: 21
   itemIcon: {fileID: 21300000, guid: e60182365858e9d488025c32c227d349, type: 3}

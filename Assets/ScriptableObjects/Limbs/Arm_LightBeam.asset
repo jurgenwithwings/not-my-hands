@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be49a1c370051624db5dce3dcc82ea63, type: 3}
   m_Name: Arm_LightBeam
   m_EditorClassIdentifier: 
-  itemName: Light Arm
+  itemName: Hand of God
   itemDescription: 'Fires a piercing beam of light.
 
 
     Increases Light Damage
     by <style=Me>12%</style>.'
-  itemFlavourText: 
+  itemFlavourText: '"Yc fiyb cqsdict yeel yfii sdnitsy kh znr."Z'
   rarity: 2
   value: 88
   itemIcon: {fileID: 21300000, guid: a0c4b7b10f1397542b080dee9f57af53, type: 3}

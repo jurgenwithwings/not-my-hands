@@ -13,11 +13,20 @@ MonoBehaviour:
   m_Name: Brain
   m_EditorClassIdentifier: 
   itemName: Brain
-  itemDescription: Your Brain.
+  itemDescription: 'Your Brain.
+
+
+    <style=Fine><style=FMe>100%</style> Base Critical
+    Chance Multiplier
+
+    <style=FMe>150%</style> Base Critical Damage Multiplier
+
+    <style=FMe>1</style>
+    Base Luck'
   itemFlavourText: ...
   rarity: 0
   value: 0
-  itemIcon: {fileID: -525207719, guid: 0fc7ca9a14c8abd42819b2057609176b, type: 3}
+  itemIcon: {fileID: 21300000, guid: f451a24a7beb8cf43bf69d294bc4eff1, type: 3}
   prefab: {fileID: 8480930156855611742, guid: f7fe040cd74096d46ab8cb1d05afdd35, type: 3}
   type: 1
   stats:

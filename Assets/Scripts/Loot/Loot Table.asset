@@ -39,3 +39,7 @@ MonoBehaviour:
     dropWeight: 33
   - data: {fileID: 11400000, guid: 271a4dabfdcd49e47915e14a24b4f7e0, type: 2}
     dropWeight: 10
+  - data: {fileID: 11400000, guid: 824ab19b3a5ea24409ed0704228e06b4, type: 2}
+    dropWeight: 10
+  - data: {fileID: 11400000, guid: 52e129641dd0126419868557fcd66201, type: 2}
+    dropWeight: 33

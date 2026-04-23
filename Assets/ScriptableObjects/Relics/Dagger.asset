@@ -17,7 +17,7 @@ MonoBehaviour:
     When a dagger hits and enemy Heal for <style=Me>1%</style> Max Health. \n\n<style=Fine><style=FMe>+1</style>
     Dagger per subsequent stack.\n<style=FMe>+0.25%</style> Health per subsequent
     stack.</style>"
-  itemFlavourText: New Flavour Text
+  itemFlavourText: Everything has a cost.
   rarity: 3
   value: 112
   itemIcon: {fileID: 21300000, guid: 865fca21390e7cb41b3e219bd127451d, type: 3}

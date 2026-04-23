@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: Black Ice Shard
   itemDescription: "<style=Me>+5%</style> Ice Damage \n\n<style=Fine><style=FMe>+3%</style>
     per subsequent stack.</style>"
-  itemFlavourText: Your pissin me off dude
+  itemFlavourText: Cold can cut deeper than a blade.
   rarity: 1
   value: 10
   itemIcon: {fileID: 21300000, guid: fa7a79cce44751b42a8b47b5b42b98d2, type: 3}

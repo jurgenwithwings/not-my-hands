@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class SettingsController : MonoBehaviour {
     [Header("Settings")] 
     [SerializeField] private SerializedDictionary<SettingName, Setting> genericSettings = new();
-    
+    [SerializeField] private string audioMixerPath = "Settings/MainMixer";
     private AudioMixer mixer;
 
     public enum SettingType {
@@ -145,12 +145,14 @@ public class SettingsController : MonoBehaviour {
 
     private void Start() {
         PlayerSettings.Load();
+
+        mixer = Resources.Load(audioMixerPath) as AudioMixer;
         
         LoadResolutions();
         
         InitialiseSettings(); // Must be called before Non-Generic Settings.
 
-        Setting setting; // ~~Non-Generic Settings~~
+        // ~~Non-Generic Settings~~
         // Graphics
         genericSettings[SettingName.Resolution].RegisterListener(i => SetResolution((int)i));
         genericSettings[SettingName.DisplayMode].RegisterListener(i => SetDisplayMode((int)i));
@@ -286,10 +288,8 @@ public class SettingsController : MonoBehaviour {
 
     //Audio Settings
     public void SetVolume(SettingName key) {
-        float mappedVolume =
-            Mathf.Lerp(-80f, 0f,
-                genericSettings[key].slider.value /
-                100f); // Assuming the slider value is between 0 and 100, map it to -80 to 0 dB
+        // Assuming the slider value is between 0 and 100, map it to -80 to 0 dB
+        float mappedVolume = Mathf.Lerp(-80f, 0f, genericSettings[key].slider.value / 100f);
 
         mixer.SetFloat(key.ToString(), mappedVolume);
     }

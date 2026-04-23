@@ -80,7 +80,7 @@ using UnityEngine;
     }
 
     public override void AddStack(DamageInfo damageInfo) {
-        Stacks += Stacks;
+        Stacks++;
         if (Stacks > maxStacks) {
             Stacks = maxStacks;
         }

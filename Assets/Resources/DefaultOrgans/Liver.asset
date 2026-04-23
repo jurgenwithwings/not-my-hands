@@ -13,11 +13,20 @@ MonoBehaviour:
   m_Name: Liver
   m_EditorClassIdentifier: 
   itemName: Liver
-  itemDescription: Your Liver.
+  itemDescription: 'Your Liver.
+
+
+    <style=Fine><style=FMe>100%</style> Base Status
+    Chance Multiplier
+
+    <style=FMe>100%</style> Base Buff Duration Multiplier
+
+    <style=FMe>100%</style>
+    Base Buff Potency Multiplier'
   itemFlavourText: ...
   rarity: 0
   value: 0
-  itemIcon: {fileID: -1169272451, guid: a6921120bca5f37468d5bb0fe877bb76, type: 3}
+  itemIcon: {fileID: 323336112, guid: 664cce031181c7d4ba043673e77a51d2, type: 3}
   prefab: {fileID: 8480930156855611742, guid: a33eab6886154cb45b2465d5b205cb2c, type: 3}
   type: 2
   stats:

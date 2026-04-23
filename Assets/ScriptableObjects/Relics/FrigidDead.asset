@@ -20,7 +20,7 @@ MonoBehaviour:
     a <style=Me>4m</style> explosion dealing <style=Me>60%</style> of the stored
     damage. \r\n\r\n<style=Fine><style=FMe>+0.5m</style> Radius per subsequent stack.\n<style=FMe>+15%</style>
     Damage per subsequent stack.</style>"
-  itemFlavourText: 
+  itemFlavourText: IyhJ69mD7xI
   rarity: 2
   value: 46
   itemIcon: {fileID: 21300000, guid: 579755c0daadd6b4ebc06b308bfd5a33, type: 3}

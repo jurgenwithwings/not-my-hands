@@ -13,8 +13,17 @@ MonoBehaviour:
   m_Name: MagicMindBrain
   m_EditorClassIdentifier: 
   itemName: Magic Mind
-  itemDescription: When Killing an Enemy, Refill <style=Me>15%</style> of Maximum
+  itemDescription: 'When Killing an Enemy, Refill <style=Me>15%</style> of Maximum
     Mana. <style=Me>2x</style> effectiveness if the Enemy has <style=Me>Judged</style>.
+
+
+    <style=Fine><style=FMe>100%</style>
+    Base Critical Chance Multiplier
+
+    <style=FMe>200%</style> Base Critical Damage
+    Multiplier
+
+    <style=FMe>1.5</style> Base Luck'
   itemFlavourText: S Tier INT Scaling!
   rarity: 1
   value: 208

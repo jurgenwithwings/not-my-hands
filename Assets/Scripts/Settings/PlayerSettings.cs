@@ -47,18 +47,18 @@ public static class PlayerSettings
     private static Dictionary<string, FieldInfo> settings = new();
     private static string SettingsFilePath => Application.dataPath + "/UserSettings.json";
     
-    // ~~ SETTINGS ~~
+    // ~~ SETTINGS & DEFAULT VALUES ~~
     // Gameplay
     public static bool AbbreviateDamageNumbers = false;
     public static float DamageNumberScale = 1f;
     public static OnScreenControllerUI ControllerUI = OnScreenControllerUI.Xbox;
     
     // Graphics
-    public static int Resolution;
-    public static int DisplayMode;
-    public static int FramerateLimit;
-    public static bool VSync;
-    public static int QualityPreset;
+    public static int Resolution = 0;
+    public static int DisplayMode = 1;
+    public static int FramerateLimit = 0;
+    public static bool VSync = false;
+    public static int QualityPreset = 3;
     
     // Input
     public static float MouseSensitivity = 30f;
@@ -69,10 +69,10 @@ public static class PlayerSettings
     public static float AimAssistStrength = 1f;
 
     // Audio
-    public static float MasterVolume = 0.35f;
-    public static float MusicVolume = 1f;
-    public static float AmbientVolume = 1f;
-    public static float EffectsVolume = 1f;
+    public static float MasterVolume = 35f;
+    public static float MusicVolume = 100f;
+    public static float AmbientVolume = 100f;
+    public static float EffectsVolume = 100f;
 
 
     private static bool loaded;
